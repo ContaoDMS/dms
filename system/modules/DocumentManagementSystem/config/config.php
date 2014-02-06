@@ -33,21 +33,22 @@ array_insert($GLOBALS['BE_MOD'], 0, array
 (
 	'dms' => array
 	(
-		'categories' => array
+		'dms_categories' => array
 		(
-			'tables' => array('tl_dms_categories'),
-			'icon'   => 'system/modules/DocumentManagementSystem/html/categories.png'
+			'tables'     => array('tl_dms_categories'),
+			'icon'       => 'system/modules/DocumentManagementSystem/html/categories.png'
 		),
-		'access_rights' => array
+		'dms_access_rights' => array
 		(
-			'tables' => array('tl_dms_access_rights'),
-			'icon'   => 'system/modules/DocumentManagementSystem/html/access_rights.png'
+			'tables'     => array('tl_dms_access_rights'),
+			'icon'       => 'system/modules/DocumentManagementSystem/html/access_rights.png'
 		),
 		
-		'documents' => array
+		'dms_documents' => array
 		(
-			'tables' => array('tl_dms_documents'),
-			'icon'   => 'system/modules/DocumentManagementSystem/html/documents.png'
+			'tables'     => array('tl_dms_documents'),
+			'icon'       => 'system/modules/DocumentManagementSystem/html/documents.png',
+			'stylesheet' => 'system/modules/DocumentManagementSystem/html/style.css'
 		)
 	)
 ));
@@ -55,10 +56,10 @@ array_insert($GLOBALS['BE_MOD'], 0, array
 /**
  * Frontend modules
  */
-array_insert($GLOBALS['FE_MOD']['DocumentManagementSystem'], 0, array
+array_insert($GLOBALS['FE_MOD']['dms'], 0, array
 (
-	'DocumentManagementSystemListing'    => 'ModuleDocManSystemListing',
-	'DocumentManagementSystemManagement' => 'ModuleDocManSystemManagement'
+	'dms_listing'    => 'ModuleDMSListing',
+	'dms_management' => 'ModuleDMSManagement'
 ));
  
 ?>

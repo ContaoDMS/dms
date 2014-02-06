@@ -34,17 +34,17 @@ $GLOBALS['TL_LANG']['MOD']['DocumentManagementSystem'] = array('Dokumenten Manag
 /**
  * Back end modules
  */
-$GLOBALS['TL_LANG']['MOD']['dms']           = array('DMS', 'Dokumenten Management System');
-$GLOBALS['TL_LANG']['MOD']['categories']    = array('Kategorien', 'Erstellen und Verwalten Sie Ihre Kategorien');
-$GLOBALS['TL_LANG']['MOD']['access_rights'] = array('Zugriffsrechte', 'Erstellen und Verwalten Sie die Zugriffsrechte');
-$GLOBALS['TL_LANG']['MOD']['documents']     = array('Dokumente', 'Administrative Verwaltung der Dokumente.');
+$GLOBALS['TL_LANG']['MOD']['dms']               = array('DMS', 'Dokumenten Management System');
+$GLOBALS['TL_LANG']['MOD']['dms_categories']    = array('Kategorien', 'Erstellen und Verwalten Sie Ihre Kategorien');
+$GLOBALS['TL_LANG']['MOD']['dms_access_rights'] = array('Zugriffsrechte', 'Erstellen und Verwalten Sie die Zugriffsrechte');
+$GLOBALS['TL_LANG']['MOD']['dms_documents']     = array('Dokumente', 'Administrative Verwaltung der Dokumente.');
 
 
 /**
  * Front end modules
  */
-$GLOBALS['TL_LANG']['FMD']['DocumentManagementSystem']           = 'Dokumenten Management System';
-$GLOBALS['TL_LANG']['FMD']['DocumentManagementSystemListing']    = array('DMS Auflistung', 'Stellt ein Modul zur Auflistung der Dokumente zur Verfügung.');
-$GLOBALS['TL_LANG']['FMD']['DocumentManagementSystemManagement'] = array('DMS Verwaltung', 'Stellt ein Modul zur Verwaltung der Dokumente zur Verfügung.');
+$GLOBALS['TL_LANG']['FMD']['dms']            = 'Dokumenten Management System';
+$GLOBALS['TL_LANG']['FMD']['dms_listing']    = array('DMS Auflistung', 'Stellt ein Modul zur Auflistung der Dokumente zur Verfügung.');
+$GLOBALS['TL_LANG']['FMD']['dms_management'] = array('DMS Verwaltung', 'Stellt ein Modul zur Verwaltung der Dokumente zur Verfügung.');
 
 ?>

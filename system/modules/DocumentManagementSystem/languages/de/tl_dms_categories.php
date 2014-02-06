@@ -2,7 +2,7 @@
 
 /**
  * TYPOlight webCMS
- * Copyright (C) 2005-2009 Leo Feyer
+ * Copyright (C) 2005-2014 Leo Feyer
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,28 +19,36 @@
  * Software Foundation website at http://www.gnu.org/licenses/.
  *
  * PHP version 5
- * @copyright  Krüger 
- * @author     Thomas Krüger 
- * @package    dokmansystem 
- * @license    LGPL 
- * @filesource
+ * @copyright  Cliff Parnitzky 2012-2014
+ * @author     Cliff Parnitzky
+ * @package    DocumentManagementSystem
+ * @license    LGPL
+ * @filesource [dokmansystem] by Thomas Krüger
  */
 
 /**
  * Fields
  */
-$GLOBALS['TL_LANG']['tl_dms_categories']['name']                     = array('Name der Kategorie', 'Geben Sie der Kategorie einen aussagekräftigen Namen.');
-$GLOBALS['TL_LANG']['tl_dms_categories']['description']             = array('Beschreibung', 'Beschreiben Sie die Kategorie in kurzen Worten.');
-$GLOBALS['TL_LANG']['tl_dms_categories']['file_types']                 = array('Erlaubte Dateitypen', 'Geben Sie durch Komma getrennt die Dateitypen an, für die ein Upload gestattet ist.');
+$GLOBALS['TL_LANG']['tl_dms_categories']['name']                    = array('Name der Kategorie', 'Geben Sie der Kategorie einen aussagekräftigen Namen.');
+$GLOBALS['TL_LANG']['tl_dms_categories']['description']             = array('Beschreibung', 'Geben Sie eine Beschreibenfür diese Kategorie an.');
+$GLOBALS['TL_LANG']['tl_dms_categories']['file_types']              = array('Erlaubte Dateitypen', 'Geben Sie durch Komma getrennt die Dateitypen an, für die ein Upload gestattet ist.');
 $GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission'] = array('Grundsätzliches Leserecht', 'Geben Sie das grundsätzliche Leserecht für Dokumente dieser Kategorie an.');
-$GLOBALS['TL_LANG']['tl_dms_categories']['published']          = array('Veröffentlicht', 'Geben Sie an ob die Kategorie veröffentlicht werden soll.');
+$GLOBALS['TL_LANG']['tl_dms_categories']['published']               = array('Kategorie veröffentlichen', 'Geben Sie an ob die Kategorie veröffentlicht sein soll.');
+
+/**
+ * Legends
+ */
+$GLOBALS['TL_LANG']['tl_dms_categories']['category_legend'] = 'Kategorie';
+$GLOBALS['TL_LANG']['tl_dms_categories']['file_legend']     = 'Datei';
+$GLOBALS['TL_LANG']['tl_dms_categories']['rights_legend']   = 'Rechte';
+$GLOBALS['TL_LANG']['tl_dms_categories']['publish_legend']  = 'Veröffentlichung';
 
 /**
  * Reference
  */
-$GLOBALS['TL_LANG']['tl_dms_categories']['leserecht']['a']     = array('Leserecht für alle Frontendnutzer','alle Frontendnutzer haben uneingeschränktes Leserecht in dieser Kategorie. Sie müssen dazu nicht angemeldet sein.');
-$GLOBALS['TL_LANG']['tl_dms_categories']['leserecht']['r']     = array('Leserecht für angemeldete Frontendnutzer','nur am Frontend angemeldete Nutzer haben uneingeschränktes Leserecht in dieser Kategorie.');
-$GLOBALS['TL_LANG']['tl_dms_categories']['leserecht']['s']     = array('spezielle Rechte für einzelne Gruppen','es werden für diese Kategorie spezielle Leserechte für einzelne Nutzergruppen vergeben (>>im Bereich Zugriffsrechte<<).');
+$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option']['a']     = array('Leserecht für alle Frontendnutzer','Alle Frontendnutzer haben uneingeschränktes Leserecht in dieser Kategorie. Sie müssen dazu nicht angemeldet sein.');
+$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option']['r']     = array('Leserecht für angemeldete Frontendnutzer','Nur am Frontend angemeldete Nutzer haben uneingeschränktes Leserecht in dieser Kategorie.');
+$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option']['s']     = array('Spezielle Rechte für einzelne Gruppen','Es werden für diese Kategorie spezielle Leserechte für einzelne Nutzergruppen vergeben (im Bereich Zugriffsrechte).');
 
 /**
  * Buttons
@@ -54,5 +62,6 @@ $GLOBALS['TL_LANG']['tl_dms_categories']['copyChilds'] = array('Kategorie mit Un
 $GLOBALS['TL_LANG']['tl_dms_categories']['delete']     = array('Kategorie löschen', 'Kategorie ID %s löschen');
 $GLOBALS['TL_LANG']['tl_dms_categories']['pasteafter'] = array('Einfügen nach', 'Nach der Kategorie ID %s einfügen');
 $GLOBALS['TL_LANG']['tl_dms_categories']['pasteinto']  = array('Einfügen in', 'In die Kategorie ID %s einfügen');
+$GLOBALS['TL_LANG']['tl_dms_categories']['toggle']     = array('Kategorie veröffentlichen/unveröffentlichen', 'Kategorie ID %s veröffentlichen/unveröffentlichen');
 
 ?>

@@ -44,16 +44,18 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 	(
 		'sorting' => array
 		(
-			'icon'                    => "system/modules/DocumentManagementSystem/html/docmansystem.png",
 			'mode'                    => 5,
-			'fields'                  => array('name'),
-			'flag'                    => 1,
-			'panelLayout'             => 'filter;sort,search,limit'
+			'icon'                    => "system/modules/DocumentManagementSystem/html/docmansystem.png",
+//			'fields'                  => array('name'),
+			//'flag'                    => 1,
+	//		'panelLayout'             => 'filter;sort,search,limit'
 		),
 		'label' => array
 		(
-			'fields'                  => array('name','file_types'),
-			'format'                  => '<span style="padding-left:5px;">%s</span><span style="color:#b3b3b3; padding-left:3px;">[%s]</span>',
+			//'fields'                  => array('name','file_types'),
+			'fields'                  => array('name'),
+			//'format'                  => '<span style="padding-left:5px;">%s</span><span style="color:#b3b3b3; padding-left:3px;">[%s]</span>',
+			'format'                  => '%s',
 			'label_callback'          => array('tl_dms_categories', 'addIcon')
 		),
 		'global_operations' => array
@@ -107,6 +109,13 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 				'icon'                => 'delete.gif',
 				'attributes'          => 'onclick="if (!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\')) return false; Backend.getScrollOffset();"'
 			),
+			'toggle' => array
+			(
+				'label'               => &$GLOBALS['TL_LANG']['tl_dms_categories']['toggle'],
+				'icon'                => 'visible.gif',
+				'attributes'          => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
+				'button_callback'     => array('tl_dms_categories', 'toggleIcon')
+			), 
 			'show' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_dms_categories']['show'],
@@ -119,19 +128,26 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => 'name,description,file_types,general_read_permission,published'
+		'default'                     => '{category_legend},name,description;{file_legend},file_types;{rights_legend},general_read_permission;{publish_legend},published'
 	),
 	
 	// Fields
 	'fields' => array
 	(
+		'pid' => array
+		(
+			'eval'                    => array('doNotShow'=>true)
+		),
+		'sorting' => array
+		(
+			'eval'                    => array('doNotShow'=>true)
+		),
 		'name' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_categories']['name'],
 			'exclude'                 => true,
 			'inputType'               => 'text',
-			'filter'                  => true,
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>64)
+			'eval'                    => array('mandatory'=>true, 'maxlength'=>255)
 		),
 		'description' => array
 		(
@@ -144,10 +160,8 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_categories']['file_types'],
 			'exclude'                 => true,
-			'filter'				  => true,
-			'search'				  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>false, 'maxlength'=>64)
+			'eval'                    => array('maxlength'=>255)
 		),
 		'general_read_permission' => array
 		(
@@ -156,7 +170,7 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 			'default'                 => 'a',
 			'inputType'               => 'radio',
 			'options'                 => array(a, r, s),
-			'reference'               => &$GLOBALS['TL_LANG']['tl_dms_categories']['leserecht'],
+			'reference'               => &$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'],
 			'eval'                    => array('helpwizard'=>true, 'tl_class'=>'w50')
 		),
 		'published' => array
@@ -173,31 +187,115 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
  * Class tl_dms_categories
  *
  * Provide miscellaneous methods that are used by the data configuration array.
- * @copyright  Cliff Parnitzky 2012
+ * @copyright  Cliff Parnitzky 2012-2014
  * @author     Cliff Parnitzky
  * @package    Controller
  */
 class tl_dms_categories extends Backend
 {
 	/**
+	 * Import the back end user object
+	 */
+	public function __construct()
+	{
+		parent::__construct();
+		$this->import('BackendUser', 'User');
+	}
+	
+	/**
 	 * Add an image to each record
 	 * @param array
 	 * @param string
 	 * @return string
 	 */
-	public function addIcon($row, $label, DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false)
+	public function addIcon($row, $label, DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false)
 	{
-		$image = 'visible.gif';
-		if (!$row['published'])
-		{
-			$image = 'invisible.gif';
-		}
-		
 		// Mark root categories
 		if ($row['pid'] == '0') {
 			$label = '<strong>' . $label . '</strong>';
 		}
-		return $this->generateImage($image, '', $imageAttribute) . $label;
+		
+		$image = 'category.png';
+		if (!$row['published'])
+		{
+			$image = 'category_1.png';
+		}
+		
+		// Return the image only
+		if ($blnReturnImage)
+		{
+			return $this->generateImage($image, '', $imageAttribute);
+		} 
+		
+		return '<a>' . $this->generateImage('system/modules/DocumentManagementSystem/html/' . $image, '', $imageAttribute) . '</a>' . $label;
 	}
-}	
+
+	
+	/**
+	 * Return the "toggle visibility" button
+	 * @param array
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @return string
+	 */
+	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
+	{
+		if (strlen($this->Input->get('tid')))
+		{
+			$this->toggleVisibility($this->Input->get('tid'), ($this->Input->get('state') == 1));
+			$this->redirect($this->getReferer());
+		}
+
+		// Check permissions AFTER checking the tid, so hacking attempts are logged
+		if (!$this->User->isAdmin && !$this->User->hasAccess('tl_dms_categories::published', 'alexf'))
+		{
+			return '';
+		}
+
+		$href .= '&amp;tid='.$row['id'].'&amp;state='.($row['published'] ? '' : 1);
+
+		if (!$row['published'])
+		{
+			$icon = 'invisible.gif';
+		}
+
+		return '<a href="'.$this->addToUrl($href).'" title="'.specialchars($title).'"'.$attributes.'>'.$this->generateImage($icon, $label).'</a> '; 
+	}
+
+	/**
+	 * Publish/unpublish a category
+	 * @param integer
+	 * @param boolean
+	 */
+	public function toggleVisibility($intId, $blnVisible)
+	{
+		// Check permissions
+		if (!$this->User->isAdmin && !$this->User->hasAccess('tl_dms_categories::published', 'alexf'))
+		{
+			$this->log('Not enough permissions to publish/unpublish dms category ID "'.$intId.'"', 'tl_dms_categories toggleVisibility', TL_ERROR);
+			$this->redirect('contao/main.php?act=error');
+		}
+
+		$this->createInitialVersion('tl_dms_categories', $intId);
+	
+		// Trigger the save_callback
+		/*if (is_array($GLOBALS['TL_DCA']['tl_dms_categories']['fields']['published']['save_callback']))
+		{
+			foreach ($GLOBALS['TL_DCA']['tl_dms_categories']['fields']['published']['save_callback'] as $callback)
+			{
+				$this->import($callback[0]);
+				$blnVisible = $this->$callback[0]->$callback[1]($blnVisible, $this);
+			}
+		}*/
+
+		// Update the database
+		$this->Database->prepare("UPDATE tl_dms_categories SET tstamp=". time() .", published='" . ($blnVisible ? 1 : '') . "' WHERE id=?")
+					   ->execute($intId);
+
+		$this->createNewVersion('tl_dms_categories', $intId);
+	}
+}
 ?>

@@ -19,11 +19,10 @@
  * Software Foundation website at http://www.gnu.org/licenses/.
  *
  * PHP version 5
- * @copyright  Cliff Parnitzky 2012-2014
+ * @copyright  Cliff Parnitzky 2014
  * @author     Cliff Parnitzky
  * @package    DocumentManagementSystem
  * @license    LGPL
- * @filesource [dokmansystem] by Thomas Krüger
  */
 
 /**
@@ -99,7 +98,7 @@ $GLOBALS['TL_DCA']['tl_dms_documents'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{general_legend},name,description,keywords;{file_legend},file_source,file_type,file_size,file_preview;{version_legend},version_major,version_minor,version_patch;{modification_legend},upload_member,upload_date,lastedit_member,lastedit_date;{publish_legend},published'
+		'default'                     => '{document_legend},name,description,keywords;{file_legend},file_source,file_type,file_size,file_preview;{version_legend},version_major,version_minor,version_patch;{modification_legend},upload_member,upload_date,lastedit_member,lastedit_date;{publish_legend},published'
 	),
 
 	// Fields
@@ -135,7 +134,15 @@ $GLOBALS['TL_DCA']['tl_dms_documents'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_documents']['file_source'],
 			'inputType'               => 'fileTree',
-			'eval'                    => array('files'=>true, 'filesOnly'=>true, 'extensions'=>'jpg,png,gif', 'fieldType'=>'radio', 'path'=>$GLOBALS['TL_CONFIG']['dokmansystem_dir'])
+			'eval'                    => array('files'=>true, 'filesOnly'=>true, 'fieldType'=>'radio', 'path'=>$GLOBALS['TL_CONFIG']['dokmansystem_dir'], 'extensions'=>tl_dms_documents::getValidFileTypesForCategory()),
+			'load_callback' => array
+			(
+				array('tl_dms_documents', 'getFullFilePath')
+			),
+			'save_callback' => array
+			(
+				array('tl_dms_documents', 'reduceFilePath')
+			)
 		),
 		'file_type' => array
 		(
@@ -149,29 +156,29 @@ $GLOBALS['TL_DCA']['tl_dms_documents'] = array
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'digit', 'tl_class'=>'w50', 'maxlength'=>10)
 		),
-		'file_preview' => array
+		/*'file_preview' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_documents']['file_preview'],
 			'inputType'               => 'fileTree',
 			'eval'                    => array('files'=>true, 'filesOnly'=>true, 'extensions'=>'jpg,png,gif', 'fieldType'=>'radio', 'path'=>$GLOBALS['TL_CONFIG']['dokmansystem_dir'])
-		),
+		),*/
 		'version_major' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_documents']['version_major'],
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'digit', 'tl_class'=>'w50', 'maxlength'=>3)
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'digit', 'tl_class'=>'w30', 'maxlength'=>3)
 		),
 		'version_minor' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_documents']['version_minor'],
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'digit', 'tl_class'=>'w50 clr', 'maxlength'=>3)
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'digit', 'tl_class'=>'w30', 'maxlength'=>3)
 		),
 		'version_patch' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_documents']['version_patch'],
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'digit', 'tl_class'=>'w50', 'maxlength'=>3)
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'digit', 'tl_class'=>'w30', 'maxlength'=>3)
 		),
 		'upload_member' => array
 		(
@@ -206,11 +213,6 @@ $GLOBALS['TL_DCA']['tl_dms_documents'] = array
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50')
 		)
-		
-		/*
-		
-  `file_preview` varchar(64) NOT NULL default '',
-  */
 	)
 );
 
@@ -242,15 +244,63 @@ class tl_dms_documents extends Backend
 	}
 	
 	/**
-	 * Return the file picker wizard
+	 * Determine the valid file types for the current category
+	 */
+	public static function getValidFileTypesForCategory()
+	{
+		$db = Database::getInstance();
+		$input = Input::getInstance();
+		$objCategory = $db->prepare('SELECT cat.* FROM tl_dms_categories cat JOIN tl_dms_documents doc ON doc.pid = cat.id WHERE doc.id = ?')->execute($input->get('id'));
+		if ($objCategory->numRows)
+		{
+			return $objCategory->file_types;
+		}
+		return "";
+	}
+	
+	/**
+	 * Return the complete file path
+	 * @param mixed
 	 * @param DataContainer
 	 * @return string
 	 */
-	public function filePicker(DataContainer $dc)
+	public function getFullFilePath($varValue, DataContainer $dc)
 	{
-		$strField = 'ctrl_' . $dc->field . (($this->Input->get('act') == 'editAll') ? '_' . $dc->id : '');
-		return ' ' . $this->generateImage('pickfile.gif', $GLOBALS['TL_LANG']['MSC']['filepicker'], 'style="vertical-align:top;cursor:pointer" onclick="Backend.pickFile(\'' . $strField . '\')"');
-	} 
+		$doc = $dc->activeRecord;
+		return $GLOBALS['TL_CONFIG']['dokmansystem_dir'] . "/" . $this->getVersionedFileName($varValue, $doc->version_major,  $doc->version_minor, $doc->version_patch);
+	}
+	
+	/**
+	 * Return the reduced file name
+	 * @param mixed
+	 * @param DataContainer
+	 * @return string
+	 */
+	public function reduceFilePath($varValue, DataContainer $dc)
+	{
+		$doc = $dc->activeRecord;
+		
+		return $this->getUnversionedFileName(substr($varValue, strlen($GLOBALS['TL_CONFIG']['dokmansystem_dir'] . "/")), $doc->version_major,  $doc->version_minor, $doc->version_patch);
+	}
+	
+	private function getVersionedFileName($file, $version_major, $version_minor, $version_patch)
+	{
+		$intPosDot = strrpos($file, ".");
+		$fileName = substr($file, 0, $intPosDot);
+		$fileType = substr($file, $intPosDot + 1);
+		
+		return $fileName . "_" . $version_major . "_" . $version_minor . "_" . $version_patch . "." . $fileType;
+	}
+	
+	private function getUnversionedFileName($file, $version_major, $version_minor, $version_patch)
+	{
+		$intPosDot = strrpos($file, ".");
+		$fileName = substr($file, 0, $intPosDot);
+		$fileType = substr($file, $intPosDot + 1);
+		$versionString = "_" . $version_major . "_" . $version_minor . "_" . $version_patch;
+		
+		return substr($fileName, 0, strrpos($fileName, $versionString)) . "." . $fileType;
+	}
 }
 
 ?>

@@ -2,7 +2,7 @@
 
 /**
  * TYPOlight webCMS
- * Copyright (C) 2005 Leo Feyer
+ * Copyright (C) 2005-2014 Leo Feyer
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,16 +19,15 @@
  * Software Foundation website at http://www.gnu.org/licenses/.
  *
  * PHP version 5
- * @copyright  Krüger 2009 
- * @author     Thomas Krüger <krueger-th@gmx.de>
- * @package    wunschliste 
- * @license    GPL 
- * @filesource
+ * @copyright  Cliff Parnitzky 2012-2014
+ * @author     Cliff Parnitzky
+ * @package    DocumentManagementSystem
+ * @license    LGPL
+ * @filesource [dokmansystem] by Thomas Krüger
  */
 
-
 /**
- * Table tl_wl_wuenschen 
+ * Table tl_dms_access_rights 
  */
 $GLOBALS['TL_DCA']['tl_dms_access_rights'] = array
 (
@@ -48,8 +47,7 @@ $GLOBALS['TL_DCA']['tl_dms_access_rights'] = array
 		(
 			'mode'                    => 6,
 			'flag'                    => 11,
-			'fields'                  => array('pid:tl_dms_categories.name', 'member_group:tl_member_group.name'),
-			'root'                    => array(0)
+			'fields'                  => array('pid:tl_dms_categories.name', 'member_group:tl_member_group.name')
 		),
 		'label' => array
 		(
@@ -111,53 +109,51 @@ $GLOBALS['TL_DCA']['tl_dms_access_rights'] = array
 	// Fields
 	'fields' => array
 	(
+		'pid' => array
+		(
+			'eval'                    => array('doNotShow'=>true)
+		),
+		'sorting' => array
+		(
+			'eval'                    => array('doNotShow'=>true)
+		),
 		'member_group' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_access_rights']['member_group'],
 			'exclude'                 => true,
 			'inputType'               => 'radio',
 			'foreignKey'              => 'tl_member_group.name',
-			'eval'                    => array('multiple'=>false,'mandatory'=>true)
+			'eval'                    => array('multiple'=>false, 'mandatory'=>true)
 		),
-		
 		'read' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_access_rights']['read'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'filter'				  => true,
-            'default'                 => '1'
+			'default'                 => '1'
 		),
-		
 		'upload' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_access_rights']['upload'],
 			'exclude'                 => true,
-			'filter'				  => true,
 			'inputType'               => 'checkbox'
 		),
-				
 		'edit' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_access_rights']['edit'],
 			'exclude'                 => true,
-			'filter'				  => true,
 			'inputType'               => 'checkbox'
 		),
-		
 		'delete' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_access_rights']['delete'],
 			'exclude'                 => true,
-			'filter'				  => true,
 			'inputType'               => 'checkbox' 
 		),
-				
 		'publish' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_access_rights']['publish'],
 			'exclude'                 => true,
-			'filter'				  => true,
 			'inputType'               => 'checkbox' 
 		)
 	)
@@ -167,8 +163,8 @@ $GLOBALS['TL_DCA']['tl_dms_access_rights'] = array
  * Class tl_dms_access_rights
  *
  * Provide miscellaneous methods that are used by the data configuration array.
- * @copyright  Leo Feyer 2005-2010
- * @author     Leo Feyer <http://www.typolight.org>
+ * @copyright  Cliff Parnitzky 2012-2014
+ * @author     Cliff Parnitzky
  * @package    Controller
  */
 class tl_dms_access_rights extends Backend
@@ -181,10 +177,6 @@ class tl_dms_access_rights extends Backend
 	 */
 	public function addIcon($row, $label, DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false)
 	{
-		$memberGroupName = $this->Database->prepare("SELECT id, name FROM tl_member_group WHERE id=?")
-										  ->limit(1)
-										  ->execute($row['member_group']);
-		
 		$accessRightRead = $row['read'] == "" ? "" : "<img src='system/modules/DocumentManagementSystem/html/access_right_read.gif' title='" . $GLOBALS['TL_LANG']['tl_dms_access_rights']['read'][0] . "'/>";
 		$accessRightUpload = $row['upload'] == "" ? "" : "<img src='system/modules/DocumentManagementSystem/html/access_right_upload.gif' title='" . $GLOBALS['TL_LANG']['tl_dms_access_rights']['upload'][0] . "'/>";
 		$accessRightDelete = $row['delete'] == "" ? "" : "<img src='system/modules/DocumentManagementSystem/html/access_right_delete.gif' title='" . $GLOBALS['TL_LANG']['tl_dms_access_rights']['delete'][0] . "'/>";

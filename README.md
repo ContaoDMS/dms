@@ -32,6 +32,12 @@ Dependency
 - There are no dependencies to other extensions, that have to be installed.
 
 
+Migration
+---------
+
+If you are trying to migrate from version 1.* to 2.* please backup the database and use the migration instructions: https://github.com/cliffparnitzky/DocumentManagementSystem
+
+
 Screenshots
 -----------
 

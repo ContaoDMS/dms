@@ -2,7 +2,7 @@
 
 /**
  * TYPOlight webCMS
- * Copyright (C) 2005-2009 Leo Feyer
+ * Copyright (C) 2005-2014 Leo Feyer
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,30 +19,28 @@
  * Software Foundation website at http://www.gnu.org/licenses/.
  *
  * PHP version 5
- * @copyright  Krüger 
- * @author     Thomas Krüger 
- * @package    dokmansystem 
- * @license    LGPL 
- * @filesource
+ * @copyright  Cliff Parnitzky 2012-2014
+ * @author     Cliff Parnitzky
+ * @package    DocumentManagementSystem
+ * @license    LGPL
+ * @filesource [dokmansystem] by Thomas Krüger
  */
-
 
 /**
  * Fields
  */
-$GLOBALS['TL_LANG']['tl_dms_access_rights']['member_group']       = array('Mitgliedergruppe mit Rechten in dieser Kategorie', 'für welche Mitgliedergruppe sollen Rechte vergeben werden ?');
-$GLOBALS['TL_LANG']['tl_dms_access_rights']['read']            = array('Dokument lesen', 'die zuvor gewählte Mitgliedergruppe soll Dokumente dieser Kategorie lesen dürfen');
-$GLOBALS['TL_LANG']['tl_dms_access_rights']['upload']           = array('Dokument uploaden', 'die zuvor gewählte Mitgliedergruppe soll Dokumente dieser Kategorie uploaden dürfen');
-$GLOBALS['TL_LANG']['tl_dms_access_rights']['delete']         = array('Dokument löschen', 'die zuvor gewählte Mitgliedergruppe soll Dokumente dieser Kategorie löschen dürfen');
-$GLOBALS['TL_LANG']['tl_dms_access_rights']['edit']        = array('Dokument editieren', 'die zuvor gewählte Mitgliedergruppe soll Details der Dokumente dieser Kategorie editieren dürfen');
-$GLOBALS['TL_LANG']['tl_dms_access_rights']['publish'] = array('Dokument veröffentlichen', 'die zuvor gewählte Mitgliedergruppe soll Dokumente dieser Kategorie veröffentlichen dürfen');
-
+$GLOBALS['TL_LANG']['tl_dms_access_rights']['member_group'] = array('Mitgliedergruppe mit Rechten für diese Kategorie', 'Wählen Sie die Mitgliedergruppe deren Rechte Sie für diese Kategorie festlegen wollen.');
+$GLOBALS['TL_LANG']['tl_dms_access_rights']['read']         = array('Dokumente lesen', 'Wählen Sie ob die Mitgliedergruppe Dokumente dieser Kategorie lesen darf.');
+$GLOBALS['TL_LANG']['tl_dms_access_rights']['upload']       = array('Dokumente uploaden', 'Wählen Sie ob die Mitgliedergruppe Dokumente in diese Kategorie hochladen darf.');
+$GLOBALS['TL_LANG']['tl_dms_access_rights']['delete']       = array('Dokumente löschen', 'Wählen Sie ob die Mitgliedergruppe Dokumente dieser Kategorie löschen darf.');
+$GLOBALS['TL_LANG']['tl_dms_access_rights']['edit']         = array('Dokumente bearbeiten', 'Wählen Sie ob die Mitgliedergruppe Dokumente dieser Kategorie bearbeiten darf.');
+$GLOBALS['TL_LANG']['tl_dms_access_rights']['publish']      = array('Dokumente veröffentlichen', 'Wählen Sie ob die Mitgliedergruppe Dokumente dieser Kategorie veröffentlichen darf.');
 
 /**
- * Reference
+ * Legends
  */
-// $GLOBALS['TL_LANG']['tl_dms_kategorie'][''] = '';
-
+$GLOBALS['TL_LANG']['tl_dms_access_rights']['member_group_legend'] = 'Mitgliedergruppe';
+$GLOBALS['TL_LANG']['tl_dms_access_rights']['rights_legend']       = 'Rechte';
 
 /**
  * Buttons
