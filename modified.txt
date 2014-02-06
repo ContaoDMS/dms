@@ -21,12 +21,14 @@ Frontend:
 
 ToDo
 ----
+- Patchnummer in FE einfügen
+- Code refactoring (alles auf Englisch)
 - Anzeige: auslesen der Daten rekursiv gemäß Verwaltung
 - Web: Alle Screens überarbeiten, CSS allgemeiner, Klassen und IDs vergeben
 - Anzeigen des Mitglieds, welches das Dokument hochgeladen / zuletzt bearbeitet hat
 - Fehler bei mehrfach bearbeiten / löschen beheben
 - Max Uploadgröße per Backend Setting festlegen und auslesen (für Upload View, für Größen Prüfung nach Upload)
 - View für Dateitypen, z.B. Excel-Arbeitsmappe (*.xls, *.xlsx) oder Word 2003 (*.doc) und Word 2007 (*.docx) --> als Checkbox Menü beim Anlegen der Kategorie, um nicht immer wieder die Endungen neu eintippen zu müssen, oder ggf. leich anpassen zu können.
-- Global Operation: recht für alle Kategorien
-- Umstellung der Technik auf englisch (Code refactoring)
+- rekursives Vererben von Rechten ... wenn nicht überschrieben
+- Global Operation: Recht für alle Kategorien
 - Modul für zuletzt hochgeladene Dateiein ... inkl. Rechteprüfung
