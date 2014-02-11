@@ -1,13 +1,15 @@
 <?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
 
 /**
- * TYPOlight webCMS
- * Copyright (C) 2005 Leo Feyer
+ * Contao Open Source CMS
+ * Copyright (C) 2005-2014 Leo Feyer
+ *
+ * Formerly known as TYPOlight Open Source CMS.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation, either
- * version 2.1 of the License, or (at your option) any later version.
+ * version 3 of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -16,22 +18,21 @@
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this program. If not, please visit the Free
- * Software Foundation website at http://www.gnu.org/licenses/.
+ * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  Krüger 2009
- * @author     Thomas Krüger
- * @package    dokmansystem
- * @license    GPL
- * @filesource
+ * @copyright  Cliff Parnitzky 2014
+ * @author     Cliff Parnitzky
+ * @package    DocumentManagementSystem
+ * @license    LGPL
+ * @filesource [dokmansystem] by Thomas Krueger
  */
-
 
 /**
  * Class ModuleDocManSystemListing
  *
- * @copyright  Krüger 2009
- * @author     Thomas Krüger
+ * @copyright  Cliff Parnitzky 2014
+ * @author     Cliff Parnitzky
  * @package    Controller
  */
 class ModuleDocManSystemListing extends Module
@@ -40,7 +41,7 @@ class ModuleDocManSystemListing extends Module
          * Template
          * @var string
          */
-        protected $strTemplate = 'mod_dokmansystem_kategorieanzeige';
+        protected $strTemplate = 'mod_dms_listing';
 		
 		
         /**
@@ -51,7 +52,7 @@ class ModuleDocManSystemListing extends Module
 				/*
 				*        kein submit                     --->  wenn ein Nutzer angemeldet ist :
 				*                                              Anzeige der Kategorieauswahl
-				*                                              Template : mod_dokmansystem_kategorieauswahl
+				*                                              Template : mod_dms_listing
 				*                                              wenn kein Nutzer angemeldet ist :
 				*                                              Hinweis ausgeben                               
                
@@ -63,6 +64,7 @@ class ModuleDocManSystemListing extends Module
 		$file = $this->Input->get('file', true);
 
 		// Send the file to the browser
+		// ToDo : check read permissions
 		if ($file != '')
 		{
 			$this->sendFileToBrowser($file);
@@ -106,17 +108,11 @@ class ModuleDocManSystemListing extends Module
 				
         $this->import('FrontendUser', 'User');
         $strUsername      = $this->User->username;
-				$intUserId        = $this->User->id;	
-				$strDokDir        = trim($GLOBALS['TL_CONFIG']['dokmansystem_dir']);
-				$strKatStruktur   = $GLOBALS['TL_CONFIG']['dokmansystem_struktur'];
-				$strKatAusblenden = $GLOBALS['TL_CONFIG']['dokmansystem_kategorieausblenden'];
+				$intUserId        = $this->User->id;
+				$strDokDir        = trim($GLOBALS['TL_CONFIG']['dmsBaseDirectory']);
+				$blnKatAusblenden = $GLOBALS['TL_CONFIG']['dmsHideEmptyLockedCategories'];
 				
-				
-				switch ($strKatStruktur)
-				{
-					case ein:		// Kategoriestruktur einblenden
-					
-						//  ====> Hauptkategorie <====
+					//  ====> Hauptkategorie <====
 				   	$objDocumentManagementSystemKat = $this->Database->execute("SELECT * FROM tl_dms_categories  WHERE pid = 0 ORDER BY name");
 				    while ($objDocumentManagementSystemKat->next())
 						{
@@ -133,7 +129,7 @@ class ModuleDocManSystemListing extends Module
 							$intDokumentLeseRecht   = $this->dokumente_leserecht($intHauptKategorieId,$strHauptLeserecht,$intUserId);						
 							$intDokumenteAnzeigen   = $this->dokumente_auflisten($arrKategorieAuswahl,$intHauptKategorieId);
 						
-							$intAnzeigenDS          = $this->kategorien_ausblenden($intDSZaehler,$strKatAusblenden,$intDokumentLeseRecht);
+							$intAnzeigenDS          = $this->kategorien_ausblenden($intDSZaehler,$blnKatAusblenden,$intDokumentLeseRecht);
 												
 							$strEinruecken          = "";
 							$arrDocumentManagementSystemKat[] = array
@@ -169,7 +165,7 @@ class ModuleDocManSystemListing extends Module
 				      $intDokumentLeseRecht     = $this->dokumente_leserecht($intHauptKategorieId,$strUnterLeserecht_1,$intUserId);						  
 						  $intDokumenteAnzeigen     = $this->dokumente_auflisten($arrKategorieAuswahl,$intUnterKategorieId_1);
 		
-		          $intAnzeigenDS            = $this->kategorien_ausblenden($intDSZaehler,$strKatAusblenden,$intDokumentLeseRecht);
+		          $intAnzeigenDS            = $this->kategorien_ausblenden($intDSZaehler,$blnKatAusblenden,$intDokumentLeseRecht);
 
 						  $strEinruecken            = $parstrEinruecken1.$parstrEinruecken2;
 						  $arrDocumentManagementSystemKat[] = array
@@ -205,7 +201,7 @@ class ModuleDocManSystemListing extends Module
 				        $intDokumentLeseRecht     = $this->dokumente_leserecht($intHauptKategorieId,$strUnterLeserecht_2,$intUserId);								  
 							  $intDokumenteAnzeigen     = $this->dokumente_auflisten($arrKategorieAuswahl,$intUnterKategorieId_2);
 
-					      $intAnzeigenDS            = $this->kategorien_ausblenden($intDSZaehler,$strKatAusblenden,$intDokumentLeseRecht);
+					      $intAnzeigenDS            = $this->kategorien_ausblenden($intDSZaehler,$blnKatAusblenden,$intDokumentLeseRecht);
 
 							  $strEinruecken            = $parstrEinruecken1.$parstrEinruecken1.$parstrEinruecken2;
 						    $arrDocumentManagementSystemKat[] = array
@@ -242,7 +238,7 @@ class ModuleDocManSystemListing extends Module
 									$intDokumentLeseRecht     = $this->dokumente_leserecht($intHauptKategorieId,$strUnterLeserecht_3,$intUserId);									
 									$intDokumenteAnzeigen     = $this->dokumente_auflisten($arrKategorieAuswahl,$intUnterKategorieId_3);
 
-									$intAnzeigenDS            = $this->kategorien_ausblenden($intDSZaehler,$strKatAusblenden,$intDokumentLeseRecht);
+									$intAnzeigenDS            = $this->kategorien_ausblenden($intDSZaehler,$blnKatAusblenden,$intDokumentLeseRecht);
 
 									$strEinruecken            = $parstrEinruecken1.$parstrEinruecken1.$parstrEinruecken1.$parstrEinruecken2;
 									$arrDocumentManagementSystemKat[] = array
@@ -267,49 +263,6 @@ class ModuleDocManSystemListing extends Module
 						}					// Ende Sub 
 
 						}					// Ende Haupt
-					break;
-					
-					case aus:		// Kategoriestruktur ausblenden
-				  
-						//  ====> alle Kategorien <====
-						$objDocumentManagementSystemKat = $this->Database->execute("SELECT * FROM tl_dms_categories ORDER BY name");
-						while ($objDocumentManagementSystemKat->next())
-						{
-							$intKategorieId           = $objDocumentManagementSystemKat->id;
-							$strKategorieName         = $objDocumentManagementSystemKat->name;
-							$strLeserecht             = $objDocumentManagementSystemKat->general_read_permission;
-							$strKategorieBild         = $objDocumentManagementSystemKat->kt_bild;
-							$strKategorieBeschreibung = $objDocumentManagementSystemKat->description;
-						
-							$objDocumentManagementSystemDok              = $this->Database->execute("SELECT * FROM tl_dms_document  WHERE pid = $intKategorieId && published = 1 && (dk_stichworte like '$strSuchwert' || dk_beschreibung like '$strSuchwert' || name like '$strSuchwert') ORDER BY name");	
-							$arrDokDetails          = $objDocumentManagementSystemDok->fetchAllAssoc();
-							$intDSZaehler           = count ($arrDokDetails);
-												  
-							$intDokumentLeseRecht   = $this->dokumente_leserecht($intKategorieId,$strLeserecht,$intUserId);						
-							$intDokumenteAnzeigen   = $this->dokumente_auflisten($arrKategorieAuswahl,$intKategorieId);
-						
-							$intAnzeigenDS          = $this->kategorien_ausblenden($intDSZaehler,$strKatAusblenden,$intDokumentLeseRecht);
-												
-							$strEinruecken          = "";
-							$arrDocumentManagementSystemKat[] = array
-							(
-								'einruecken'            => $strEinruecken,
-								'kategorieid'           => $intKategorieId,
-								'kategoriename'         => $strKategorieName,
-								'dokdetails'            => $arrDokDetails,
-								'anzeigen'              => $intDokumenteAnzeigen,
-								'leserecht'             => $intDokumentLeseRecht,
-								'dokdir'                => $strDokDir,
-								'kategoriebild'         => $strKategorieBild,
-								'zaehlerds'             => $intDSZaehler,
-								'kategoriebeschreibung' => $strKategorieBeschreibung,
-								'anzeigends'            => $intAnzeigenDS,
-							);				  				    
-					}
-					break;
-				}                // Ende KatStruktur 
-				
-
 
 					$this->Template->DocumentManagementSystemKat = $arrDocumentManagementSystemKat;
 					$this->Template->action = ampersand($this->Environment->request);
@@ -322,22 +275,22 @@ class ModuleDocManSystemListing extends Module
 		**********************************************************************************************************************
 		*/
 		
-        protected function kategorien_ausblenden($intDSZaehler,$strKatAusblenden,$intDokumentLeseRecht)
+        protected function kategorien_ausblenden($intDSZaehler,$blnKatAusblenden,$intDokumentLeseRecht)
         {
 				/*
 				*     Pruefung, ob Kategorien ausgeblendet oder angezeigt werden sollen
 				*
 				*/
 					$intAnzeigenDS          = 1;
-					if ($intDSZaehler == 0 && $strKatAusblenden == 'aus')
+					if ($intDSZaehler == 0 && !$blnKatAusblenden)
 					{
 						$intAnzeigenDS      = 0;
 					}
-					if ($intDSZaehler <> 0 && $strKatAusblenden == 'aus' && $intDokumentLeseRecht == 0)
+					if ($intDSZaehler <> 0 && !$blnKatAusblenden && $intDokumentLeseRecht == 0)
 					{
 						$intAnzeigenDS      = 0;
 					}			 
-					return($intAnzeigenDS);			 
+					return($intAnzeigenDS);
 				}
 		
 		
@@ -373,18 +326,18 @@ class ModuleDocManSystemListing extends Module
 
 					switch ($strLeserecht)
 					{
-						case "a":
+						case "ALL":
 							$intDokumenteLeseRecht = 1;
 							break;
 				   
-						case "r":
+						case "LOGGED_USER":
 							if ($intUserId <> "")
 							{
 								$intDokumenteLeseRecht = 1;
 							}
 							break;
 				   
-						case "s":
+						case "CUSTOM":
 							if ($intUserId <> "")
 							{
 								$objDocumentManagementSystemUser = $this->Database->execute("SELECT * FROM tl_member WHERE id = $intUserId");

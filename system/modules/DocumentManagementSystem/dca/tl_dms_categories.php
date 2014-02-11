@@ -1,29 +1,31 @@
 <?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
 
 /**
- * TYPOlight webCMS
+ * Contao Open Source CMS
  * Copyright (C) 2005-2014 Leo Feyer
+ *
+ * Formerly known as TYPOlight Open Source CMS.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation, either
- * version 2.1 of the License, or (at your option) any later version.
- * 
+ * version 3 of the License, or (at your option) any later version.
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this program. If not, please visit the Free
- * Software Foundation website at http://www.gnu.org/licenses/.
+ * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  Cliff Parnitzky 2012-2014
+ * @copyright  Cliff Parnitzky 2014
  * @author     Cliff Parnitzky
  * @package    DocumentManagementSystem
  * @license    LGPL
- * @filesource [dokmansystem] by Thomas Krüger
+ * @filesource [dokmansystem] by Thomas Krueger
  */
  
 /**
@@ -36,7 +38,7 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 	(
 		'label'                       => $GLOBALS['TL_LANG']['MOD']['dms'][1],
 		'dataContainer'               => 'Table',
-		'enableVersioning'            => true,
+		'enableVersioning'            => true
 	),
 	
 	// List
@@ -45,17 +47,12 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 		'sorting' => array
 		(
 			'mode'                    => 5,
-			'icon'                    => "system/modules/DocumentManagementSystem/html/docmansystem.png",
-//			'fields'                  => array('name'),
-			//'flag'                    => 1,
-	//		'panelLayout'             => 'filter;sort,search,limit'
+			'icon'                    => "system/modules/DocumentManagementSystem/html/docmansystem.png"
 		),
 		'label' => array
 		(
-			//'fields'                  => array('name','file_types'),
-			'fields'                  => array('name'),
-			//'format'                  => '<span style="padding-left:5px;">%s</span><span style="color:#b3b3b3; padding-left:3px;">[%s]</span>',
-			'format'                  => '%s',
+			'fields'                  => array('name','file_types'),
+			'format'                  => '<span style="padding-left:5px;">%s</span><span style="color:#b3b3b3; padding-left:3px;">[%s]</span>',
 			'label_callback'          => array('tl_dms_categories', 'addIcon')
 		),
 		'global_operations' => array
@@ -167,9 +164,9 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission'],
 			'exclude'                 => true,
-			'default'                 => 'a',
+			'default'                 => 'ALL',
 			'inputType'               => 'radio',
-			'options'                 => array(a, r, s),
+			'options'                 => array('ALL', 'LOGGED_USER', 'CUSTOM'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'],
 			'eval'                    => array('helpwizard'=>true, 'tl_class'=>'w50')
 		),
@@ -187,7 +184,7 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
  * Class tl_dms_categories
  *
  * Provide miscellaneous methods that are used by the data configuration array.
- * @copyright  Cliff Parnitzky 2012-2014
+ * @copyright  Cliff Parnitzky 2014
  * @author     Cliff Parnitzky
  * @package    Controller
  */
@@ -282,14 +279,14 @@ class tl_dms_categories extends Backend
 		$this->createInitialVersion('tl_dms_categories', $intId);
 	
 		// Trigger the save_callback
-		/*if (is_array($GLOBALS['TL_DCA']['tl_dms_categories']['fields']['published']['save_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_dms_categories']['fields']['published']['save_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_dms_categories']['fields']['published']['save_callback'] as $callback)
 			{
 				$this->import($callback[0]);
 				$blnVisible = $this->$callback[0]->$callback[1]($blnVisible, $this);
 			}
-		}*/
+		}
 
 		// Update the database
 		$this->Database->prepare("UPDATE tl_dms_categories SET tstamp=". time() .", published='" . ($blnVisible ? 1 : '') . "' WHERE id=?")

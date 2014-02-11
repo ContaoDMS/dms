@@ -1,13 +1,15 @@
 <?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
 
 /**
- * TYPOlight webCMS
- * Copyright (C) 2005 Leo Feyer
+ * Contao Open Source CMS
+ * Copyright (C) 2005-2014 Leo Feyer
+ *
+ * Formerly known as TYPOlight Open Source CMS.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation, either
- * version 2.1 of the License, or (at your option) any later version.
+ * version 3 of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -16,22 +18,21 @@
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this program. If not, please visit the Free
- * Software Foundation website at http://www.gnu.org/licenses/.
+ * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  Krüger 2009
- * @author     Thomas Krüger
- * @package    dokmansystem
- * @license    GPL
- * @filesource
+ * @copyright  Cliff Parnitzky 2014
+ * @author     Cliff Parnitzky
+ * @package    DocumentManagementSystem
+ * @license    LGPL
+ * @filesource [dokmansystem] by Thomas Krueger
  */
-
 
 /**
  * Class ModuleDocManSystemManagement
  *
- * @copyright  Krüger 2009
- * @author     Thomas Krüger
+ * @copyright  Cliff Parnitzky 2014
+ * @author     Cliff Parnitzky
  * @package    Controller
  */
 class ModuleDocManSystemManagement extends Module
@@ -40,7 +41,7 @@ class ModuleDocManSystemManagement extends Module
          * Template
          * @var string
          */
-        protected $strTemplate = 'mod_dokmansystem_kategorieauswahl';
+        protected $strTemplate = 'mod_dms_management_categories';
 
 
         /**
@@ -51,7 +52,7 @@ class ModuleDocManSystemManagement extends Module
 				/*
 				*        kein submit                     --->  wenn ein Nutzer angemeldet ist :
 				*                                              Anzeige der Kategorieauswahl
-				*                                              Template : mod_dokmansystem_kategorieauswahl
+				*                                              Template : mod_dms_management_categories
 				*                                              wenn kein Nutzer angemeldet ist :
 				*                                              Hinweis ausgeben                               
 				*
@@ -105,7 +106,7 @@ class ModuleDocManSystemManagement extends Module
 				*     Scribt wird neu aufgerufen
 				*  
 				*/
-				$dir = trim($GLOBALS['TL_CONFIG']['dokmansystem_dir']);
+				$dir = trim($GLOBALS['TL_CONFIG']['dmsBaseDirectory']);
 				$dirTemp   = $dir."/temp";
 				
 				if ($this->Input->post('submit_abbrechen'))
@@ -371,7 +372,7 @@ class ModuleDocManSystemManagement extends Module
 				$intUserId   = $this->User->id;
 				if ($strUsername == "")                      // kein Frontenduser angemeldet
 				{  
-			    $this->Template = new FrontendTemplate('mod_dokmansystem_ablehnung');
+			    $this->Template = new FrontendTemplate('mod_dms_management_access_denied');
 			    $this->Template->action = ampersand($this->Environment->request);
 				}	
 				else                                         // Frontenduser angemeldet			
@@ -405,7 +406,7 @@ class ModuleDocManSystemManagement extends Module
 				$tmp_loeschen         = 0;
 				$tmp_upload           = 0;
 				$tmp_editieren        = 0;
-				$tmp_veroeffentlichen = 0;												
+				$tmp_veroeffentlichen = 0;
 				
 
 				// Zugriffsrechte auslesen
@@ -477,7 +478,7 @@ class ModuleDocManSystemManagement extends Module
 				*     Auswahl der Datei die upgeloadet werden soll
 				*
 				*/
-					$this->Template = new FrontendTemplate('mod_dokmansystem_dokumentupload_auswahl');
+					$this->Template = new FrontendTemplate('mod_dms_management_upload_select_file');
 					$arrDocumentManagementSystemUp       = array();
 
 					$strDocumentManagementSystemUp1      = $this->Database->execute("SELECT * FROM tl_dms_categories WHERE id = $intKategorieId");
@@ -508,10 +509,10 @@ class ModuleDocManSystemManagement extends Module
 					*     Eingabe aller Beschreibungsteile für die zu uploadende Datei
 					*
 					*/
-					$dir = trim($GLOBALS['TL_CONFIG']['dokmansystem_dir']);
+					$dir = trim($GLOBALS['TL_CONFIG']['dmsBaseDirectory']);
 					$dirTemp = $dir."/temp";
 				
-					$this->Template     = new FrontendTemplate('mod_dokmansystem_dokumentupload_eigenschaften');
+					$this->Template     = new FrontendTemplate('mod_dms_management_upload_enter_properties');
 					$arrDocumentManagementSystemUpEig        = array();
                 
 					$strDateiName       = strtok($strUploadName, ".");
@@ -602,11 +603,11 @@ class ModuleDocManSystemManagement extends Module
 				*
 				*     Prüfung, ob Versionnummer zulässig ist. Ja:Verarbeitung / Nein:Abbruch
 				*/	
-				$dir       = trim($GLOBALS['TL_CONFIG']['dokmansystem_dir']);
+				$dir       = trim($GLOBALS['TL_CONFIG']['dmsBaseDirectory']);
 				$dirTemp   = $dir."/temp";
 				$dirGrafik = $dir."/preview";
 				
-				$this->Template = new FrontendTemplate('mod_dokmansystem_dokumentupload_verarbeiten');
+				$this->Template = new FrontendTemplate('mod_dms_management_upload_processing');
 				$arrDocumentManagementSystemUpVerarb    = array();
 				
 				$this->import('FrontendUser', 'User');
@@ -735,7 +736,7 @@ class ModuleDocManSystemManagement extends Module
 				*     Dokument verwalten
 				*/
 				
-					$this->Template							= new FrontendTemplate('mod_dokmansystem_dokumentverwaltung_auswahl');
+					$this->Template							= new FrontendTemplate('mod_dms_management_document_select');
 					$arrDocumentManagementSystemVerw									= array();
 
 					$strDocumentManagementSystemVerw1								= $this->Database->execute("SELECT * FROM tl_dms_categories WHERE id = $intKategorieId");
@@ -771,7 +772,7 @@ class ModuleDocManSystemManagement extends Module
 					/*	Loeschen von ausgewaehlten Dokumenten
 					*			ausgewaehlte Dokumente im Array $arrLoeschen werden geloescht (hier:Sicherheitsabfrage)
 					*/
-					$this->Template						= new FrontendTemplate('mod_dokmansystem_dokumentverwaltung_loeschen_nachfrage');
+					$this->Template						= new FrontendTemplate('mod_dms_management_document_delete');
 
 					$arrConvVeroeffentlichen;
 					if ($arrVeroeffentlichen) {
@@ -829,7 +830,7 @@ class ModuleDocManSystemManagement extends Module
 					*			2. Grafik
 					*			3. Datenbankeintrag
 					*/
-					$this->Template						= new FrontendTemplate('mod_dokmansystem_dokumentverwaltung_loeschen_bestaetigen');
+					$this->Template						= new FrontendTemplate('mod_dms_management_document_delete_processing');
 
 					$arrConvVeroeffentlichen;
 					if ($arrVeroeffentlichen) {
@@ -860,7 +861,7 @@ class ModuleDocManSystemManagement extends Module
 							$intVersionMinir			= $row['version_minor'];
 							$strBildName					= $row['file_preview'];
 							
-							$dir									= trim($GLOBALS['TL_CONFIG']['dokmansystem_dir']);
+							$dir									= trim($GLOBALS['TL_CONFIG']['dmsBaseDirectory']);
 							$dirGrafik						= $dir."/preview";
 							
 							$strDateiNameVorn			= strtok($strDateiName, ".");
@@ -911,7 +912,7 @@ class ModuleDocManSystemManagement extends Module
 					/*	Editieren von ausgewaehlten Dokumenten
 					*			ausgewaehlte Dokumente im Array $arrEditieren werden editiert (hier:Sicherheitsabfrage)
 					*/
-					$this->Template						= new FrontendTemplate('mod_dokmansystem_dokumentverwaltung_editieren_eingabe');
+					$this->Template						= new FrontendTemplate('mod_dms_management_document_edit');
 
 					$arrConvVeroeffentlichen;
 					if ($arrVeroeffentlichen) {
@@ -965,7 +966,7 @@ class ModuleDocManSystemManagement extends Module
 					/*	Editieren von ausgewaehlten Dokumenten
 					*			ausgewaehlte Dokumente im Array $arrEditieren werden editiert (hier:Sicherheitsabfrage)
 					*/
-					$this->Template						= new FrontendTemplate('mod_dokmansystem_dokumentverwaltung_editieren_ausfuehren');
+					$this->Template						= new FrontendTemplate('mod_dms_management_document_edit_processing');
 
 					$arrConvVeroeffentlichen;
 					if ($arrVeroeffentlichen) {

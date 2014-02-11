@@ -21,10 +21,11 @@ Frontend:
 
 ToDo
 ----
+- Code refactoring (alles auf Englisch) ... fehlen nur noch die Module
 - Patchnummer in FE einfügen
-- Code refactoring (alles auf Englisch)
-- Anzeige: auslesen der Daten rekursiv gemäß Verwaltung
-- Web: Alle Screens überarbeiten, CSS allgemeiner, Klassen und IDs vergeben
+- Listing: auslesen der Daten rekursiv gemäß Verwaltung
+- Web: Alle Screens überarbeiten, CSS allgemeiner, Klassen und IDs vergeben, Texte auslagern
+
 - Anzeigen des Mitglieds, welches das Dokument hochgeladen / zuletzt bearbeitet hat
 - Fehler bei mehrfach bearbeiten / löschen beheben
 - Max Uploadgröße per Backend Setting festlegen und auslesen (für Upload View, für Größen Prüfung nach Upload)

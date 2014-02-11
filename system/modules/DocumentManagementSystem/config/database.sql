@@ -22,7 +22,7 @@ CREATE TABLE `tl_dms_categories` (
   `name` varchar(255) NOT NULL default '',
   `description` text NULL,
   `file_types` varchar(255) NOT NULL default '',
-  `general_read_permission` char(1) NOT NULL default '',
+  `general_read_permission` varchar(64) NOT NULL default '',
   `published` char(1) NOT NULL default '',
   PRIMARY KEY  (`id`),
   KEY `pid` (`pid`)
