@@ -31,7 +31,7 @@
 /**
  * Backend modules
  */
-array_insert($GLOBALS['BE_MOD'], 0, array
+array_insert($GLOBALS['BE_MOD'], 1, array
 (
 	'dms' => array
 	(
@@ -58,10 +58,13 @@ array_insert($GLOBALS['BE_MOD'], 0, array
 /**
  * Frontend modules
  */
-array_insert($GLOBALS['FE_MOD']['dms'], 0, array
+array_insert($GLOBALS['FE_MOD'], 1, array
 (
-	'dms_listing'    => 'ModuleDMSListing',
-	'dms_management' => 'ModuleDMSManagement'
+	'dms' => array
+	(
+		'dms_listing'    => 'ModuleDmsListing',
+		'dms_management' => 'ModuleDmsManagement'
+	)
 ));
  
 ?>
