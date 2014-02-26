@@ -164,9 +164,9 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission'],
 			'exclude'                 => true,
-			'default'                 => 'ALL',
+			'default'                 => Category::GENERAL_READ_PERMISSION_ALL,
 			'inputType'               => 'radio',
-			'options'                 => array('ALL', 'LOGGED_USER', 'CUSTOM'),
+			'options'                 => array(Category::GENERAL_READ_PERMISSION_ALL, Category::GENERAL_READ_PERMISSION_LOGGED_USER, Category::GENERAL_READ_PERMISSION_CUSTOM),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'],
 			'eval'                    => array('helpwizard'=>true, 'tl_class'=>'w50')
 		),

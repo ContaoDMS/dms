@@ -128,6 +128,9 @@ class ModuleDmsListing extends Module
 		$intUserId = $this->User->id;
 		$strDokDir = trim($GLOBALS['TL_CONFIG']['dmsBaseDirectory']);
 		$blnKatAusblenden = $GLOBALS['TL_CONFIG']['dmsHideEmptyLockedCategories'];
+		
+		$dmsLoader = DmsLoader::getInstance();
+		var_dump($dmsLoader->loadCategories(0));
 
 		//  ====> Hauptkategorie <====
 		$objDocumentManagementSystemKat = $this->Database->execute("SELECT * FROM tl_dms_categories  WHERE pid = 0 ORDER BY name");
@@ -284,18 +287,18 @@ class ModuleDmsListing extends Module
 
 		switch ($strLeserecht)
 		{
-			case "ALL":
+			case Category::GENERAL_READ_PERMISSION_ALL:
 				$intDokumenteLeseRecht = 1;
 				break;
 
-			case "LOGGED_USER":
+			case Category::GENERAL_READ_PERMISSION_LOGGED_USER:
 				if ($intUserId <> "")
 				{
 					$intDokumenteLeseRecht = 1;
 				}
 				break;
 
-			case "CUSTOM":
+			case Category::GENERAL_READ_PERMISSION_CUSTOM:
 				if ($intUserId <> "")
 				{
 					$objDocumentManagementSystemUser = $this->Database->execute("SELECT * FROM tl_member WHERE id = $intUserId");

@@ -105,7 +105,7 @@ $GLOBALS['TL_DCA']['tl_dms_access_rights'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{member_group_legend},member_group;{rights_legend},read,upload,delete,edit,publish'
+		'default'                     => '{member_group_legend},member_group;{rights_legend},right_read,right_upload,right_delete,right_edit,right_publish'
 	),
 
 	// Fields
@@ -127,34 +127,34 @@ $GLOBALS['TL_DCA']['tl_dms_access_rights'] = array
 			'foreignKey'              => 'tl_member_group.name',
 			'eval'                    => array('multiple'=>false, 'mandatory'=>true)
 		),
-		'read' => array
+		'right_read' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_access_rights']['read'],
+			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_access_rights']['right_read'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'default'                 => '1'
 		),
-		'upload' => array
+		'right_upload' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_access_rights']['upload'],
+			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_access_rights']['right_upload'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox'
 		),
-		'edit' => array
+		'right_edit' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_access_rights']['edit'],
+			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_access_rights']['right_edit'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox'
 		),
-		'delete' => array
+		'right_delete' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_access_rights']['delete'],
+			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_access_rights']['right_delete'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox' 
 		),
-		'publish' => array
+		'right_publish' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_access_rights']['publish'],
+			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_access_rights']['right_publish'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox' 
 		)
@@ -179,11 +179,11 @@ class tl_dms_access_rights extends Backend
 	 */
 	public function addIcon($row, $label, DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false)
 	{
-		$accessRightRead = $row['read'] == "" ? "" : "<img src='system/modules/DocumentManagementSystem/html/access_right_read.gif' title='" . $GLOBALS['TL_LANG']['tl_dms_access_rights']['read'][0] . "'/>";
-		$accessRightUpload = $row['upload'] == "" ? "" : "<img src='system/modules/DocumentManagementSystem/html/access_right_upload.gif' title='" . $GLOBALS['TL_LANG']['tl_dms_access_rights']['upload'][0] . "'/>";
-		$accessRightDelete = $row['delete'] == "" ? "" : "<img src='system/modules/DocumentManagementSystem/html/access_right_delete.gif' title='" . $GLOBALS['TL_LANG']['tl_dms_access_rights']['delete'][0] . "'/>";
-		$accessRightEdit = $row['edit'] == "" ? "" : "<img src='system/modules/DocumentManagementSystem/html/access_right_edit.gif' title='" . $GLOBALS['TL_LANG']['tl_dms_access_rights']['edit'][0] . "'/>";
-		$accessRightPublish = $row['publish'] == "" ? "" : "<img src='system/modules/DocumentManagementSystem/html/access_right_publish.gif' title='" . $GLOBALS['TL_LANG']['tl_dms_access_rights']['publish'][0] . "'/>";
+		$accessRightRead = $row['right_read'] == "" ? "" : "<img src='system/modules/DocumentManagementSystem/html/access_right_read.gif' title='" . $GLOBALS['TL_LANG']['tl_dms_access_rights']['right_read'][0] . "'/>";
+		$accessRightUpload = $row['right_upload'] == "" ? "" : "<img src='system/modules/DocumentManagementSystem/html/access_right_upload.gif' title='" . $GLOBALS['TL_LANG']['tl_dms_access_rights']['right_upload'][0] . "'/>";
+		$accessRightDelete = $row['right_delete'] == "" ? "" : "<img src='system/modules/DocumentManagementSystem/html/access_right_delete.gif' title='" . $GLOBALS['TL_LANG']['tl_dms_access_rights']['right_delete'][0] . "'/>";
+		$accessRightEdit = $row['right_edit'] == "" ? "" : "<img src='system/modules/DocumentManagementSystem/html/access_right_edit.gif' title='" . $GLOBALS['TL_LANG']['tl_dms_access_rights']['right_edit'][0] . "'/>";
+		$accessRightPublish = $row['right_publish'] == "" ? "" : "<img src='system/modules/DocumentManagementSystem/html/access_right_publish.gif' title='" . $GLOBALS['TL_LANG']['tl_dms_access_rights']['right_publish'][0] . "'/>";
 		
 		return $this->generateImage('system/modules/DocumentManagementSystem/html/access_rights.png', '', '') . $label .'<span style="color:#b3b3b3; padding-left:3px;">' . $accessRightRead . ' ' . $accessRightUpload . ' ' . $accessRightDelete . ' ' . $accessRightEdit . ' ' . $accessRightPublish . '</span>';
 	}

@@ -40,11 +40,11 @@ CREATE TABLE `tl_dms_access_rights` (
   `sorting` int(10) unsigned NOT NULL default '0',
   `tstamp` int(10) unsigned NOT NULL default '0',
   `member_group` int(10) unsigned NOT NULL default '0',
-  `read` char(1) NOT NULL default '1',
-  `upload` char(1) NOT NULL default '',
-  `delete` char(1) NOT NULL default '',
-  `edit` char(1) NOT NULL default '',
-  `publish` char(1) NOT NULL default '',
+  `right_read` char(1) NOT NULL default '1',
+  `right_upload` char(1) NOT NULL default '',
+  `right_delete` char(1) NOT NULL default '',
+  `right_edit` char(1) NOT NULL default '',
+  `right_publish` char(1) NOT NULL default '',
   PRIMARY KEY  (`id`),
   KEY `pid` (`pid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;

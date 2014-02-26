@@ -589,7 +589,7 @@ class ModuleDmsManagement extends Module
 		$strUsername = $this->User->username;
 		$intUserId = $this->User->id;
 
-		$strDatumAktuell = date("Ymd");
+		$time = time();
 
 		$strDocumentManagementSystemUpVerarbPruef = $this->Database->execute("SELECT * FROM tl_dms_document WHERE file_source = '$strDateiName' && version_major = '$strDokVersionMajor' && version_minor = '$strDokVersionMinir' ");
 		if ($strDocumentManagementSystemUpVerarbPruef->numRows) // Pruefung, ob Versionnummer zulaessig
@@ -649,7 +649,7 @@ class ModuleDmsManagement extends Module
 			$this->update_veroeffentlichen($intKategorieId, $strDateiName, $arrAltDokVeroeffentlichen, $intUserId);
 
 			// Insert des neuen Dokument-Datenatzes
-			$set = array('tstamp' => time(), 'name' => $strDokName, 'pid' => $intKategorieId, 'description' => $strDokBeschreibung, 'file_source' => $strDateiName, 'file_sourcetyp' => $strDateiTyp, 'file_sourcegroesse' => $strDateiGroesse, 'version_major' => $strDokVersionMajor, 'version_minor' => $strDokVersionMinir, 'file_preview' => $strBildNameUpload, 'keywords' => $strDokStichworte, 'upload_member' => $intUserId, 'upload_date' => $strDatumAktuell, 'published' => $intDokVeroeffentlichen,);
+			$set = array('tstamp' => time(), 'name' => $strDokName, 'pid' => $intKategorieId, 'description' => $strDokBeschreibung, 'file_source' => $strDateiName, 'file_sourcetyp' => $strDateiTyp, 'file_sourcegroesse' => $strDateiGroesse, 'version_major' => $strDokVersionMajor, 'version_minor' => $strDokVersionMinir, 'file_preview' => $strBildNameUpload, 'keywords' => $strDokStichworte, 'upload_member' => $intUserId, 'upload_date' => $time, 'published' => $intDokVeroeffentlichen,);
 			$this->Database->prepare("INSERT INTO tl_dms_document %s")->set($set)->execute();
 
 		}
@@ -907,8 +907,7 @@ class ModuleDmsManagement extends Module
 			}
 
 			// Update der Datenbank
-			$strDatumAktuell = date("Ymd");
-			$DsSet = array('description' => $strDokBeschreibung, 'keywords' => $strDokStichworte, 'lastedit_member' => $intUserId, 'lastedit_date' => $strDatumAktuell,);
+			$DsSet = array('description' => $strDokBeschreibung, 'keywords' => $strDokStichworte, 'lastedit_member' => $intUserId, 'lastedit_date' => time());
 
 			$this->Database->prepare("UPDATE `tl_dms_document` %s WHERE id=?")->set($DsSet)->execute($strEditierenId);
 
@@ -938,7 +937,7 @@ class ModuleDmsManagement extends Module
 		 *    Findet eine Veränderung an dem Veröffentlichungs-Status statt,
 		 *    wird das Datum und die UserId des Users gespeichert
 		 */
-		$strDatumAktuell = date("Ymd");
+		$time = time();
 		$strDocumentManagementSystemUpDSPruef = $this->Database->execute("SELECT * FROM tl_dms_document WHERE file_source like '$strDateiName' && pid = $intKategorieId ");
 		$rows = $strDocumentManagementSystemUpDSPruef->fetchAllAssoc();
 		foreach ($rows as $row)
@@ -950,7 +949,7 @@ class ModuleDmsManagement extends Module
 				if ($row['published'] == 0)
 				{
 					$mkLasteditUserid = $intUserId;
-					$mkDatum = $strDatumAktuell;
+					$mkDatum = $time;
 				}
 				else
 				{
@@ -964,7 +963,7 @@ class ModuleDmsManagement extends Module
 				if ($row['published'] == 1)
 				{
 					$mkLasteditUserid = $intUserId;
-					$mkDatum = $strDatumAktuell;
+					$mkDatum = $time;
 				}
 				else
 				{
