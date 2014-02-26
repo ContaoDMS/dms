@@ -31,7 +31,7 @@
 /**
  * Add to palette
  */
-$GLOBALS['TL_DCA']['tl_settings']['palettes']['default'] .= ';{dms_legend},dmsBaseDirectory,dmsHideEmptyLockedCategories';
+$GLOBALS['TL_DCA']['tl_settings']['palettes']['default'] .= ';{dms_legend},dmsBaseDirectory,dmsHideEmptyLockedCategories,dmsMaxUploadFileSize';
 
 /**
  * Add fields
@@ -44,7 +44,82 @@ $GLOBALS['TL_DCA']['tl_settings']['fields']['dmsBaseDirectory'] = array(
 $GLOBALS['TL_DCA']['tl_settings']['fields']['dmsHideEmptyLockedCategories'] = array(
 	'label'     => &$GLOBALS['TL_LANG']['tl_settings']['dmsHideEmptyLockedCategories'],
 	'inputType' => 'checkbox',
-	'eval'      => array('tl_class'=>'w50 clr')
+	'eval'      => array('tl_class'=>'clr')
 );
+$GLOBALS['TL_DCA']['tl_settings']['fields']['dmsMaxUploadFileSize'] = array(
+	'label'     => &$GLOBALS['TL_LANG']['tl_settings']['dmsMaxUploadFileSize'],
+	'inputType' => 'inputUnit',
+	'options'   => array(Document::FILE_SIZE_UNIT_BYTE, Document::FILE_SIZE_UNIT_KB, Document::FILE_SIZE_UNIT_MB, Document::FILE_SIZE_UNIT_GB),
+	'reference' => &$GLOBALS['TL_LANG']['DMS']['file_size_unit'],
+	'eval'      => array('tl_class'=>'clr', 'mandatory'=>true, 'rgxp'=>'digit'),
+	'save_callback' => array
+	(
+		array('tl_settings_dms', 'validateMaxUploadFileSize')
+	)
+);
+
+/**
+ * Class tl_settings_dms
+ *
+ * Provide miscellaneous methods that are used by the data configuration array.
+ * PHP version 5
+ * @copyright  Cliff Parnitzky 2014
+ * @author     Cliff Parnitzky
+ * @package    Controller
+ */
+class tl_settings_dms extends Backend
+{
+	/**
+	 * Return the reduced file name
+	 * @param mixed
+	 * @param DataContainer
+	 * @return string
+	 */
+	public function validateMaxUploadFileSize($varValue, DataContainer $dc)
+	{
+		$arrValue = deserialize($varValue);
+		$dmsUnit = $arrValue['unit'];
+		$dmsVal = Document::convertFileSize((double) $arrValue['value'], $dmsUnit, Document::FILE_SIZE_UNIT_BYTE);
+		$phpVal = $this->getPhpUploadMaxFilesize();
+		
+		if ($dmsVal > $phpVal)
+		{
+			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['dmsMaxUploadFileSize'], Document::formatFileSize(Document::convertFileSize($phpVal, Document::FILE_SIZE_UNIT_BYTE, $dmsUnit), $dmsUnit)));
+		}
+		
+		return $varValue;
+	}
+	
+	/**
+	 * Get the value of the upload_max_filesize set in PHP.
+	 *
+	 * @return	int	The int value of the upload_max_filesize set in PHP in byte.
+	 */
+	private function getPhpUploadMaxFilesize()
+	{
+		$param = trim(ini_get('upload_max_filesize'));
+		$unit = strtolower(substr($param, -1));
+		$val = (double) $param;
+		switch($unit)
+		{
+			case 'k':
+				$val = Document::convertFileSize((double) substr($param, 0, strlen($param) - 1), Document::FILE_SIZE_UNIT_KB, Document::FILE_SIZE_UNIT_BYTE);
+				break;
+			case 'm':
+				$val = Document::convertFileSize((double) substr($param, 0, strlen($param) - 1), Document::FILE_SIZE_UNIT_MB, Document::FILE_SIZE_UNIT_BYTE);
+				break;
+			case 'g':
+				$val = Document::convertFileSize((double) substr($param, 0, strlen($param) - 1), Document::FILE_SIZE_UNIT_GB, Document::FILE_SIZE_UNIT_BYTE);
+				break;
+		}
+		
+		if (!is_double($val))
+		{
+			throw new Exception('PHP value for upload_max_filesize could not be determined.');
+		}
+		return $val;
+	}
+
+}
 
 ?>

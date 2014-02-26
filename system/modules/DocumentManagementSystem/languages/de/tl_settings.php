@@ -27,9 +27,18 @@
  * @license    LGPL
  * @filesource [dokmansystem] by Thomas Krueger
  */
- 
+
+/**
+ * Fields
+ */
 $GLOBALS['TL_LANG']['tl_settings']['dms_legend']                   = "Dokumenten Management System";
 $GLOBALS['TL_LANG']['tl_settings']['dmsBaseDirectory']             = array('Basisverzeichnis', 'Hier können Sie das Basisverzeichnis für die Dokumente auswählen. Der empfohlene Ort ist <em>tl_files/dms</em>.');
 $GLOBALS['TL_LANG']['tl_settings']['dmsHideEmptyLockedCategories'] = array('Leere / gespeerte Kategorien ausblenden', 'Hier können Sie auswählen ob leere / gespeerte Kategorien ausgeblendet werden sollen.');
+$GLOBALS['TL_LANG']['tl_settings']['dmsMaxUploadFileSize']         = array('Maximale Upload Dateigröße', 'Geben Sie die maximale Größe von Dateien an, die hochgeladen werden dürfen. Diese Größe darf die PHP Einstellung für <i>upload_max_filesize</i> nicht überschreiten.');
+
+/**
+ * Errors
+ */
+$GLOBALS['TL_LANG']['ERR']['dmsMaxUploadFileSize'] = 'Der gewählte Wert übersteigt den der PHP Konfiguration. Es sind maximal <b>%s</b> möglich.';
 
 ?>

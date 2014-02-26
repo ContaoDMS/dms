@@ -30,4 +30,15 @@
 $GLOBALS['TL_LANG']['DMS']['management_access_denied_headline'] = "Zugriff verweigert";
 $GLOBALS['TL_LANG']['DMS']['management_access_denied_text']     = "Nicht angemeldete Nutzer haben <u>grundsätzlich</u> kein Recht zum Verwaltungsbereich des Dokumenten Management System.";
 
+/**
+ * File size units
+ */
+$GLOBALS['TL_LANG']['DMS']['file_size_unit'][Document::FILE_SIZE_UNIT_BYTE] = 'Byte';
+$GLOBALS['TL_LANG']['DMS']['file_size_unit'][Document::FILE_SIZE_UNIT_KB]   = 'KB';
+$GLOBALS['TL_LANG']['DMS']['file_size_unit'][Document::FILE_SIZE_UNIT_MB]   = 'MB';
+$GLOBALS['TL_LANG']['DMS']['file_size_unit'][Document::FILE_SIZE_UNIT_GB]   = 'GB';
+$GLOBALS['TL_LANG']['DMS']['file_size_format']['text']                      = '%s %s';
+$GLOBALS['TL_LANG']['DMS']['file_size_format']['dec_point']                 = ',';
+$GLOBALS['TL_LANG']['DMS']['file_size_format']['$thousands_sep']            = '.';
+
 ?>

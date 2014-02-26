@@ -53,7 +53,7 @@ class Document
 	private $intFileSize = -1;
 	private $strFilePreview = '';
 	private $intVersionMajor = -1;
-	private $intVersionMajor = -1;
+	private $intVersionMinor = -1;
 	private $intVersionPatch = -1;
 	private $intUploadMemberId = -1;
 	private $tstampUploadDate = '';
@@ -224,27 +224,97 @@ class Document
 	/**
 	 * Return the file size for the given unit.
 	 *
-	 * @param	string	$strUnit	The unit.
-	 * @return	string	The file size for the given unit.
+	 * @param	string	$strUnit	The file size unit.
+	 * @return	mixed	The file size for the given unit (as int or formatted as string).
 	 */
-	public function getFileSize($strUnit)
+	public function getFileSize($strUnit, $blnFormatted = false)
 	{
-		// TODO maybe we need a formatter here, to cut decimal places
-		switch ($strUnit)
+		$doubleFileSize = Document::convertFileSize($this->intFileSize, self::FILE_SIZE_UNIT_BYTE, $strUnit);
+		if ($doubleFileSize < 0)
 		{
-			case self::FILE_SIZE_UNIT_KB:
-				return ($this->intFileSize / 1024);
-				break;
-			case self::FILE_SIZE_UNIT_MB:
-				return ($this->intFileSize / 1024 / 1024);
-				break;
-			case self::FILE_SIZE_UNIT_GB:
-				return ($this->intFileSize / 1024 / 1024 / 1024);
-				break;
-			default:
-				return $this->intFileSize;
-				break;
+			throw new Exception(sprintf('Invalid file size [%s] or unit [%s] for document.', $this->intFileSize, $strKey));
+			break;
 		}
+		
+		if ($blnFormatted)
+		{
+			return Document::formatFileSize($doubleFileSize, $strUnit);
+		}
+		
+		return $doubleFileSize;
+	}
+	
+	/**
+	 * Utility function to convert file size from a source unit into a target unit.
+	 *
+	 * @param	double	$doubleFileSize	The file size value.
+	 * @param	string	$strSourceUnit	The source unit of the file size.
+	 * @param	string	$strTargetUnit	The target unit of the file size.
+	 * @return	double	The converted file size value.
+	 */
+	public static function convertFileSize($doubleFileSize, $strSourceUnit, $strTargetUnit)
+	{
+		if ($strSourceUnit == $strTargetUnit)
+		{
+			// no conversion needed
+			return $doubleFileSize;
+		}
+		
+		if ($strSourceUnit == Document::FILE_SIZE_UNIT_BYTE)
+		{
+			switch ($strTargetUnit)
+			{
+				case Document::FILE_SIZE_UNIT_KB : return $doubleFileSize / 1024;
+				case Document::FILE_SIZE_UNIT_MB : return $doubleFileSize / 1024 / 1024;
+				case Document::FILE_SIZE_UNIT_GB : return $doubleFileSize / 1024 / 1024 / 1024;
+			}
+		}
+		else if ($strSourceUnit == Document::FILE_SIZE_UNIT_KB)
+		{
+			switch ($strTargetUnit)
+			{
+				case Document::FILE_SIZE_UNIT_BYTE : return $doubleFileSize * 1024;
+				case Document::FILE_SIZE_UNIT_MB   : return $doubleFileSize / 1024;
+				case Document::FILE_SIZE_UNIT_GB   : return $doubleFileSize / 1024 / 1024;
+			}
+		}
+		else if ($strSourceUnit == Document::FILE_SIZE_UNIT_MB)
+		{
+			switch ($strTargetUnit)
+			{
+				case Document::FILE_SIZE_UNIT_BYTE : return $doubleFileSize * 1024 * 1024;
+				case Document::FILE_SIZE_UNIT_KB   : return $doubleFileSize * 1024;
+				case Document::FILE_SIZE_UNIT_GB   : return $doubleFileSize / 1024;
+			}
+		}
+		else if ($strSourceUnit == Document::FILE_SIZE_UNIT_GB)
+		{
+			switch ($strTargetUnit)
+			{
+				case Document::FILE_SIZE_UNIT_BYTE : return $doubleFileSize * 1024 * 1024 * 1024;
+				case Document::FILE_SIZE_UNIT_KB   : return $doubleFileSize * 1024 * 1024;
+				case Document::FILE_SIZE_UNIT_MB   : return $doubleFileSize * 1024;
+			}
+		}
+		// no match
+		return -1;
+	}
+	
+	/**
+	 * Utility function to format file size values
+	 *
+	 * @param	double	$doubleFileSize	The file size value.
+	 * @param	string	$strUnit	The file size unit.
+	 * @return	string	The formatted file size value.
+	 */
+	public static function formatFileSize($doubleFileSize, $strUnit)
+	{
+		$value = number_format($doubleFileSize, 2, $GLOBALS['TL_LANG']['DMS']['file_size_format']['dec_point'], $GLOBALS['TL_LANG']['DMS']['file_size_format']['$thousands_sep']);
+		if (substr($value, -3) == ($GLOBALS['TL_LANG']['DMS']['file_size_format']['dec_point'] . "00"))
+		{
+			$value = substr($value, 0, strlen($value) - 3);
+		}
+		return sprintf($GLOBALS['TL_LANG']['DMS']['file_size_format']['text'], $value, $GLOBALS['TL_LANG']['DMS']['file_size_unit'][$strUnit]);
 	}
 	
 	/**

@@ -14,6 +14,6 @@ Version 2.0.0 (2014-xx-xx)
 - added patch number to version (to support semantic versioning: http://semver.org)
 - refactored complete code (language is english, more technical)
 - added recursive inheritance of rights (categories without defined access right inherit the restictions from her parent category)
-- added templates for Contao 2.1x.x
+- added templates for Contao 2.10.x, 2.11.x
 - added secure download (download folder is protected by `.htaccess`)
 - reworked file name and document name checking (remove special chars)
