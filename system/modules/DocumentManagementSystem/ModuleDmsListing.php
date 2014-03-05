@@ -70,254 +70,117 @@ class ModuleDmsListing extends Module
 	 */
 	protected function compile()
 	{
-		/*
-		 *        kein submit                     --->  wenn ein Nutzer angemeldet ist :
-		 *                                              Anzeige der Kategorieauswahl
-		 *                                              Template : mod_dms_listing
-		 *                                              wenn kein Nutzer angemeldet ist :
-		 *                                              Hinweis ausgeben                               
-		
+		/**
+		 * - Suchstring ggf. umformatieren
+		 * - Suchstring an Loader uebergeben
+		 * - File Doanload einbauen
+		 * - Rechteprüfung vor File Doanload einbauen
 		 */
-
-		// Adding secure download
-		$file = $this->Input->get('file', true);
-
-		// Send the file to the browser
-		// ToDo : check read permissions
-		if ($file != '')
-		{
-			$this->sendFileToBrowser($file);
-		}
-
-		/*
-		 *     =============================================================================================================
-		 *
-		 *     Hauptmenü
-		 */
-
-		if ($this->Input->post('submit_kategorieauswahl'))
-		{
-			$arrKategorieAuswahl = $this->Input->post('kategorieauswahl');
-			$strSuchbegriff = $this->Input->post('suchbegriff');
-
-			if (count($arrKategorieAuswahl) == 0)
-			{
-				$arrKategorieAuswahl[0] = "a";
-			}
-			$strSuchbegriff = trim($strSuchbegriff);
-			if ($strSuchbegriff == "" || $strSuchbegriff == "Suchbegriff")
-			{
-				$strSuchwert = "%";
-			}
-			else
-			{
-				//					$strSuchbegriff				= strtr($strSuchbegriff, array ("Ä"=>"Ae","ä"=>"ae","Ö"=>"Oe","ö"=>"oe","Ü"=>"Ue","ü"=>"ue","ß"=>"ss","&"=>"_und_"," "=>"_"));
-				$strSuchbegriff = strtr($strSuchbegriff, array("Ä" => "Ae", "ä" => "Ae", "Ö" => "Oe", "ö" => "Oe", "Ü" => "Ue", "ü" => "Ue", "ß" => "SS", "&" => "_und_", " " => "_"));
-				$strSuchwert = strtoupper($strSuchbegriff);
-				$strSuchwert = "%" . $strSuchwert . "%";
-			}
-		}
-		else
-		{
-			$arrKategorieAuswahl = array();
-			$strSuchwert = "%";
-		}
-
-		$this->import('FrontendUser', 'User');
-		$strUsername = $this->User->username;
-		$intUserId = $this->User->id;
-		$strDokDir = trim($GLOBALS['TL_CONFIG']['dmsBaseDirectory']);
-		$blnKatAusblenden = $GLOBALS['TL_CONFIG']['dmsHideEmptyLockedCategories'];
 		
 		$dmsLoader = DmsLoader::getInstance();
-		var_dump($dmsLoader->loadCategories(0));
-
-		//  ====> Hauptkategorie <====
-		$objDocumentManagementSystemKat = $this->Database->execute("SELECT * FROM tl_dms_categories  WHERE pid = 0 ORDER BY name");
-		while ($objDocumentManagementSystemKat->next())
+		
+		/* set custom template if defined */
+		if ($this->dmsTemplate != $strTemplate)
 		{
-			$intHauptKategorieId = $objDocumentManagementSystemKat->id;
-			$strHauptKategorieName = $objDocumentManagementSystemKat->name;
-			$strHauptLeserecht = $objDocumentManagementSystemKat->general_read_permission;
-			$strHauptKategorieBild = $objDocumentManagementSystemKat->kt_bild;
-			$strHauptKategorieBeschreibung = $objDocumentManagementSystemKat->description;
-
-			$objDocumentManagementSystemDok = $this->Database->execute("SELECT * FROM tl_dms_documents  WHERE pid = $intHauptKategorieId && published = 1 && (keywords like '$strSuchwert' || description like '$strSuchwert' || name like '$strSuchwert') ORDER BY name, version_major, version_minor");
-			$arrDokDetails = $objDocumentManagementSystemDok->fetchAllAssoc();
-			$intDSZaehler = count($arrDokDetails);
-
-			$intDokumentLeseRecht = $this->dokumente_leserecht($intHauptKategorieId, $strHauptLeserecht, $intUserId);
-			$intDokumenteAnzeigen = $this->dokumente_auflisten($arrKategorieAuswahl, $intHauptKategorieId);
-
-			$intAnzeigenDS = $this->kategorien_ausblenden($intDSZaehler, $blnKatAusblenden, $intDokumentLeseRecht);
-
-			$strEinruecken = "";
-			$arrDocumentManagementSystemKat[] = array('einruecken' => $strEinruecken, 'kategorieid' => $intHauptKategorieId, 'kategoriename' => $strHauptKategorieName, 'dokdetails' => $arrDokDetails, 'anzeigen' => $intDokumenteAnzeigen, 'leserecht' => $intDokumentLeseRecht, 'dokdir' => $strDokDir, 'kategoriebild' => $strHauptKategorieBild, 'zaehlerds' => $intDSZaehler, 'kategoriebeschreibung' => $strHauptKategorieBeschreibung, 'anzeigends' => $intAnzeigenDS, 'category' => 0,);
-
-			//  ====> Unterkategorie 1 (Sub)<====
-			$objDocumentManagementSystemKat1 = $this->Database->execute("SELECT * FROM tl_dms_categories  WHERE pid = $intHauptKategorieId ORDER BY name");
-			while ($objDocumentManagementSystemKat1->next())
+			$this->strTemplate = $this->dmsTemplate;
+			$this->Template = new \FrontendTemplate($this->strTemplate);
+			$this->Template->setData($this->arrData);
+		}
+		
+		/* extract data from post */
+		 $formId = "dms_listing_" . $this->id;
+		 
+		$arrErrors = array();
+		$arrExpandedCategories = array();
+		$strSearchText = "";
+		
+		if ($this->Input->post('FORM_SUBMIT') == $formId)
+		{
+			/* remember expanded catagories */
+			if (is_array($this->Input->post('expandedCatagories')))
 			{
-				$intUnterKategorieId_1 = $objDocumentManagementSystemKat1->id;
-				$strUnterKategorieName_1 = $objDocumentManagementSystemKat1->name;
-				$strUnterLeserecht_1 = $objDocumentManagementSystemKat1->general_read_permission;
-				$strUnterKategorieBild_1 = $objDocumentManagementSystemKat1->kt_bild;
-				$strUnterKategorieBeschreibung_1 = $objDocumentManagementSystemKat1->description;
-
-				$objDocumentManagementSystemDok = $this->Database->execute("SELECT * FROM tl_dms_documents  WHERE pid = $intUnterKategorieId_1 && published = 1 && (keywords like '$strSuchwert' || description like '$strSuchwert' || name like '$strSuchwert') ORDER BY name, version_major, version_minor");
-				$arrDokDetails = $objDocumentManagementSystemDok->fetchAllAssoc();
-				$intDSZaehler = count($arrDokDetails);
-
-				$intDokumentLeseRecht = $this->dokumente_leserecht($intHauptKategorieId, $strUnterLeserecht_1, $intUserId);
-				$intDokumenteAnzeigen = $this->dokumente_auflisten($arrKategorieAuswahl, $intUnterKategorieId_1);
-
-				$intAnzeigenDS = $this->kategorien_ausblenden($intDSZaehler, $blnKatAusblenden, $intDokumentLeseRecht);
-
-				$strEinruecken = $parstrEinruecken1 . $parstrEinruecken2;
-				$arrDocumentManagementSystemKat[] = array('einruecken' => $strEinruecken, 'kategorieid' => $intUnterKategorieId_1, 'kategoriename' => $strUnterKategorieName_1, 'dokdetails' => $arrDokDetails, 'anzeigen' => $intDokumenteAnzeigen, 'leserecht' => $intDokumentLeseRecht, 'dokdir' => $strDokDir, 'kategoriebild' => $strUnterKategorieBild_1, 'zaehlerds' => $intDSZaehler, 'kategoriebeschreibung' => $strUnterKategorieBeschreibung_1, 'anzeigends' => $intAnzeigenDS, 'category' => 1,);
-
-				//  ====> Unterkategorie 2  (SubSub) <====
-				$objDocumentManagementSystemKat2 = $this->Database->execute("SELECT * FROM tl_dms_categories  WHERE pid = $intUnterKategorieId_1 ORDER BY name");
-				while ($objDocumentManagementSystemKat2->next())
+				$arrExpandedCategories = $this->Input->post('expandedCatagories');
+			}
+			
+			/* prepare search string */
+			$strSearchText = $this->Input->post('searchText');
+			// TODO : prepare search string ???
+			//		$strSuchbegriff = strtr($strSuchbegriff, array("Ä" => "Ae", "ä" => "Ae", "Ö" => "Oe", "ö" => "Oe", "Ü" => "Ue", "ü" => "Ue", "ß" => "SS", "&" => "_und_", " " => "_"));
+			//		$strSuchwert = strtoupper($strSuchbegriff);
+			//		$strSuchwert = "%" . $strSuchwert . "%";
+			
+			/* handle download */
+			$docId = $this->Input->post('docId');
+			if ($docId != '')
+			{
+				if ($docId != '' && is_numeric($docId))
 				{
-					$intUnterKategorieId_2 = $objDocumentManagementSystemKat2->id;
-					$strUnterKategorieName_2 = $objDocumentManagementSystemKat2->name;
-					$strUnterLeserecht_2 = $objDocumentManagementSystemKat2->general_read_permission;
-					$strUnterKategorieBild_2 = $objDocumentManagementSystemKat2->kt_bild;
-					$strUnterKategorieBeschreibung_2 = $objDocumentManagementSystemKat2->description;
-
-					$objDocumentManagementSystemDok = $this->Database->execute("SELECT * FROM tl_dms_documents  WHERE pid = $intUnterKategorieId_2 && published = 1 && (keywords like '$strSuchwert' || description like '$strSuchwert' || name like '$strSuchwert') ORDER BY name, version_major, version_minor");
-					$arrDokDetails = $objDocumentManagementSystemDok->fetchAllAssoc();
-					$intDSZaehler = count($arrDokDetails);
-
-					$intDokumentLeseRecht = $this->dokumente_leserecht($intHauptKategorieId, $strUnterLeserecht_2, $intUserId);
-					$intDokumenteAnzeigen = $this->dokumente_auflisten($arrKategorieAuswahl, $intUnterKategorieId_2);
-
-					$intAnzeigenDS = $this->kategorien_ausblenden($intDSZaehler, $blnKatAusblenden, $intDokumentLeseRecht);
-
-					$strEinruecken = $parstrEinruecken1 . $parstrEinruecken1 . $parstrEinruecken2;
-					$arrDocumentManagementSystemKat[] = array('einruecken' => $strEinruecken, 'kategorieid' => $intUnterKategorieId_2, 'kategoriename' => $strUnterKategorieName_2, 'dokdetails' => $arrDokDetails, 'anzeigen' => $intDokumenteAnzeigen, 'leserecht' => $intDokumentLeseRecht, 'dokdir' => $strDokDir, 'kategoriebild' => $strUnterKategorieBild_2, 'zaehlerds' => $intDSZaehler, 'kategoriebeschreibung' => $strUnterKategorieBeschreibung_2, 'anzeigends' => $intAnzeigenDS, 'category' => 2,);
-
-					//  ====> Unterkategorie 3  (SubSubSub) <====
-					$objDocumentManagementSystemKat3 = $this->Database->execute("SELECT * FROM tl_dms_categories  WHERE pid = $intUnterKategorieId_2 ORDER BY name");
-					while ($objDocumentManagementSystemKat3->next())
+					$document = $dmsLoader->loadDocument($docId); // with path to Root Category .... hier sowieso gesetzt
+					if ($document != null)
 					{
-						$intUnterKategorieId_3 = $objDocumentManagementSystemKat3->id;
-						$strUnterKategorieName_3 = $objDocumentManagementSystemKat3->name;
-						$strUnterLeserecht_3 = $objDocumentManagementSystemKat3->general_read_permission;
-						$strUnterKategorieBild_3 = $objDocumentManagementSystemKat3->kt_bild;
-						$strUnterKategorieBeschreibung_3 = $objDocumentManagementSystemKat3->description;
-
-						$objDocumentManagementSystemDok = $this->Database->execute("SELECT * FROM tl_dms_documents  WHERE pid = $intUnterKategorieId_3 && published = 1 && (keywords like '$strSuchwert' || description like '$strSuchwert' || name like '$strSuchwert') ORDER BY name, version_major, version_minor");
-						$arrDokDetails = $objDocumentManagementSystemDok->fetchAllAssoc();
-						$intDSZaehler = count($arrDokDetails);
-
-						$intDokumentLeseRecht = $this->dokumente_leserecht($intHauptKategorieId, $strUnterLeserecht_3, $intUserId);
-						$intDokumenteAnzeigen = $this->dokumente_auflisten($arrKategorieAuswahl, $intUnterKategorieId_3);
-
-						$intAnzeigenDS = $this->kategorien_ausblenden($intDSZaehler, $blnKatAusblenden, $intDokumentLeseRecht);
-
-						$strEinruecken = $parstrEinruecken1 . $parstrEinruecken1 . $parstrEinruecken1 . $parstrEinruecken2;
-						$arrDocumentManagementSystemKat[] = array('einruecken' => $strEinruecken, 'kategorieid' => $intUnterKategorieId_3, 'kategoriename' => $strUnterKategorieName_3, 'dokdetails' => $arrDokDetails, 'anzeigen' => $intDokumenteAnzeigen, 'leserecht' => $intDokumentLeseRecht, 'dokdir' => $strDokDir, 'kategoriebild' => $strUnterKategorieBild_3, 'zaehlerds' => $intDSZaehler, 'kategoriebeschreibung' => $strUnterKategorieBeschreibung_3, 'anzeigends' => $intAnzeigenDS, 'category' => 3,);
-					} // Ende SubSubSub
-
-				} // Ende SubSub
-
-			} // Ende Sub 
-
-		} // Ende Haupt
-
-		$this->Template->DocumentManagementSystemKat = $arrDocumentManagementSystemKat;
-		$this->Template->action = ampersand($this->Environment->request);
-
-	}
-
-	/*********************************************************************************************************************
-	 *        Funktionen
-	 **********************************************************************************************************************
-	 */
-
-	protected function kategorien_ausblenden($intDSZaehler, $blnKatAusblenden, $intDokumentLeseRecht)
-	{
-		/*
-		 *     Pruefung, ob Kategorien ausgeblendet oder angezeigt werden sollen
-		 *
-		 */
-		$intAnzeigenDS = 1;
-		if ($intDSZaehler == 0 && !$blnKatAusblenden)
-		{
-			$intAnzeigenDS = 0;
-		}
-		if ($intDSZaehler <> 0 && !$blnKatAusblenden && $intDokumentLeseRecht == 0)
-		{
-			$intAnzeigenDS = 0;
-		}
-		return ($intAnzeigenDS);
-	}
-
-	protected function dokumente_auflisten($arrKategorieAuswahl, $intKategorieId)
-	{
-		/*
-		 *     Pruefung, ob Dokumente in dieser Kategorie aufgelistet werden sollen
-		 *               - Kategorie wurde mittels Checkbox ausgewaehlt
-		 *
-		 */
-		$intDokumenteAnzeigen = 0;
-		if ($arrKategorieAuswahl)
-		{
-			foreach ($arrKategorieAuswahl as $strKategorieAuswahl)
-			{
-				if ($strKategorieAuswahl == "a" || $strKategorieAuswahl == $intKategorieId)
+						// Send the file to the browser
+						// TODO : Send the file to the browser (build path)
+						// TODO : check read permissions
+						$strDokDir = trim($GLOBALS['TL_CONFIG']['dmsBaseDirectory']);
+						
+						//$this->sendFileToBrowser($file);
+					}
+					else
+					{
+						$arrErrors[] = $GLOBALS['TL_LANG']['DMS']['ERR']['download_document_not_found'];
+					}
+				}
+				else
 				{
-					$intDokumenteAnzeigen = 1;
+					$arrErrors[] = $GLOBALS['TL_LANG']['DMS']['ERR']['download_document_illegal_parameter'];
 				}
 			}
 		}
-		return $intDokumenteAnzeigen;
+		
+		// TODO set a custom ROOT node id here
+		// TODO add search here
+		$arrCategories = $dmsLoader->loadCategories(0, true, true);
+		// apply the read permissions, to only show valid categories
+		$arrCategories = $this->applyReadPermissionsToCategories($arrCategories);
+		// flatten the tree structure (easier to use in template)
+		$arrCategories = DmsLoader::flattenCategories($arrCategories);
+		
+		// add all needed values to template
+		$this->Template->categories = $arrCategories;
+		$this->Template->hideEmptyCategories = $this->dmsHideEmptyCategories;
+		$this->Template->hideLockedCategories = $this->dmsHideLockedCategories;
+		$this->Template->formId = $formId;
+		$this->Template->action = ampersand($this->Environment->request);
+		$this->Template->errors = $arrErrors;
+		
+		// add collected post data
+		$this->Template->expandedCategories = $arrExpandedCategories;
+		$this->Template->searchText = $strSearchText;
 	}
-
-	protected function dokumente_leserecht($intKategorieId, $strLeserecht, $intUserId)
+	
+	/**
+	 * Apply the read permissions to the categories.
+	 *
+	 * @param	arr	$arrCategories	The structured array of categories.
+	 * @return	array	Returns a reduced array of categories (depends on the read permissions).
+	 */
+	private function applyReadPermissionsToCategories(Array $arrCategories)
 	{
-		/*
-		 *     Pruefung, ob Dokumente in dieser Kategorie aufgelistet werden dürfen
-		 *               - hat der User das Recht zu lesen?
-		 *
-		 */
-		$intDokumenteLeseRecht = 0;
-
-		switch ($strLeserecht)
+		$arrSecureCategories = $arrCategories;
+		foreach ($arrSecureCategories as $category)
 		{
-			case Category::GENERAL_READ_PERMISSION_ALL:
-				$intDokumenteLeseRecht = 1;
-				break;
-
-			case Category::GENERAL_READ_PERMISSION_LOGGED_USER:
-				if ($intUserId <> "")
-				{
-					$intDokumenteLeseRecht = 1;
-				}
-				break;
-
-			case Category::GENERAL_READ_PERMISSION_CUSTOM:
-				if ($intUserId <> "")
-				{
-					$objDocumentManagementSystemUser = $this->Database->execute("SELECT * FROM tl_member WHERE id = $intUserId");
-					$arrGroups = unserialize($objDocumentManagementSystemUser->groups); // Usergruppen
-
-					foreach ($arrGroups as $intGroup) // Array mit Zugriffsrechten erstellen
-					{
-						$objDocumentManagementSystemZug = $this->Database->execute("SELECT * FROM tl_dms_access_rights WHERE member_group = $intGroup && pid = $intKategorieId");
-						if ($objDocumentManagementSystemZug->read == 1)
-						{
-							$intDokumenteLeseRecht = 1;
-						}
-					}
-				}
-				break;
+			if (!$category->isPublished() || ($this->dmsHideEmptyCategories && !$category->hasDocuments()) || ($this->dmsHideLockedCategories && !$category->isReadableForCurrentMember()))
+			{
+				unset($arrSecureCategories[$category->id]);
+			}
+			else if ($category->hasSubCategories())
+			{
+				$arrSecureSubCategories = $this->applyReadPermissionsToCategories($category->subCategories);
+				$category->subCategories = $arrSecureSubCategories;
+			}
 		}
-		return ($intDokumenteLeseRecht);
+		return $arrSecureCategories;
 	}
-
-} //end class
+}
 
 ?>

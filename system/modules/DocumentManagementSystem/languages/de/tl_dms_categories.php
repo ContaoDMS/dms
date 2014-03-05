@@ -48,9 +48,10 @@ $GLOBALS['TL_LANG']['tl_dms_categories']['publish_legend']  = 'Veröffentlichung
 /**
  * Reference
  */
-$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'][Category::GENERAL_READ_PERMISSION_ALL]         = array('Leserecht für alle Frontendnutzer','Alle Frontendnutzer haben uneingeschränktes Leserecht in dieser Kategorie. Sie müssen dazu nicht angemeldet sein.');
-$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'][Category::GENERAL_READ_PERMISSION_LOGGED_USER] = array('Leserecht für angemeldete Frontendnutzer','Nur am Frontend angemeldete Nutzer haben uneingeschränktes Leserecht in dieser Kategorie.');
-$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'][Category::GENERAL_READ_PERMISSION_CUSTOM]      = array('Spezielle Rechte für einzelne Gruppen','Es werden für diese Kategorie spezielle Leserechte für einzelne Nutzergruppen vergeben (im Bereich Zugriffsrechte).');
+$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'][Category::GENERAL_READ_PERMISSION_ALL]         = array('Leserecht für alle Frontendnutzer', 'Alle Frontendnutzer haben uneingeschränktes Leserecht in dieser Kategorie. Sie müssen dazu nicht angemeldet sein.');
+$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'][Category::GENERAL_READ_PERMISSION_LOGGED_USER] = array('Leserecht für angemeldete Frontendnutzer', 'Nur am Frontend angemeldete Nutzer haben uneingeschränktes Leserecht in dieser Kategorie.');
+$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'][Category::GENERAL_READ_PERMISSION_CUSTOM]      = array('Spezielle Leserechte für einzelne Gruppen', 'Es werden für diese Kategorie spezielle Leserechte für einzelne Nutzergruppen vergeben (im Bereich Zugriffsrechte).');
+$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'][Category::GENERAL_READ_PERMISSION_INHERIT]     = array('Vererbung der Leserechte durch Oberkategorie(n)', 'Es werden für diese Kategorie die Leserechte der Oberkategorie(n) verwendet.');
 
 /**
  * Buttons

@@ -29,9 +29,65 @@
  */
 
 /**
- * Add a palette to tl_module
+ * Add palettes to tl_module
  */
-$GLOBALS['TL_DCA']['tl_module']['palettes']['dms_listing']    = '{title_legend},name,headline,type;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';
-$GLOBALS['TL_DCA']['tl_module']['palettes']['dms_management'] = '{title_legend},name,headline,type;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['dms_listing']    = '{title_legend},name,headline,type;{config_legend},dmsHideEmptyCategories,dmsHideLockedCategories;{template_legend:hide},dmsTemplate;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['dms_management'] = '{title_legend},name,headline,type;{config_legend},dmsHideLockedCategories;{template_legend:hide},dmsTemplate;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';
+
+/**
+ * Fields
+ */
+$GLOBALS['TL_DCA']['tl_module']['fields']['dmsHideEmptyCategories'] = array(
+	'label'            => &$GLOBALS['TL_LANG']['tl_module']['dmsHideEmptyCategories'],
+	'inputType'        => 'checkbox',
+	'eval'             => array('tl_class'=>'w50')
+);
+$GLOBALS['TL_DCA']['tl_module']['fields']['dmsHideLockedCategories'] = array(
+	'label'            => &$GLOBALS['TL_LANG']['tl_module']['dmsHideLockedCategories'],
+	'inputType'        => 'checkbox',
+	'eval'             => array('tl_class'=>'w50')
+);
+$GLOBALS['TL_DCA']['tl_module']['fields']['dmsTemplate'] = array(
+	'label'            => &$GLOBALS['TL_LANG']['tl_module']['dmsTemplate'],
+	'inputType'        => 'select',
+	'options_callback' => array('tl_module_dms', 'getDmsTemplates')
+);
+
+/**
+ * Class tl_module_dms
+ *
+ * Provide miscellaneous methods that are used by the data configuration array.
+ * PHP version 5
+ * @copyright  Cliff Parnitzky 2014
+ * @author     Cliff Parnitzky
+ * @package    Controller
+ */
+class tl_module_dms extends Backend
+{
+	/**
+	 * Constructor
+	 */
+	public function __construct()
+	{
+		parent::__construct();
+	}
+	
+	/**
+	 * Return all dms templates as array
+	 * @param DataContainer
+	 * @return array
+	 */
+	public function getDmsTemplates(DataContainer $dc)
+	{
+		$intPid = $dc->activeRecord->pid;
+		
+		if ($this->Input->get('act') == 'overrideAll')
+		{
+			$intPid = $this->Input->get('id');
+		}
+		
+		return $this->getTemplateGroup('mod_' . $dc->activeRecord->type, $intPid);
+	}
+}
 
 ?>

@@ -30,6 +30,18 @@
 $GLOBALS['TL_LANG']['DMS']['management_access_denied_headline'] = "Zugriff verweigert";
 $GLOBALS['TL_LANG']['DMS']['management_access_denied_text']     = "Nicht angemeldete Nutzer haben <u>grundsätzlich</u> kein Recht zum Verwaltungsbereich des Dokumenten Management System.";
 
+$GLOBALS['TL_LANG']['DMS']['listing_th_category']               = "Kategorie";
+$GLOBALS['TL_LANG']['DMS']['listing_th_filecount']              = "&sum;";
+$GLOBALS['TL_LANG']['DMS']['listing_th_select']                 = "Auswahl";
+$GLOBALS['TL_LANG']['DMS']['listing_search_button']             = "Suchen";
+$GLOBALS['TL_LANG']['DMS']['listing_search_placeholder']        = "Suchbegriff";
+$GLOBALS['TL_LANG']['DMS']['listing_button_show_all_documents'] = "Alle Dokumente anzeigen";
+$GLOBALS['TL_LANG']['DMS']['listing_button_hide_all_documents'] = "Alle Dokumente ausblenden";
+$GLOBALS['TL_LANG']['DMS']['listing_version']                   = "(V. %s)";
+$GLOBALS['TL_LANG']['DMS']['listing_size']                      = "Dateigröße: %s";
+$GLOBALS['TL_LANG']['DMS']['listing_uploaded']                  = "Hochgeladen: %s (%s)";
+$GLOBALS['TL_LANG']['DMS']['listing_lastedited']                = "Zuletzt bearbeitet: %s (%s)";
+
 /**
  * File size units
  */
@@ -40,5 +52,11 @@ $GLOBALS['TL_LANG']['DMS']['file_size_unit'][Document::FILE_SIZE_UNIT_GB]   = 'G
 $GLOBALS['TL_LANG']['DMS']['file_size_format']['text']                      = '%s %s';
 $GLOBALS['TL_LANG']['DMS']['file_size_format']['dec_point']                 = ',';
 $GLOBALS['TL_LANG']['DMS']['file_size_format']['$thousands_sep']            = '.';
+
+/**
+ * File size units
+ */
+$GLOBALS['TL_LANG']['DMS']['ERR']['download_document_illegal_parameter'] = 'Die angeforderte Datei konnte nicht heruntergeladen werden, weil der Übergabeparameter unzulässig ist.';
+$GLOBALS['TL_LANG']['DMS']['ERR']['download_document_not_found']         = 'Die angeforderte Datei konnte nicht heruntergeladen werden, weil das Dokument nicht existiert.';
 
 ?>

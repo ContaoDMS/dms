@@ -45,6 +45,7 @@ class AccessRight
 	/**
 	 * Define object parameters.
 	 */
+	private $intId = -1;
 	private $intMemberGroupId = -1;
 	private $blnRead = false;
 	private $blnUpload = false;
@@ -53,12 +54,19 @@ class AccessRight
 	private $blnPublish = false;
 	
 	/**
+	 * reference to category
+	 */
+	private $category = null;
+	
+	/**
 	 * Initialize the object.
 	 *
+	 * @param	int	$intId	The id of the access right.
 	 * @param	int	$intMemberGroupId	The id of the member group.
 	 */
-	public function __construct($intMemberGroupId)
+	public function __construct($intId, $intMemberGroupId)
 	{
+		$this->intId = $intId;
 		$this->intMemberGroupId = $intMemberGroupId;
 	}
 	
@@ -72,6 +80,9 @@ class AccessRight
 	{
 		switch ($strKey)
 		{
+			case 'id':
+				$this->intId = $varValue;
+				break;
 			case 'memberGroup':
 				$this->intMemberGroupId = $varValue;
 				break;
@@ -90,6 +101,9 @@ class AccessRight
 			case self::PUBLISH:
 				$this->blnPublish = (bool) $varValue;
 				break;
+			case 'category':
+				$this->category = $varValue;
+				break;
 			default:
 				throw new Exception(sprintf('Invalid argument "%s"', $strKey));
 				break;
@@ -106,6 +120,9 @@ class AccessRight
 	{
 		switch ($strKey)
 		{
+			case 'id':
+				return $this->intId;
+				break;
 			case 'memberGroup':
 				return $this->intMemberGroupId;
 				break;
@@ -123,6 +140,9 @@ class AccessRight
 				break;
 			case self::PUBLISH:
 				return $this->blnPublish;
+				break;
+			case 'category':
+				return $this->category;
 				break;
 			default:
 				return null;

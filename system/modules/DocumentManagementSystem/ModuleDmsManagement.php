@@ -41,7 +41,7 @@ class ModuleDmsManagement extends Module
 	 * Template
 	 * @var string
 	 */
-	protected $strTemplate = 'mod_dms_management_categories';
+	protected $strTemplate = 'mod_dms_management';
 
 	/**
 	 * Display a wildcard in the back end
@@ -70,10 +70,18 @@ class ModuleDmsManagement extends Module
 	 */
 	protected function compile()
 	{
+		if ($this->dmsTemplate != $strTemplate)
+		{
+			$this->strTemplate = $this->dmsTemplate;
+
+			$this->Template = new \FrontendTemplate($this->strTemplate);
+			$this->Template->setData($this->arrData);
+		}
+		
 		/*
 		 *        kein submit                     --->  wenn ein Nutzer angemeldet ist :
 		 *                                              Anzeige der Kategorieauswahl
-		 *                                              Template : mod_dms_management_categories
+		 *                                              Template : mod_dms_management
 		 *                                              wenn kein Nutzer angemeldet ist :
 		 *                                              Hinweis ausgeben                               
 		 *
@@ -379,7 +387,7 @@ class ModuleDmsManagement extends Module
 		$intUserId = $this->User->id;
 		if ($strUsername == "") // kein Frontenduser angemeldet
 		{
-			$this->Template = new FrontendTemplate('mod_dms_management_access_denied');
+			$this->Template = new FrontendTemplate('mod_dms_mgmt_access_denied');
 			$this->Template->action = ampersand($this->Environment->request);
 		}
 		else // Frontenduser angemeldet			
@@ -482,7 +490,7 @@ class ModuleDmsManagement extends Module
 		 *     Auswahl der Datei die upgeloadet werden soll
 		 *
 		 */
-		$this->Template = new FrontendTemplate('mod_dms_management_upload_select_file');
+		$this->Template = new FrontendTemplate('mod_dms_mgmt_upload_select_file');
 		$arrDocumentManagementSystemUp = array();
 
 		$strDocumentManagementSystemUp1 = $this->Database->execute("SELECT * FROM tl_dms_categories WHERE id = $intKategorieId");
@@ -492,6 +500,7 @@ class ModuleDmsManagement extends Module
 		$arrDocumentManagementSystemUp[] = array('kategorieid' => $intKategorieId, 'kategoriename' => $strKategorieName, 'recht_veroeffentlichen' => $strVeroeffentlichen, 'dateitypen' => $strDateitypen,);
 
 		$this->Template->DocumentManagementSystemUp = $arrDocumentManagementSystemUp;
+		//$this->Template->maxUploadFileSize = 
 		$this->Template->action = ampersand($this->Environment->request);
 	}
 
@@ -508,7 +517,7 @@ class ModuleDmsManagement extends Module
 		$dir = trim($GLOBALS['TL_CONFIG']['dmsBaseDirectory']);
 		$dirTemp = $dir . "/temp";
 
-		$this->Template = new FrontendTemplate('mod_dms_management_upload_enter_properties');
+		$this->Template = new FrontendTemplate('mod_dms_mgmt_upload_enter_properties');
 		$arrDocumentManagementSystemUpEig = array();
 
 		$strDateiName = strtok($strUploadName, ".");
@@ -582,7 +591,7 @@ class ModuleDmsManagement extends Module
 		$dirTemp = $dir . "/temp";
 		$dirGrafik = $dir . "/preview";
 
-		$this->Template = new FrontendTemplate('mod_dms_management_upload_processing');
+		$this->Template = new FrontendTemplate('mod_dms_mgmt_upload_processing');
 		$arrDocumentManagementSystemUpVerarb = array();
 
 		$this->import('FrontendUser', 'User');
@@ -674,7 +683,7 @@ class ModuleDmsManagement extends Module
 		 *     Dokument verwalten
 		 */
 
-		$this->Template = new FrontendTemplate('mod_dms_management_document_select');
+		$this->Template = new FrontendTemplate('mod_dms_mgmt_document_select');
 		$arrDocumentManagementSystemVerw = array();
 
 		$strDocumentManagementSystemVerw1 = $this->Database->execute("SELECT * FROM tl_dms_categories WHERE id = $intKategorieId");
@@ -699,7 +708,7 @@ class ModuleDmsManagement extends Module
 		/*	Loeschen von ausgewaehlten Dokumenten
 		 *			ausgewaehlte Dokumente im Array $arrLoeschen werden geloescht (hier:Sicherheitsabfrage)
 		 */
-		$this->Template = new FrontendTemplate('mod_dms_management_document_delete');
+		$this->Template = new FrontendTemplate('mod_dms_mgmt_document_delete');
 
 		$arrConvVeroeffentlichen;
 		if ($arrVeroeffentlichen)
@@ -745,7 +754,7 @@ class ModuleDmsManagement extends Module
 		 *			2. Grafik
 		 *			3. Datenbankeintrag
 		 */
-		$this->Template = new FrontendTemplate('mod_dms_management_document_delete_processing');
+		$this->Template = new FrontendTemplate('mod_dms_mgmt_document_delete_processing');
 
 		$arrConvVeroeffentlichen;
 		if ($arrVeroeffentlichen)
@@ -815,7 +824,7 @@ class ModuleDmsManagement extends Module
 		/*	Editieren von ausgewaehlten Dokumenten
 		 *			ausgewaehlte Dokumente im Array $arrEditieren werden editiert (hier:Sicherheitsabfrage)
 		 */
-		$this->Template = new FrontendTemplate('mod_dms_management_document_edit');
+		$this->Template = new FrontendTemplate('mod_dms_mgmt_document_edit');
 
 		$arrConvVeroeffentlichen;
 		if ($arrVeroeffentlichen)
@@ -857,7 +866,7 @@ class ModuleDmsManagement extends Module
 		/*	Editieren von ausgewaehlten Dokumenten
 		 *			ausgewaehlte Dokumente im Array $arrEditieren werden editiert (hier:Sicherheitsabfrage)
 		 */
-		$this->Template = new FrontendTemplate('mod_dms_management_document_edit_processing');
+		$this->Template = new FrontendTemplate('mod_dms_mgmt_document_edit_processing');
 
 		$arrConvVeroeffentlichen;
 		if ($arrVeroeffentlichen)

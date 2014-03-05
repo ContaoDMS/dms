@@ -56,16 +56,23 @@ class Document
 	private $intVersionMinor = -1;
 	private $intVersionPatch = -1;
 	private $intUploadMemberId = -1;
-	private $tstampUploadDate = '';
+	private $strUploadMemberName = "";
+	private $intUploadDate = -1;
 	private $intLasteditMemberId = -1;
-	private $tstampLasteditDate = '';
+	private $strLasteditMemberName = "";
+	private $intLasteditDate = -1;
 	private $blnPublished = false;
+	
+	/**
+	 * reference to category
+	 */
+	private $category = null;
 	
 	/**
 	 * Initialize the object.
 	 *
-	 * @param	int	$intId	The id of the category.
-	 * @param	string	$strName	The name of the category.
+	 * @param	int	$intId	The id of the document.
+	 * @param	string	$strName	The name of the document.
 	 */
 	public function __construct($intId, $strName)
 	{
@@ -116,20 +123,29 @@ class Document
 			case 'versionPatch':
 				$this->intVersionPatch = (int) $varValue;
 				break;
-			case 'uploadMember':
+			case 'uploadMemberId':
 				$this->intUploadMemberId = (int) $varValue;
 				break;
-			case 'uploadDate':
-				$this->tstampUploadDate = $varValue;
+			case 'uploadMemberName':
+				$this->strUploadMemberName = $varValue;
 				break;
-			case 'lasteditMember':
+			case 'uploadDate':
+				$this->intUploadDate = (int) $varValue;
+				break;
+			case 'lasteditMemberId':
 				$this->intLasteditMemberId = (int) $varValue;
 				break;
+			case 'lasteditMemberName':
+				$this->strLasteditMemberName = $varValue;
+				break;
 			case 'lasteditDate':
-				$this->tstampLasteditDate = $varValue;
+				$this->intLasteditDate = (int) $varValue;
 				break;
 			case 'published':
 				$this->blnPublished = (bool) $varValue;
+				break;
+			case 'category':
+				$this->category = $varValue;
 				break;
 			default:
 				throw new Exception(sprintf('Invalid argument "%s"', $strKey));
@@ -180,20 +196,29 @@ class Document
 			case 'versionPatch':
 				return $this->intVersionPatch;
 				break;
-			case 'uploadMember':
+			case 'uploadMemberId':
 				return $this->intUploadMemberId;
 				break;
-			case 'uploadDate':
-				return $this->tstampUploadDate;
+			case 'uploadMemberName':
+				return $this->strUploadMemberName;
 				break;
-			case 'lasteditMember':
+			case 'uploadDate':
+				return $this->intUploadDate;
+				break;
+			case 'lasteditMemberId':
 				return $this->intLasteditMemberId;
 				break;
+			case 'lasteditMemberName':
+				return $this->strLasteditMemberName;
+				break;
 			case 'lasteditDate':
-				return $this->tstampLasteditDate;
+				return $this->intLasteditDate;
 				break;
 			case 'published':
 				return $this->blnPublished;
+				break;
+			case 'category':
+				return $this->category;
 				break;
 			default:
 				return null;
@@ -212,19 +237,60 @@ class Document
 	}
 	
 	/**
+	 * Return if this document has a description.
+	 *
+	 * @return	bool	True if there is a description.
+	 */
+	public function hasDescription()
+	{
+		return strlen($this->strDescription) > 0;
+	}
+	
+	/**
+	 * Return if this document knows a member name who uploaded the file.
+	 *
+	 * @return	bool	True if there is a member name.
+	 */
+	public function hasUploadMemberName()
+	{
+		return strlen($this->strUploadMemberName) > 0;
+	}
+	
+	/**
+	 * Return if this document knows a member name of the last editor.
+	 *
+	 * @return	bool	True if there is a member name.
+	 */
+	public function hasLasteditMemberName()
+	{
+		return strlen($this->strLasteditMemberName) > 0;
+	}
+	
+	/**
 	 * Return the complete version string of this document.
 	 *
 	 * @return	string	The complete version string of this document.
 	 */
 	public function getVersion()
 	{
-		return $this->intVersionMajor . '.' . $this->intVersionMinor . '.' . $this->intVersionPatch;
+		return static::buildVersion($this->intVersionMajor, $this->intVersionMinor, $this->intVersionPatch);
+	}
+	
+	/**
+	 * Return the complete version string of the file name for this document.
+	 *
+	 * @return	string	The complete version string of the file name for this document.
+	 */
+	public function getFileNameVersion()
+	{
+		return static::buildFileNameVersion($this->intVersionMajor, $this->intVersionMinor, $this->intVersionPatch);
 	}
 	
 	/**
 	 * Return the file size for the given unit.
 	 *
 	 * @param	string	$strUnit	The file size unit.
+	 * @param	bool	$blnFormatted	True if the file size should be returned as formatted string (with unit).
 	 * @return	mixed	The file size for the given unit (as int or formatted as string).
 	 */
 	public function getFileSize($strUnit, $blnFormatted = false)
@@ -312,7 +378,7 @@ class Document
 		$value = number_format($doubleFileSize, 2, $GLOBALS['TL_LANG']['DMS']['file_size_format']['dec_point'], $GLOBALS['TL_LANG']['DMS']['file_size_format']['$thousands_sep']);
 		if (substr($value, -3) == ($GLOBALS['TL_LANG']['DMS']['file_size_format']['dec_point'] . "00"))
 		{
-			$value = substr($value, 0, strlen($value) - 3);
+			$value = substr($value, 0, - 3);
 		}
 		return sprintf($GLOBALS['TL_LANG']['DMS']['file_size_format']['text'], $value, $GLOBALS['TL_LANG']['DMS']['file_size_unit'][$strUnit]);
 	}
@@ -325,7 +391,7 @@ class Document
 	public function getUploadDate()
 	{
 		// TODO get a format from config here
-		return date($this->tstampUploadDate, 'd.m.Y H:i:s');
+		return date('d.m.Y H:i:s', $this->intUploadDate);
 	}
 	
 	/**
@@ -336,7 +402,7 @@ class Document
 	public function getLasteditDate()
 	{
 		// TODO get a format from config here
-		return date($this->tstampLasteditDate, 'd.m.Y H:i:s');
+		return date('d.m.Y H:i:s', $this->intLasteditDate);
 	}
 	
 	/**
@@ -347,6 +413,32 @@ class Document
 	public function isPublished()
 	{
 		return $this->blnPublished;
+	}
+	
+	/**
+	 * Return the complete version string for a document.
+	 *
+	 * @param	int	$intVersionMajor	The versions major number.
+	 * @param	int	$intVersionMinor	The versions minor number.
+	 * @param	int	$intVersionPatch	The versions patch number.
+	 * @return	string	The complete version string of a document.
+	 */
+	public static function buildVersion($intVersionMajor, $intVersionMinor, $intVersionPatch)
+	{
+		return $intVersionMajor . '.' . $intVersionMinor . '.' . $intVersionPatch;
+	}
+	
+	/**
+	 * Return the complete version string for a file name of a document.
+	 *
+	 * @param	int	$intVersionMajor	The versions major number.
+	 * @param	int	$intVersionMinor	The versions minor number.
+	 * @param	int	$intVersionPatch	The versions patch number.
+	 * @return	string	The complete version string for a file name of a document.
+	 */
+	public static function buildFileNameVersion($intVersionMajor, $intVersionMinor, $intVersionPatch)
+	{
+		return $intVersionMajor . '_' . $intVersionMinor . '_' . $intVersionPatch;
 	}
 }
 

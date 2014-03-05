@@ -288,7 +288,7 @@ class tl_dms_documents extends Backend
 		$fileName = substr($file, 0, $intPosDot);
 		$fileType = substr($file, $intPosDot + 1);
 		
-		return $fileName . "_" . $version_major . "_" . $version_minor . "_" . $version_patch . "." . $fileType;
+		return $fileName . "_" . Document::buildFileNameVersion($version_major, $version_minor, $version_patch) . "." . $fileType;
 	}
 	
 	private function getUnversionedFileName($file, $version_major, $version_minor, $version_patch)
@@ -296,7 +296,7 @@ class tl_dms_documents extends Backend
 		$intPosDot = strrpos($file, ".");
 		$fileName = substr($file, 0, $intPosDot);
 		$fileType = substr($file, $intPosDot + 1);
-		$versionString = "_" . $version_major . "_" . $version_minor . "_" . $version_patch;
+		$versionString = "_" . Document::buildFileNameVersion($version_major, $version_minor, $version_patch);
 		
 		return substr($fileName, 0, strrpos($fileName, $versionString)) . "." . $fileType;
 	}

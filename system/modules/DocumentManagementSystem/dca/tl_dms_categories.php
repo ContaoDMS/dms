@@ -166,7 +166,13 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 			'exclude'                 => true,
 			'default'                 => Category::GENERAL_READ_PERMISSION_ALL,
 			'inputType'               => 'radio',
-			'options'                 => array(Category::GENERAL_READ_PERMISSION_ALL, Category::GENERAL_READ_PERMISSION_LOGGED_USER, Category::GENERAL_READ_PERMISSION_CUSTOM),
+			'options'                 => array
+										 (
+											Category::GENERAL_READ_PERMISSION_ALL,
+											Category::GENERAL_READ_PERMISSION_LOGGED_USER,
+											Category::GENERAL_READ_PERMISSION_CUSTOM,
+											Category::GENERAL_READ_PERMISSION_INHERIT
+										 ),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'],
 			'eval'                    => array('helpwizard'=>true, 'tl_class'=>'w50')
 		),
@@ -222,9 +228,14 @@ class tl_dms_categories extends Backend
 		if ($blnReturnImage)
 		{
 			return $this->generateImage($image, '', $imageAttribute);
-		} 
+		}
 		
-		return '<a>' . $this->generateImage('system/modules/DocumentManagementSystem/html/' . $image, '', $imageAttribute) . '</a>' . $label;
+		$genReadPerm = $row['general_read_permission'];
+		$genReadPermImg = '<span style="padding-left:3px;">'
+						. $this->generateImage('system/modules/DocumentManagementSystem/html/general_read_permission_' . $genReadPerm . '.png', $genReadPerm, 'title="' . $GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'][$genReadPerm][0] . '"')
+						. '</span>';
+		
+		return '<a>' . $this->generateImage('system/modules/DocumentManagementSystem/html/' . $image, '', $imageAttribute) . '</a>' . $label . $genReadPermImg;
 	}
 
 	

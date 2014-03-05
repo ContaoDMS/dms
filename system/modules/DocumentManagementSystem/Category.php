@@ -39,6 +39,7 @@ class Category extends System
 	const GENERAL_READ_PERMISSION_ALL         = "ALL";
 	const GENERAL_READ_PERMISSION_LOGGED_USER = "LOGGED_USER";
 	const GENERAL_READ_PERMISSION_CUSTOM      = "CUSTOM";
+	const GENERAL_READ_PERMISSION_INHERIT     = "INHERIT";
 	
 	/**
 	 * Define object parameters.
@@ -52,7 +53,11 @@ class Category extends System
 	private $arrSubCategories = array();
 	private $arrAccessRights = array();
 	private $arrDocuments = array();
-	private $intLevel = -1;
+	
+	/**
+	 * reference to parent category
+	 */
+	private $parentCategory = null;
 	
 	/**
 	 * Initialize the object.
@@ -111,8 +116,8 @@ class Category extends System
 			case 'documents':
 				$this->arrDocuments = $varValue;
 				break;
-			case 'level':
-				$this->intLevel = (int) $varValue;
+			case 'parentCategory':
+				$this->parentCategory = $varValue;
 				break;
 			default:
 				throw new Exception(sprintf('Invalid argument "%s"', $strKey));
@@ -157,8 +162,8 @@ class Category extends System
 			case 'documents':
 				return $this->arrDocuments;
 				break;
-			case 'level':
-				return $this->intLevel;
+			case 'parentCategory':
+				return $this->parentCategory;
 				break;
 			default:
 				return null;
@@ -206,15 +211,38 @@ class Category extends System
 		return !empty($this->arrDocuments);
 	}
 	
+	
+	/**
+	 * Return if this category has a description.
+	 *
+	 * @return	bool	True if there is a description.
+	 */
+	public function hasDescription()
+	{
+		return strlen($this->strDescription) > 0;
+	}
+	
 	/**
 	 * Add an additional subcategory.
 	 *
 	 * @param	$subCategory	The subcategory to add.
 	 * @return	category	Returns this category.
 	 */
-	public function addSubCategory($subCategory)
+	public function addSubCategory(Category $subCategory)
 	{
 		$this->arrSubCategories[] = $subCategory;
+		return $this;
+	}
+	
+	/**
+	 * Remove a subcategory.
+	 *
+	 * @param	$subCategory	The subcategory to remove.
+	 * @return	category	Returns this category.
+	 */
+	public function removeSubCategory(Category $subCategory)
+	{
+		unset($this->arrSubCategories[$subCategory]);
 		return $this;
 	}
 	
@@ -224,7 +252,7 @@ class Category extends System
 	 * @param	$accessRight	The access right to add.
 	 * @return	category	Returns this category.
 	 */
-	public function addAccessRight($accessRight)
+	public function addAccessRight(AccessRight $accessRight)
 	{
 		$this->arrAccessRights[] = $accessRight;
 		return $this;
@@ -236,7 +264,7 @@ class Category extends System
 	 * @param	$document	The document to add.
 	 * @return	category	Returns this category.
 	 */
-	public function addDocument($document)
+	public function addDocument(Document $document)
 	{
 		$this->arrDocuments[] = $document;
 		return $this;
@@ -269,17 +297,21 @@ class Category extends System
 	 */
 	public function isReadableForCurrentMember()
 	{
-		if ($this->strGeneralReadPermission == self::GENERAL_READ_PERMISSION_ALL)
+		if ($this->generalReadPermission == self::GENERAL_READ_PERMISSION_ALL)
 		{
 			return true;
 		}
-		else if ($this->strGeneralReadPermission == self::GENERAL_READ_PERMISSION_LOGGED_USER && FE_USER_LOGGED_IN)
+		else if ($this->generalReadPermission == self::GENERAL_READ_PERMISSION_LOGGED_USER && FE_USER_LOGGED_IN)
 		{
 			return true;
 		}
-		else if ($this->strGeneralReadPermission == self::GENERAL_READ_PERMISSION_CUSTOM && FE_USER_LOGGED_IN)
+		else if ($this->generalReadPermission == self::GENERAL_READ_PERMISSION_CUSTOM && FE_USER_LOGGED_IN)
 		{
 			return $this->isAccessibleByCurrentMember(AccessRight::READ);
+		}
+		else if ($this->generalReadPermission == self::GENERAL_READ_PERMISSION_INHERIT && !$this->isRootCategory())
+		{
+			return $this->parentCategory->isReadableForCurrentMember();
 		}
 		return false;
 	}
@@ -296,6 +328,7 @@ class Category extends System
 		{
 			$blnIsAccessible = false;
 			$arrMemberGroups = deserialize($this->User->groups);
+			// TODO if has no access rights ... get from parent ... need a flag, to allow inherited access rights
 			foreach($this->arrAccessRights as $accessRight)
 			{
 				if (in_array($accessRight->memberGroup, $arrMemberGroups))
@@ -306,6 +339,60 @@ class Category extends System
 			return $blnIsAccessible;
 		}
 		return false;
+	}
+	
+	/**
+	 * Returns if this category is a root node in context of the current structure of categories.
+	 *
+	 * @return	bool	True if this category has no parent category.
+	 */
+	public function isRootCategory()
+	{
+		return $this->parentCategory == null;
+	}
+	
+	/**
+	 * Returns the root node of this category in context of the current structure of categories.
+	 *
+	 * @return	category	True if this category has no parent category.
+	 */
+	public function getRootCategory()
+	{
+		if (!$this->isRootCategory())
+		{
+			return $this->parentCategory->getRootCategory();
+		}
+		
+		// return this category, if there is no parent
+		return $this;
+	}
+	
+	/**
+	 * Returns the path from the root node of this category to this category in context of the current structure of categories.
+	 *
+	 * @return	arr	All nodes in the path from the root node to this category.
+	 */
+	public function getPath()
+	{
+		$arrPath = array();
+		
+		if (!$this->isRootCategory())
+		{
+			$arrPath = $this->parentCategory->getPath();
+		}
+		$arrPath[] = $this;
+		
+		return $arrPath;
+	}
+	
+	/**
+	 * Returns the level of the category in context of the current structure of categories.
+	 *
+	 * @return	int	The level of this category.
+	 */
+	public function getLevel()
+	{
+		return count($this->getPath());
 	}
 }
 

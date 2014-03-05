@@ -31,7 +31,7 @@
 /**
  * Add to palette
  */
-$GLOBALS['TL_DCA']['tl_settings']['palettes']['default'] .= ';{dms_legend},dmsBaseDirectory,dmsHideEmptyLockedCategories,dmsMaxUploadFileSize';
+$GLOBALS['TL_DCA']['tl_settings']['palettes']['default'] .= ';{dms_legend},dmsBaseDirectory,dmsMaxUploadFileSize';
 
 /**
  * Add fields
@@ -41,11 +41,7 @@ $GLOBALS['TL_DCA']['tl_settings']['fields']['dmsBaseDirectory'] = array(
 	'inputType' => 'fileTree',
 	'eval'      => array('files'=>false, 'fieldType'=>'radio', 'mandatory'=>true)
 );
-$GLOBALS['TL_DCA']['tl_settings']['fields']['dmsHideEmptyLockedCategories'] = array(
-	'label'     => &$GLOBALS['TL_LANG']['tl_settings']['dmsHideEmptyLockedCategories'],
-	'inputType' => 'checkbox',
-	'eval'      => array('tl_class'=>'clr')
-);
+
 $GLOBALS['TL_DCA']['tl_settings']['fields']['dmsMaxUploadFileSize'] = array(
 	'label'     => &$GLOBALS['TL_LANG']['tl_settings']['dmsMaxUploadFileSize'],
 	'inputType' => 'inputUnit',
@@ -69,6 +65,14 @@ $GLOBALS['TL_DCA']['tl_settings']['fields']['dmsMaxUploadFileSize'] = array(
  */
 class tl_settings_dms extends Backend
 {
+	/**
+	 * Constructor
+	 */
+	public function __construct()
+	{
+		parent::__construct();
+	}
+	
 	/**
 	 * Return the reduced file name
 	 * @param mixed
@@ -103,13 +107,13 @@ class tl_settings_dms extends Backend
 		switch($unit)
 		{
 			case 'k':
-				$val = Document::convertFileSize((double) substr($param, 0, strlen($param) - 1), Document::FILE_SIZE_UNIT_KB, Document::FILE_SIZE_UNIT_BYTE);
+				$val = Document::convertFileSize((double) substr($param, 0, - 1), Document::FILE_SIZE_UNIT_KB, Document::FILE_SIZE_UNIT_BYTE);
 				break;
 			case 'm':
-				$val = Document::convertFileSize((double) substr($param, 0, strlen($param) - 1), Document::FILE_SIZE_UNIT_MB, Document::FILE_SIZE_UNIT_BYTE);
+				$val = Document::convertFileSize((double) substr($param, 0, - 1), Document::FILE_SIZE_UNIT_MB, Document::FILE_SIZE_UNIT_BYTE);
 				break;
 			case 'g':
-				$val = Document::convertFileSize((double) substr($param, 0, strlen($param) - 1), Document::FILE_SIZE_UNIT_GB, Document::FILE_SIZE_UNIT_BYTE);
+				$val = Document::convertFileSize((double) substr($param, 0, - 1), Document::FILE_SIZE_UNIT_GB, Document::FILE_SIZE_UNIT_BYTE);
 				break;
 		}
 		
@@ -119,7 +123,6 @@ class tl_settings_dms extends Backend
 		}
 		return $val;
 	}
-
 }
 
 ?>

@@ -25,19 +25,13 @@
  * @author     Cliff Parnitzky
  * @package    DocumentManagementSystem
  * @license    LGPL
- * @filesource [dokmansystem] by Thomas Krueger
  */
 
 /**
  * Fields
  */
-$GLOBALS['TL_LANG']['tl_settings']['dms_legend']                   = "Dokumenten Management System";
-$GLOBALS['TL_LANG']['tl_settings']['dmsBaseDirectory']             = array('Basisverzeichnis', 'Hier können Sie das Basisverzeichnis für die Dokumente auswählen. Der empfohlene Ort ist <em>tl_files/dms</em>.');
-$GLOBALS['TL_LANG']['tl_settings']['dmsMaxUploadFileSize']         = array('Maximale Upload Dateigröße', 'Geben Sie die maximale Größe von Dateien an, die hochgeladen werden dürfen. Diese Größe darf die PHP Einstellung für <i>upload_max_filesize</i> nicht überschreiten.');
-
-/**
- * Errors
- */
-$GLOBALS['TL_LANG']['ERR']['dmsMaxUploadFileSize'] = 'Der gewählte Wert übersteigt den der PHP Konfiguration. Es sind maximal <b>%s</b> möglich.';
+$GLOBALS['TL_LANG']['tl_module']['dmsHideEmptyCategories']  = array('Leere Kategorien ausblenden', 'Bitte wählen Sie ob leere Kategorien ausgeblendet werden sollen.');
+$GLOBALS['TL_LANG']['tl_module']['dmsHideLockedCategories'] = array('Gespeerte Kategorien ausblenden', 'Bitte wählen Sie ob gespeerte Kategorien ausgeblendet werden sollen.');
+$GLOBALS['TL_LANG']['tl_module']['dmsTemplate']             = array('DMS Template', 'Bitte wählen eine eigenes Template aus.');
 
 ?>
