@@ -48,7 +48,7 @@ class Document
 	private $strName = "";
 	private $strDescription = "";
 	private $strKeywords = "";
-	private $strFileSource = '';
+	private $strFileName = '';
 	private $strFileType = '';
 	private $intFileSize = -1;
 	private $strFilePreview = '';
@@ -102,8 +102,8 @@ class Document
 			case 'keywords':
 				$this->strKeywords = $varValue;
 				break;
-			case 'fileSource':
-				$this->strFileSource = $varValue;
+			case 'fileName':
+				$this->strFileName = $varValue;
 				break;
 			case 'fileType':
 				$this->strFileType = $varValue;
@@ -175,8 +175,8 @@ class Document
 			case 'keywords':
 				return $this->strKeywords;
 				break;
-			case 'fileSource':
-				return $this->strFileSource;
+			case 'fileName':
+				return $this->strFileName;
 				break;
 			case 'fileType':
 				return $this->strFileType;
@@ -281,9 +281,19 @@ class Document
 	 *
 	 * @return	string	The complete version string of the file name for this document.
 	 */
-	public function getFileNameVersion()
+	public function getVersionForFileName()
 	{
-		return static::buildFileNameVersion($this->intVersionMajor, $this->intVersionMinor, $this->intVersionPatch);
+		return static::buildVersionForFileName($this->intVersionMajor, $this->intVersionMinor, $this->intVersionPatch);
+	}
+	
+	/**
+	 * Return the complete versioned filename string for this document.
+	 *
+	 * @return	string	The complete versioned filename string for this document.
+	 */
+	public function getFileNameVersioned()
+	{
+		return static::buildFileNameVersioned($this->strFileName, static::getVersionForFileName($this->intVersionMajor, $this->intVersionMinor, $this->intVersionPatch), $this->strFileType);
 	}
 	
 	/**
@@ -436,9 +446,22 @@ class Document
 	 * @param	int	$intVersionPatch	The versions patch number.
 	 * @return	string	The complete version string for a file name of a document.
 	 */
-	public static function buildFileNameVersion($intVersionMajor, $intVersionMinor, $intVersionPatch)
+	public static function buildVersionForFileName($intVersionMajor, $intVersionMinor, $intVersionPatch)
 	{
 		return $intVersionMajor . '_' . $intVersionMinor . '_' . $intVersionPatch;
+	}
+	
+	/**
+	 * Return the complete versioned filename string of a document.
+	 *
+	 * @param	string	$strFileName	The files name.
+	 * @param	string	$strFileNameVersion	The file name version.
+	 * @param	string	$strFileType	The files type.
+	 * @return	string	The complete versioned filename string of a document.
+	 */
+	public static function buildFileNameVersioned($strFileName, $strFileNameVersion, $strFileType)
+	{
+		return $strFileName . '_' . $strFileNameVersion . '.' . $strFileType;
 	}
 }
 

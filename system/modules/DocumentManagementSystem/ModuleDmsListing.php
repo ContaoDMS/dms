@@ -70,13 +70,6 @@ class ModuleDmsListing extends Module
 	 */
 	protected function compile()
 	{
-		/**
-		 * - Suchstring ggf. umformatieren
-		 * - Suchstring an Loader uebergeben
-		 * - File Doanload einbauen
-		 * - Rechteprüfung vor File Doanload einbauen
-		 */
-		
 		$dmsLoader = DmsLoader::getInstance();
 		
 		/* set custom template if defined */
@@ -102,12 +95,7 @@ class ModuleDmsListing extends Module
 				$arrExpandedCategories = $this->Input->post('expandedCatagories');
 			}
 			
-			/* prepare search string */
 			$strSearchText = $this->Input->post('searchText');
-			// TODO : prepare search string ???
-			//		$strSuchbegriff = strtr($strSuchbegriff, array("Ä" => "Ae", "ä" => "Ae", "Ö" => "Oe", "ö" => "Oe", "Ü" => "Ue", "ü" => "Ue", "ß" => "SS", "&" => "_und_", " " => "_"));
-			//		$strSuchwert = strtoupper($strSuchbegriff);
-			//		$strSuchwert = "%" . $strSuchwert . "%";
 			
 			/* handle download */
 			$docId = $this->Input->post('docId');
@@ -118,12 +106,18 @@ class ModuleDmsListing extends Module
 					$document = $dmsLoader->loadDocument($docId); // with path to Root Category .... hier sowieso gesetzt
 					if ($document != null)
 					{
-						// Send the file to the browser
-						// TODO : Send the file to the browser (build path)
 						// TODO : check read permissions
-						$strDokDir = trim($GLOBALS['TL_CONFIG']['dmsBaseDirectory']);
 						
-						//$this->sendFileToBrowser($file);
+						// Send the file to the browser
+						$file = DmsConfig::getDocumentFilePath($document->getFileNameVersioned());
+						if (file_exists(TL_ROOT . '/' . $file))
+						{
+							$this->sendFileToBrowser($file);
+						}
+						else
+						{
+							$arrErrors[] = $GLOBALS['TL_LANG']['DMS']['ERR']['download_document_not_found'];
+						}
 					}
 					else
 					{
@@ -137,9 +131,18 @@ class ModuleDmsListing extends Module
 			}
 		}
 		
-		// TODO set a custom ROOT node id here
-		// TODO add search here
-		$arrCategories = $dmsLoader->loadCategories(0, true, true);
+		// Prepare paramters for loader
+		$params = new DmsLoaderParams();
+		// TODO (issue #9) set a custom ROOT node id here --> module config
+		$params->rootCategoryId = 0;
+		$params->loadRootCategory = false;
+		$params->loadAccessRights = true;
+		$params->loadDocuments = true;
+		$params->documentSearchText = $strSearchText;
+		// TODO (issue #9) get the search type from form here (via Drop Down)
+		$params->documentSearchType = DmsLoaderParams::DOCUMENT_SEARCH_LIKE;
+		
+		$arrCategories = $dmsLoader->loadCategories($params);
 		// apply the read permissions, to only show valid categories
 		$arrCategories = $this->applyReadPermissionsToCategories($arrCategories);
 		// flatten the tree structure (easier to use in template)

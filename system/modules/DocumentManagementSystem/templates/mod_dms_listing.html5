@@ -21,6 +21,7 @@
 	<!-- Search -->
 	<div id="list_search">
 		<input type="text" name="searchText" id="searchText" placeholder="<?php echo $GLOBALS['TL_LANG']['DMS']['listing_search_placeholder']; ?>" value="<?php if ($this->searchText != "") : ?><?php echo $this->searchText; ?><?php endif; ?>" />
+		<input type="button" onclick="resetSearch();" value="<?php echo $GLOBALS['TL_LANG']['DMS']['listing_reset_button']; ?>" />
 		<input type="submit" value="<?php echo $GLOBALS['TL_LANG']['DMS']['listing_search_button']; ?>" />
 	</div>
 	
@@ -28,9 +29,9 @@
 	<table cellpadding="0" cellspacing="0" border="0">
 		<thead>
 			<tr>
-				<th><?php echo $GLOBALS['TL_LANG']['DMS']['listing_th_category']; ?></th>
-				<th><?php echo $GLOBALS['TL_LANG']['DMS']['listing_th_filecount']; ?></th>
-				<th><?php echo $GLOBALS['TL_LANG']['DMS']['listing_th_select']; ?></th>
+				<th><?php echo $GLOBALS['TL_LANG']['DMS']['listing_thead_category']; ?></th>
+				<th><?php echo $GLOBALS['TL_LANG']['DMS']['listing_thead_filecount']; ?></th>
+				<th><?php echo $GLOBALS['TL_LANG']['DMS']['listing_thead_select']; ?></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -104,6 +105,11 @@
 		</tbody>
 		<tfoot>
 			<tr>
+				<td><?php echo $GLOBALS['TL_LANG']['DMS']['listing_tfoot_document_count']; ?></td>
+				<td><?php echo $fileCount; ?></td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
 				<td colspan="3">
 				<?php if ($fileCount > 0) : ?> 
 					<input type="submit" name="submit_kategorieauswahl" class="submit" value="<?php echo $GLOBALS['TL_LANG']['DMS']['listing_button_show_all_documents']; ?>" onclick="checkAllCategories(true);"/>
@@ -122,6 +128,12 @@
 			document.getElementsByName("expandedCatagories[]")[i].checked = check;
 		}
 	}
+	
+	function resetSearch () {
+		document.getElementById('searchText').value = "";
+		document.getElementById('listing').submit();
+	}
+	
 	function downloadFile (docId) {
 		document.getElementById('docId').value = docId;
 		document.getElementById('listing').submit();

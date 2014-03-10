@@ -64,22 +64,26 @@ class DmsLoader extends Controller
 	} 
 	
 	/**
-	 * Load the categories structure.
+	 * Load the categories structure without consideration of access rights.
 	 *
-	 * @param	int	$intRootCategoryId	The id of the root category to start from.
-	 * @param	bool	$blnLoadAccessRights	If true the access rights will be loaded.
-	 * @param	bool	$blnLoadDocuments	If true the documents will be loaded.
+	 * @param	DmsLoaderParams	$params	The configured params to use while loading.
 	 * @return	array	Returns the category structure.
 	 */
-	public function loadCategories($intRootCategoryId, $blnLoadAccessRights, $blnLoadDocuments)
+	public function loadCategories(DmsLoaderParams $params)
 	{
-		return $this->getCategoryLevel($intRootCategoryId, null, $blnLoadAccessRights, $blnLoadDocuments);
+		$rootCategory = null;
+		// if another root category is selected
+		if ($params->loadRootCategory && $params->rootCategoryId > 0)
+		{
+			$rootCategory = $this->loadCategory($params->rootCategoryId, $params);
+		}
+		return $this->getCategoryLevel($params->rootCategoryId, $rootCategory, $params);
 	}
 	
 	/**
 	 * Flatten a categories structure.
 	 *
-	 * @param	arr	$arrCategories	The structured array of categories.
+	 * @param	arr		$arrCategories	The structured array of categories.
 	 * @return	array	Returns the flattened array of categories.
 	 */
 	public static function flattenCategories(Array $arrCategories)
@@ -101,12 +105,11 @@ class DmsLoader extends Controller
 	/**
 	 * Load the category with the given id.
 	 *
-	 * @param	int	$categoryId	The id of the category to load.
-	 * @param	bool	$blnLoadAccessRights	True if the access rights should be loaded.
-	 * @param	bool	$blnLoadDocuments	True if the documents should be loaded.
+	 * @param	int		$categoryId	The id of the category to load.
+	 * @param	DmsLoaderParams	$params	The configured params to use while loading.
 	 * @return	category	Returns the category.
 	 */
-	public function loadCategory($categoryId, $blnLoadAccessRights, $blnLoadDocuments)
+	public function loadCategory($categoryId, DmsLoaderParams $params)
 	{
 		$objCategory = $this->Database->prepare("SELECT * FROM tl_dms_categories WHERE id = ?")
 									  ->limit(1)
@@ -116,13 +119,13 @@ class DmsLoader extends Controller
 		if ($objCategory->numRows)
 		{
 			$category = $this->buildCategory($objCategory);
-			if ($blnLoadAccessRights)
+			if ($params->loadAccessRights)
 			{
-				$category->accessRights = $this->getAccessRights($category);
+				$category->accessRights = $this->getAccessRights($category, $params);
 			}
-			if ($blnLoadDocuments)
+			if ($params->loadDocuments)
 			{
-				$category->documents = $this->getDocuments($category);
+				$category->documents = $this->getDocuments($category, $params);
 			}
 		}
 
@@ -157,7 +160,7 @@ class DmsLoader extends Controller
 	/**
 	 * Recursively reading the categories
 	 */
-	protected function getCategoryLevel($parentCategoryId, Category $parentCategory=null, $blnLoadAccessRights, $blnLoadDocuments)
+	protected function getCategoryLevel($parentCategoryId, Category $parentCategory=null, DmsLoaderParams $params)
 	{
 		$arrCategories = array();
 		$objCategory = $this->Database->prepare("SELECT * FROM tl_dms_categories WHERE pid = ? AND published = 1 ORDER BY sorting")
@@ -168,14 +171,14 @@ class DmsLoader extends Controller
 		{
 			$category = $this->buildCategory($objCategory);
 			$category->parentCategory = $parentCategory;
-			$category->subCategories = $this->getCategoryLevel($category->id, $category, $blnLoadAccessRights, $blnLoadDocuments);
-			if ($blnLoadAccessRights)
+			$category->subCategories = $this->getCategoryLevel($category->id, $category, $params);
+			if ($params->loadAccessRights)
 			{
-				$category->accessRights = $this->getAccessRights($category);
+				$category->accessRights = $this->getAccessRights($category, $params);
 			}
-			if ($blnLoadDocuments)
+			if ($params->loadDocuments)
 			{
-				$category->documents = $this->getDocuments($category);
+				$category->documents = $this->getDocuments($category, $params);
 			}
 			$arrCategories[$category->id] = $category;
 		}
@@ -187,9 +190,10 @@ class DmsLoader extends Controller
 	 * Get all access rights for the given category.
 	 *
 	 * @param	category	$category	The category to get the access rights for.
+	 * @param	DmsLoaderParams	$params	The configured params to use while loading.
 	 * @return	arr	Returns array of access rights.
 	 */
-	private function getAccessRights(Category $category)
+	private function getAccessRights(Category $category, DmsLoaderParams $params)
 	{
 		$objAccessRight = $this->Database->prepare("SELECT * FROM tl_dms_access_rights WHERE pid = ?")
 										 ->execute($category->id);
@@ -207,16 +211,42 @@ class DmsLoader extends Controller
 	 * Get all documents for the given category.
 	 *
 	 * @param	category	$category	The category to get the access rights for.
+	 * @param	DmsLoaderParams	$params	The configured params to use while loading.
 	 * @return	arr	Returns array of documents.
 	 */
-	private function getDocuments(Category $category)
+	private function getDocuments(Category $category, DmsLoaderParams $params)
 	{
+		$whereClause = "WHERE d.pid = ?";
+		
+		$whereParams = array();
+		$whereParams[] = $category->id;
+		
+		if ($params->hasDocumentSearchText())
+		{
+			if ($params->documentSearchType == DmsLoaderParams::DOCUMENT_SEARCH_LIKE)
+			{
+				$whereClause .= " AND (d.name = ? OR d.description = ? OR d.keywords = ?)";
+				$seachText = $params->documentSearchText;
+			}
+			else
+			{
+				$whereClause .= " AND (UPPER(d.name) LIKE ? OR UPPER(d.description) LIKE ? OR UPPER(d.keywords) LIKE ?)";
+				$seachText = "%" . $params->documentSearchText . "%";
+			}
+			
+			// add the search text 3 times
+			for ($i = 0; $i < 3; $i++)
+			{
+				$whereParams[] = $seachText;
+			}
+		}
+		
 		$objDocument = $this->Database->prepare("SELECT d.*, CONCAT(m1.firstname, ' ', m1.lastname) AS upload_member_name, CONCAT(m2.firstname, ' ', m2.lastname) AS lastedit_member_name "
 											  . "FROM tl_dms_documents d "
 											  . "LEFT JOIN tl_member m1 ON m1.id = d.upload_member "
 											  . "LEFT JOIN tl_member m2 ON m2.id = d.lastedit_member "
-											  . "WHERE d.pid = ?")
-									  ->execute($category->id);
+											  . $whereClause)
+									  ->execute($whereParams);
 		$arrDocuments = array();
 		while ($objDocument->next())
 		{
@@ -276,7 +306,7 @@ class DmsLoader extends Controller
 		$document = new Document($objDocument->id, $objDocument->name);
 		$document->description = $objDocument->description;
 		$document->keywords = $objDocument->keywords;
-		$document->fileSource = $objDocument->file_source;
+		$document->fileName = $objDocument->file_name;
 		$document->fileType = $objDocument->file_type;
 		$document->fileSize = $objDocument->file_size;
 		$document->filePreview = $objDocument->file_preview;

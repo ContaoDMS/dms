@@ -97,7 +97,7 @@ $GLOBALS['TL_DCA']['tl_dms_documents'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{document_legend},name,description,keywords;{file_legend},file_source,file_type,file_size,file_preview;{version_legend},version_major,version_minor,version_patch;{modification_legend},upload_member,upload_date,lastedit_member,lastedit_date;{publish_legend},published'
+		'default'                     => '{document_legend},name,description,keywords;{file_legend},file_name,file_type,file_size,file_preview;{version_legend},version_major,version_minor,version_patch;{modification_legend},upload_member,upload_date,lastedit_member,lastedit_date;{publish_legend},published'
 	),
 
 	// Fields
@@ -129,11 +129,11 @@ $GLOBALS['TL_DCA']['tl_dms_documents'] = array
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'tl_class'=>'long', 'maxlength'=>255)
 		),
-		'file_source' => array
+		'file_name' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_documents']['file_source'],
+			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_documents']['file_name'],
 			'inputType'               => 'fileTree',
-			'eval'                    => array('files'=>true, 'filesOnly'=>true, 'fieldType'=>'radio', 'path'=>$GLOBALS['TL_CONFIG']['dmsBaseDirectory'], 'extensions'=>tl_dms_documents::getValidFileTypesForCategory()),
+			'eval'                    => array('files'=>true, 'filesOnly'=>true, 'fieldType'=>'radio', 'path'=>DmsConfig::getBaseDirectory(false), 'extensions'=>tl_dms_documents::getValidFileTypesForCategory()),
 			'load_callback' => array
 			(
 				array('tl_dms_documents', 'getFullFilePath')
@@ -159,7 +159,7 @@ $GLOBALS['TL_DCA']['tl_dms_documents'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_documents']['file_preview'],
 			'inputType'               => 'fileTree',
-			'eval'                    => array('files'=>true, 'filesOnly'=>true, 'extensions'=>'jpg,png,gif', 'fieldType'=>'radio', 'path'=>$GLOBALS['TL_CONFIG']['dmsBaseDirectory'])
+			'eval'                    => array('files'=>true, 'filesOnly'=>true, 'extensions'=>'jpg,png,gif', 'fieldType'=>'radio', 'path'=>DmsConfig::getPreviewDirectory(false))
 		),*/
 		'version_major' => array
 		(
@@ -266,7 +266,12 @@ class tl_dms_documents extends Backend
 	public function getFullFilePath($varValue, DataContainer $dc)
 	{
 		$doc = $dc->activeRecord;
-		return $GLOBALS['TL_CONFIG']['dmsBaseDirectory'] . "/" . $this->getVersionedFileName($varValue, $doc->version_major,  $doc->version_minor, $doc->version_patch);
+		return DmsConfig::getDocumentFilePath(
+						Document::buildFileNameVersioned($varValue, 
+								Document::buildVersionForFileName($doc->version_major,  $doc->version_minor, $doc->version_patch), 
+														 $doc->file_type
+														)
+											  );
 	}
 	
 	/**
@@ -278,17 +283,7 @@ class tl_dms_documents extends Backend
 	public function reduceFilePath($varValue, DataContainer $dc)
 	{
 		$doc = $dc->activeRecord;
-		
-		return $this->getUnversionedFileName(substr($varValue, strlen($GLOBALS['TL_CONFIG']['dmsBaseDirectory'] . "/")), $doc->version_major,  $doc->version_minor, $doc->version_patch);
-	}
-	
-	private function getVersionedFileName($file, $version_major, $version_minor, $version_patch)
-	{
-		$intPosDot = strrpos($file, ".");
-		$fileName = substr($file, 0, $intPosDot);
-		$fileType = substr($file, $intPosDot + 1);
-		
-		return $fileName . "_" . Document::buildFileNameVersion($version_major, $version_minor, $version_patch) . "." . $fileType;
+		return $this->getUnversionedFileName(substr($varValue, strlen(DmsConfig::getBaseDirectory(true))), $doc->version_major,  $doc->version_minor, $doc->version_patch);
 	}
 	
 	private function getUnversionedFileName($file, $version_major, $version_minor, $version_patch)
@@ -296,9 +291,12 @@ class tl_dms_documents extends Backend
 		$intPosDot = strrpos($file, ".");
 		$fileName = substr($file, 0, $intPosDot);
 		$fileType = substr($file, $intPosDot + 1);
-		$versionString = "_" . Document::buildFileNameVersion($version_major, $version_minor, $version_patch);
+		$versionString = "_" . Document::buildVersionForFileName($version_major, $version_minor, $version_patch);
 		
-		return substr($fileName, 0, strrpos($fileName, $versionString)) . "." . $fileType;
+		// TODO reset the new fileType
+		// TODO geht version parts from POST ... maybe changed ... or reduce fileName via finding and counting underscores and removing them
+		
+		return substr($fileName, 0, strrpos($fileName, $versionString));
 	}
 }
 

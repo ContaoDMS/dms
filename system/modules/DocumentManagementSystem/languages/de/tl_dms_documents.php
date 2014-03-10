@@ -34,7 +34,7 @@
 $GLOBALS['TL_LANG']['tl_dms_documents']['name']            = array('Name', 'Gibt den Namen für dieses Dokument an.');
 $GLOBALS['TL_LANG']['tl_dms_documents']['description']     = array('Beschreibung', 'Gibt die Beschreibung für dieses Dokument an.');
 $GLOBALS['TL_LANG']['tl_dms_documents']['keywords']        = array('Schlüsselworte', 'Gibt eine Komma getrennt Liste von Schlüsselworten für dieses Dokument an.');
-$GLOBALS['TL_LANG']['tl_dms_documents']['file_source']     = array('Dateiquelle', 'Gibt die Datei für dieses Dokument an.');
+$GLOBALS['TL_LANG']['tl_dms_documents']['file_name']       = array('Dateiquelle', 'Gibt die Datei für dieses Dokument an.');
 $GLOBALS['TL_LANG']['tl_dms_documents']['file_type']       = array('Dateityp', 'Gibt den Typ der Datei für dieses Dokument an.');
 $GLOBALS['TL_LANG']['tl_dms_documents']['file_size']       = array('Dateigröße [Bytes]', 'Gibt die Größe der Datei für dieses Dokument an. Diese wird beim Upload automatisch ermittelt.');
 $GLOBALS['TL_LANG']['tl_dms_documents']['file_preview']    = array('Dateivorschau', 'Gibt ein Vorschaubild für dieses Dokument an.');

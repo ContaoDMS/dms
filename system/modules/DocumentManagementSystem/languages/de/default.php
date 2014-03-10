@@ -30,9 +30,11 @@
 $GLOBALS['TL_LANG']['DMS']['management_access_denied_headline'] = "Zugriff verweigert";
 $GLOBALS['TL_LANG']['DMS']['management_access_denied_text']     = "Nicht angemeldete Nutzer haben <u>grundsätzlich</u> kein Recht zum Verwaltungsbereich des Dokumenten Management System.";
 
-$GLOBALS['TL_LANG']['DMS']['listing_th_category']               = "Kategorie";
-$GLOBALS['TL_LANG']['DMS']['listing_th_filecount']              = "&sum;";
-$GLOBALS['TL_LANG']['DMS']['listing_th_select']                 = "Auswahl";
+$GLOBALS['TL_LANG']['DMS']['listing_thead_category']            = "Kategorie";
+$GLOBALS['TL_LANG']['DMS']['listing_thead_filecount']           = "&sum;";
+$GLOBALS['TL_LANG']['DMS']['listing_thead_select']              = "Auswahl";
+$GLOBALS['TL_LANG']['DMS']['listing_tfoot_document_count']      = "Anzahl gefundener Dokumente";
+$GLOBALS['TL_LANG']['DMS']['listing_reset_button']              = "Zurücksetzen";
 $GLOBALS['TL_LANG']['DMS']['listing_search_button']             = "Suchen";
 $GLOBALS['TL_LANG']['DMS']['listing_search_placeholder']        = "Suchbegriff";
 $GLOBALS['TL_LANG']['DMS']['listing_button_show_all_documents'] = "Alle Dokumente anzeigen";
@@ -58,5 +60,6 @@ $GLOBALS['TL_LANG']['DMS']['file_size_format']['$thousands_sep']            = '.
  */
 $GLOBALS['TL_LANG']['DMS']['ERR']['download_document_illegal_parameter'] = 'Die angeforderte Datei konnte nicht heruntergeladen werden, weil der Übergabeparameter unzulässig ist.';
 $GLOBALS['TL_LANG']['DMS']['ERR']['download_document_not_found']         = 'Die angeforderte Datei konnte nicht heruntergeladen werden, weil das Dokument nicht existiert.';
+$GLOBALS['TL_LANG']['DMS']['ERR']['download_file_not_found']             = 'Die angeforderte Datei konnte nicht heruntergeladen werden, weil sie nicht existiert.';
 
 ?>

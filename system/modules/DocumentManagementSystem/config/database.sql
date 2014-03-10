@@ -63,7 +63,7 @@ CREATE TABLE `tl_dms_documents` (
   `name` varchar(255) NOT NULL default '',
   `description` text NULL,
   `keywords` varchar(255) NOT NULL default '',
-  `file_source` varchar(1024) NOT NULL default '',
+  `file_name` varchar(1024) NOT NULL default '',
   `file_type` varchar(5) NOT NULL default '',
   `file_size` int(10) NOT NULL default '0',
   `file_preview` varchar(1024) NOT NULL default '',
