@@ -216,7 +216,7 @@ class DmsLoader extends Controller
 	 */
 	private function getDocuments(Category $category, DmsLoaderParams $params)
 	{
-		$whereClause = "WHERE d.pid = ?";
+		$whereClause = "WHERE d.pid = ? ";
 		
 		$whereParams = array();
 		$whereParams[] = $category->id;
@@ -225,12 +225,12 @@ class DmsLoader extends Controller
 		{
 			if ($params->documentSearchType == DmsLoaderParams::DOCUMENT_SEARCH_LIKE)
 			{
-				$whereClause .= " AND (d.name = ? OR d.description = ? OR d.keywords = ?)";
+				$whereClause .= "AND (d.name = ? OR d.description = ? OR d.keywords = ?) ";
 				$seachText = $params->documentSearchText;
 			}
 			else
 			{
-				$whereClause .= " AND (UPPER(d.name) LIKE ? OR UPPER(d.description) LIKE ? OR UPPER(d.keywords) LIKE ?)";
+				$whereClause .= "AND (UPPER(d.name) LIKE ? OR UPPER(d.description) LIKE ? OR UPPER(d.keywords) LIKE ?) ";
 				$seachText = "%" . $params->documentSearchText . "%";
 			}
 			
@@ -245,7 +245,8 @@ class DmsLoader extends Controller
 											  . "FROM tl_dms_documents d "
 											  . "LEFT JOIN tl_member m1 ON m1.id = d.upload_member "
 											  . "LEFT JOIN tl_member m2 ON m2.id = d.lastedit_member "
-											  . $whereClause)
+											  . $whereClause
+											  . "ORDER BY d.name, d.version_major, d.version_minor, d.version_patch")
 									  ->execute($whereParams);
 		$arrDocuments = array();
 		while ($objDocument->next())
