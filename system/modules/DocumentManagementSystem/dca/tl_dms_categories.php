@@ -174,7 +174,7 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 											Category::GENERAL_READ_PERMISSION_INHERIT
 										 ),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'],
-			'eval'                    => array('helpwizard'=>true, 'tl_class'=>'w50')
+			'eval'                    => array('mandatory'=>true, 'helpwizard'=>true, 'tl_class'=>'w50')
 		),
 		'published' => array
 		(
