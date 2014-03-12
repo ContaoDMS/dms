@@ -75,6 +75,7 @@
 	<?php if ($category->isReadableForCurrentMember() && $category->hasDocuments() && in_array($category->id, $this->expandedCategories)) : ?>
 			<!-- documents -->
 		<?php foreach ($category->documents as $document) : ?>
+			<?php if ($document->isPublished()) : ?>
 			<tr class="document level_<?php echo $category->getLevel(); ?>">
 				<td colspan="3" class="document_link">
 					<?php
@@ -100,12 +101,13 @@
 			<td><a href="{{link_url::anzeige}}?file=<?php echo $DocumentManagementSystemKat['dokdir'].'/preview/'.$dokdetail['name'].'_'.$dokdetail['file_preview'] ?>" target="_new"> <img src="<?php echo $DocumentManagementSystemKat['dokdir'].'/preview/'.$dokdetail['name'].'_'.$dokdetail['file_preview'] ?>" width="20" height="20" border="0"  /> </a></td>
 			<?php } */?>
 			</tr>
-			<?php if ($document->hasDescription()) : ?>
+				<?php if ($document->hasDescription()) : ?>
 			<tr class="description document_description level_<?php echo $category->getLevel(); ?>">
 				<td colspan="3" class="document_description">
 					<?php echo $document->description; ?>
 				</td>
 			</tr>
+				<?php endif; ?>
 			<?php endif; ?>
 		<?php endforeach; ?>
 	<?php endif; ?>
