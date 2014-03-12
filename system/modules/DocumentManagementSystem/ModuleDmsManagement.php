@@ -405,8 +405,11 @@ class ModuleDmsManagement extends Module
 			$params->loadAccessRights = true;
 			$params->loadDocuments = true;
 			
-			if ($this->Input->post('FORM_SUBMIT') == $formId)
+			$abort = (bool) $this->Input->post('abort');
+			
+			if ($this->Input->post('FORM_SUBMIT') == $formId && !$abort)
 			{
+				
 				$uploadDocumentCategory = $this->Input->post('uploadDocumentCategory');
 				$manageDocumentCategory = $this->Input->post('manageDocumentCategory');
 				

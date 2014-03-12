@@ -36,6 +36,7 @@ $GLOBALS['TL_LANG']['DMS']['management_thead_category']         = "Kategorie";
 $GLOBALS['TL_LANG']['DMS']['management_thead_action']           = "Aktion";
 $GLOBALS['TL_LANG']['DMS']['management_button_upload']          = "Hochladen";
 $GLOBALS['TL_LANG']['DMS']['management_button_manage']          = "Verwalten";
+$GLOBALS['TL_LANG']['DMS']['management_button_abort']           = "Abbrechen";
 $GLOBALS['TL_LANG']['DMS']['management_headline']               = "%s :: %s";
 $GLOBALS['TL_LANG']['DMS']['management_headline_upload']        = "Dokumentenupload";
 $GLOBALS['TL_LANG']['DMS']['management_headline_upload_select'] = "Dateiauswahl";
