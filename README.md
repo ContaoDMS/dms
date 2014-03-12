@@ -1,7 +1,7 @@
 Contao Extension: DocumentManagementSystem
 ==========================================
 
-Provides a document management system.
+Provides a document management system to store versioned files in a category structure with defined access rights.
 
 
 Installation
@@ -35,7 +35,13 @@ Dependency
 Migration
 ---------
 
-If you are trying to migrate from version 1.* to 2.* please backup the database and use the migration instructions: https://github.com/cliffparnitzky/DocumentManagementSystem
+If you are trying to migrate from version 1.* to 2.* please backup the database and use the migration instructions at https://github.com/cliffparnitzky/DocumentManagementSystem-Migration
+
+
+Documentation, Customization and Configuration
+----------------------------------------------
+
+If you need configuration hints or customization examples please look at https://github.com/cliffparnitzky/DocumentManagementSystem-Documentation-Configuration-Customization
 
 
 Screenshots
