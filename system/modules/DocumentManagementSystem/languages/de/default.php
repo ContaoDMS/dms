@@ -30,6 +30,7 @@
 /**
  * Translations for management module
  */
+// general
 $GLOBALS['TL_LANG']['DMS']['management_access_denied_headline'] = "Zugriff verweigert";
 $GLOBALS['TL_LANG']['DMS']['management_access_denied_text']     = "Nicht angemeldete Nutzer haben <u>grundsätzlich</u> kein Recht zum Verwaltungsbereich des Dokumenten Management System.";
 $GLOBALS['TL_LANG']['DMS']['management_thead_category']         = "Kategorie";
@@ -38,8 +39,14 @@ $GLOBALS['TL_LANG']['DMS']['management_button_upload']          = "Hochladen";
 $GLOBALS['TL_LANG']['DMS']['management_button_manage']          = "Verwalten";
 $GLOBALS['TL_LANG']['DMS']['management_button_abort']           = "Abbrechen";
 $GLOBALS['TL_LANG']['DMS']['management_headline']               = "%s :: %s";
-$GLOBALS['TL_LANG']['DMS']['management_headline_upload']        = "Dokumentenupload";
-$GLOBALS['TL_LANG']['DMS']['management_headline_upload_select'] = "Dateiauswahl";
+
+// upload
+$GLOBALS['TL_LANG']['DMS']['management_upload_headline']           = "Dokumentenupload";
+$GLOBALS['TL_LANG']['DMS']['management_upload_select_headline']    = "Dateiauswahl";
+$GLOBALS['TL_LANG']['DMS']['management_upload_select_category']    = "Kategorie";
+$GLOBALS['TL_LANG']['DMS']['management_upload_select_filetypes']   = "Zulässige Dateitypen";
+$GLOBALS['TL_LANG']['DMS']['management_upload_select_max_size']    = "Maximale Dateigröße";
+$GLOBALS['TL_LANG']['DMS']['management_upload_select_file_select'] = "Dateitauswahl";
 
 /**
  * Translations for listing module
