@@ -125,7 +125,7 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{category_legend},name,description;{file_legend},file_types;{rights_legend},general_read_permission;{publish_legend},published'
+		'default'                     => '{category_legend},name,description;{file_legend},file_types;{rights_legend},general_read_permission,general_manage_permission;{publish_legend},published'
 	),
 	
 	// Fields
@@ -174,6 +174,21 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 											Category::GENERAL_READ_PERMISSION_INHERIT
 										 ),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'],
+			'eval'                    => array('mandatory'=>true, 'helpwizard'=>true, 'tl_class'=>'w50')
+		),
+		'general_manage_permission' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_categories']['general_manage_permission'],
+			'exclude'                 => true,
+			'default'                 => Category::GENERAL_MANAGE_PERMISSION_CUSTOM,
+			'inputType'               => 'radio',
+			'options'                 => array
+										 (
+											Category::GENERAL_MANAGE_PERMISSION_LOGGED_USER,
+											Category::GENERAL_MANAGE_PERMISSION_CUSTOM,
+											Category::GENERAL_MANAGE_PERMISSION_INHERIT
+										 ),
+			'reference'               => &$GLOBALS['TL_LANG']['tl_dms_categories']['general_manage_permission_option'],
 			'eval'                    => array('mandatory'=>true, 'helpwizard'=>true, 'tl_class'=>'w50')
 		),
 		'published' => array
@@ -234,8 +249,12 @@ class tl_dms_categories extends Backend
 		$genReadPermImg = '<span style="padding-left:3px;">'
 						. $this->generateImage('system/modules/DocumentManagementSystem/html/general_read_permission_' . $genReadPerm . '.png', $genReadPerm, 'title="' . $GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'][$genReadPerm][0] . '"')
 						. '</span>';
+		$genManagePerm = $row['general_manage_permission'];
+		$genManagePermImg = '<span style="padding-left:3px;">'
+						. $this->generateImage('system/modules/DocumentManagementSystem/html/general_manage_permission_' . $genManagePerm . '.png', $genManagePerm, 'title="' . $GLOBALS['TL_LANG']['tl_dms_categories']['general_manage_permission_option'][$genManagePerm][0] . '"')
+						. '</span>';
 		
-		return '<a>' . $this->generateImage('system/modules/DocumentManagementSystem/html/' . $image, '', $imageAttribute) . '</a>' . $label . $genReadPermImg;
+		return '<a>' . $this->generateImage('system/modules/DocumentManagementSystem/html/' . $image, '', $imageAttribute) . '</a>' . $label . $genReadPermImg . $genManagePermImg;
 	}
 
 	

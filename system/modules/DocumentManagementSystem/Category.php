@@ -36,10 +36,13 @@ class Category extends System
 	/**
 	 * Define constants.
 	 */
-	const GENERAL_READ_PERMISSION_ALL         = "ALL";
-	const GENERAL_READ_PERMISSION_LOGGED_USER = "LOGGED_USER";
-	const GENERAL_READ_PERMISSION_CUSTOM      = "CUSTOM";
-	const GENERAL_READ_PERMISSION_INHERIT     = "INHERIT";
+	const GENERAL_READ_PERMISSION_ALL           = "ALL";
+	const GENERAL_READ_PERMISSION_LOGGED_USER   = "LOGGED_USER";
+	const GENERAL_READ_PERMISSION_CUSTOM        = "CUSTOM";
+	const GENERAL_READ_PERMISSION_INHERIT       = "INHERIT";
+	const GENERAL_MANAGE_PERMISSION_LOGGED_USER = "LOGGED_USER";
+	const GENERAL_MANAGE_PERMISSION_CUSTOM      = "CUSTOM";
+	const GENERAL_MANAGE_PERMISSION_INHERIT     = "INHERIT";
 	
 	/**
 	 * Define object parameters.
@@ -49,6 +52,7 @@ class Category extends System
 	private $strDescription = "";
 	private $strFileTypes = "";
 	private $strGeneralReadPermission = "";
+	private $strGeneralManagePermission = "";
 	private $blnPublished = false;
 	private $arrSubCategories = array();
 	private $arrAccessRights = array();
@@ -104,6 +108,9 @@ class Category extends System
 			case 'generalReadPermission':
 				$this->strGeneralReadPermission = $varValue;
 				break;
+			case 'generalManagePermission':
+				$this->strGeneralManagePermission = $varValue;
+				break;
 			case 'published':
 				$this->blnPublished = (bool) $varValue;
 				break;
@@ -149,6 +156,9 @@ class Category extends System
 				break;
 			case 'generalReadPermission':
 				return $this->strGeneralReadPermission;
+				break;
+			case 'generalManagePermission':
+				return $this->strGeneralManagePermission;
 				break;
 			case 'published':
 				return $this->blnPublished;
@@ -346,11 +356,14 @@ class Category extends System
 	 */
 	public function isAccessibleForCurrentMember($strAccessRight)
 	{
-		if (FE_USER_LOGGED_IN)
+		if ($this->generalManagePermission == self::GENERAL_MANAGE_PERMISSION_LOGGED_USER && FE_USER_LOGGED_IN)
+		{
+			return true;
+		}
+		else if ($this->generalManagePermission == self::GENERAL_MANAGE_PERMISSION_CUSTOM && FE_USER_LOGGED_IN)
 		{
 			$blnIsAccessible = false;
 			$arrMemberGroups = deserialize($this->User->groups);
-			// TODO if has no access rights ... get from parent ... need a flag, to allow inherited access rights
 			foreach($this->arrAccessRights as $accessRight)
 			{
 				if (in_array($accessRight->memberGroup, $arrMemberGroups))
@@ -359,6 +372,10 @@ class Category extends System
 				}
 			}
 			return $blnIsAccessible;
+		}
+		else if ($this->generalManagePermission == self::GENERAL_MANAGE_PERMISSION_INHERIT && !$this->isRootCategory())
+		{
+			return $this->parentCategory->isAccessibleForCurrentMember($strAccessRight);
 		}
 		return false;
 	}

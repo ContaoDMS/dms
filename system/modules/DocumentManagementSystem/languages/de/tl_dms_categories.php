@@ -31,11 +31,12 @@
 /**
  * Fields
  */
-$GLOBALS['TL_LANG']['tl_dms_categories']['name']                    = array('Name der Kategorie', 'Geben Sie der Kategorie einen aussagekräftigen Namen.');
-$GLOBALS['TL_LANG']['tl_dms_categories']['description']             = array('Beschreibung', 'Geben Sie eine Beschreibenfür diese Kategorie an.');
-$GLOBALS['TL_LANG']['tl_dms_categories']['file_types']              = array('Erlaubte Dateitypen', 'Geben Sie durch Komma getrennt die Dateitypen an, für die ein Upload gestattet ist.');
-$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission'] = array('Grundsätzliches Leserecht', 'Geben Sie das grundsätzliche Leserecht für Dokumente dieser Kategorie an.');
-$GLOBALS['TL_LANG']['tl_dms_categories']['published']               = array('Kategorie veröffentlichen', 'Geben Sie an ob die Kategorie veröffentlicht sein soll.');
+$GLOBALS['TL_LANG']['tl_dms_categories']['name']                      = array('Name der Kategorie', 'Geben Sie der Kategorie einen aussagekräftigen Namen.');
+$GLOBALS['TL_LANG']['tl_dms_categories']['description']               = array('Beschreibung', 'Geben Sie eine Beschreibenfür diese Kategorie an.');
+$GLOBALS['TL_LANG']['tl_dms_categories']['file_types']                = array('Erlaubte Dateitypen', 'Geben Sie durch Komma getrennt die Dateitypen an, für die ein Upload gestattet ist.');
+$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission']   = array('Grundsätzliches Leserecht', 'Geben Sie das grundsätzliche Leserecht für Dokumente dieser Kategorie an.');
+$GLOBALS['TL_LANG']['tl_dms_categories']['general_manage_permission'] = array('Grundsätzliche Verwaltungsrechte', 'Geben Sie die grundsätzlichen Verwaltungsrechte für Dokumente dieser Kategorie an.');
+$GLOBALS['TL_LANG']['tl_dms_categories']['published']                 = array('Kategorie veröffentlichen', 'Geben Sie an ob die Kategorie veröffentlicht sein soll.');
 
 /**
  * Legends
@@ -48,10 +49,13 @@ $GLOBALS['TL_LANG']['tl_dms_categories']['publish_legend']  = 'Veröffentlichung
 /**
  * Reference
  */
-$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'][Category::GENERAL_READ_PERMISSION_ALL]         = array('Leserecht für alle Frontendnutzer', 'Alle Frontendnutzer haben uneingeschränktes Leserecht in dieser Kategorie. Sie müssen dazu nicht angemeldet sein.');
-$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'][Category::GENERAL_READ_PERMISSION_LOGGED_USER] = array('Leserecht für angemeldete Frontendnutzer', 'Nur am Frontend angemeldete Nutzer haben uneingeschränktes Leserecht in dieser Kategorie.');
-$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'][Category::GENERAL_READ_PERMISSION_CUSTOM]      = array('Spezielle Leserechte für einzelne Gruppen', 'Es werden für diese Kategorie spezielle Leserechte für einzelne Nutzergruppen vergeben (im Bereich Zugriffsrechte).');
-$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'][Category::GENERAL_READ_PERMISSION_INHERIT]     = array('Vererbung der Leserechte durch Oberkategorie(n)', 'Es werden für diese Kategorie die Leserechte der Oberkategorie(n) verwendet.');
+$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'][Category::GENERAL_READ_PERMISSION_ALL]             = array('Leserecht für alle Frontendnutzer', 'Alle Frontendnutzer haben uneingeschränktes Leserecht in dieser Kategorie. Sie müssen dazu nicht angemeldet sein.');
+$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'][Category::GENERAL_READ_PERMISSION_LOGGED_USER]     = array('Leserecht für angemeldete Frontendnutzer', 'Nur am Frontend angemeldete Nutzer haben uneingeschränktes Leserecht in dieser Kategorie.');
+$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'][Category::GENERAL_READ_PERMISSION_CUSTOM]          = array('Spezielle Leserechte für einzelne Gruppen', 'Es werden für diese Kategorie spezielle Leserechte für einzelne Nutzergruppen vergeben (im Bereich Zugriffsrechte).');
+$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'][Category::GENERAL_READ_PERMISSION_INHERIT]         = array('Vererbung der Leserechte durch Oberkategorie(n)', 'Es werden für diese Kategorie die Leserechte der Oberkategorie(n) verwendet.');
+$GLOBALS['TL_LANG']['tl_dms_categories']['general_manage_permission_option'][Category::GENERAL_MANAGE_PERMISSION_LOGGED_USER] = array('Alle Verwaltungsrechte für angemeldete Frontendnutzer', 'Am Frontend angemeldete Nutzer haben uneingeschränktes Verwaltungsrechte in dieser Kategorie.');
+$GLOBALS['TL_LANG']['tl_dms_categories']['general_manage_permission_option'][Category::GENERAL_MANAGE_PERMISSION_CUSTOM]      = array('Spezielle Verwaltungsrechte für einzelne Gruppen', 'Es werden für diese Kategorie spezielle Verwaltungsrechte für einzelne Nutzergruppen vergeben (im Bereich Zugriffsrechte).');
+$GLOBALS['TL_LANG']['tl_dms_categories']['general_manage_permission_option'][Category::GENERAL_MANAGE_PERMISSION_INHERIT]     = array('Vererbung der Verwaltungsrechte durch Oberkategorie(n)', 'Es werden für diese Kategorie die Verwaltungsrechte der Oberkategorie(n) verwendet.');
 
 /**
  * Buttons
