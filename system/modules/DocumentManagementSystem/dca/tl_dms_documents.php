@@ -283,20 +283,12 @@ class tl_dms_documents extends Backend
 	public function reduceFilePath($varValue, DataContainer $dc)
 	{
 		$doc = $dc->activeRecord;
-		return $this->getUnversionedFileName(substr($varValue, strlen(DmsConfig::getBaseDirectory(true))), $doc->version_major,  $doc->version_minor, $doc->version_patch);
-	}
-	
-	private function getUnversionedFileName($file, $version_major, $version_minor, $version_patch)
-	{
-		$intPosDot = strrpos($file, ".");
-		$fileName = substr($file, 0, $intPosDot);
-		$fileType = substr($file, $intPosDot + 1);
-		$versionString = "_" . Document::buildVersionForFileName($version_major, $version_minor, $version_patch);
 		
+		$arrFileNameParts = Document::splitFileName(substr($varValue, strlen(DmsConfig::getBaseDirectory(true))));
 		// TODO reset the new fileType
 		// TODO geht version parts from POST ... maybe changed ... or reduce fileName via finding and counting underscores and removing them
 		
-		return substr($fileName, 0, strrpos($fileName, $versionString));
+		return $arrFileNameParts['fileName'];
 	}
 }
 

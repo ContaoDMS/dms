@@ -463,6 +463,56 @@ class Document
 	{
 		return $strFileName . '_' . $strFileNameVersion . '.' . $strFileType;
 	}
+	
+	/**
+	 * Return the split file name (splitted into name, version and type).
+	 *
+	 * @param	string	$strFileName	The files name to split.
+	 * @return	array	The splitted parts of the file name.
+	 */
+	public static function splitFileName($strFileName)
+	{
+		$arrParts = array();
+		
+		$intPosDot = strrpos($strFileName, ".");
+		$fileName = substr($strFileName, 0, $intPosDot);
+		$fileType = substr($strFileName, $intPosDot + 1);
+		
+		$hasVersion = false;
+		$version = null;
+		$versionMajor = null;
+		$versionMinor = null;
+		$versionPatch = null;
+		
+		$arrFileNameParts = explode("_", $fileName);
+		if (count($arrFileNameParts) >= 4)
+		{
+			$versionMajorTemp = $arrFileNameParts[count($arrFileNameParts) - 3];
+			$versionMinorTemp = $arrFileNameParts[count($arrFileNameParts) - 2];
+			$versionPatchTemp = $arrFileNameParts[count($arrFileNameParts) - 1];
+			
+			if (is_numeric($versionMajorTemp) && is_numeric($versionMinorTemp) && is_numeric($versionPatchTemp))
+			{
+				$hasVersion = true;
+				$version = self::buildVersionForFileName($versionMajorTemp, $versionMinorTemp, $versionPatchTemp);
+				$versionMajor = $versionMajorTemp;
+				$versionMinor = $versionMinorTemp;
+				$versionPatch = $versionPatchTemp;
+				
+				$fileName = substr($fileName, 0, strrpos($fileName, "_$version"));
+			}
+		}
+		
+		$arrParts['fileName'] = $fileName;
+		$arrParts['fileType'] = $fileType;
+		$arrParts['hasVersion'] = $hasVersion;
+		$arrParts['version'] = $version;
+		$arrParts['versionMajor'] = $versionMajor;
+		$arrParts['versionMinor'] = $versionMinor;
+		$arrParts['versionPatch'] = $versionPatch;
+		
+		return $arrParts;
+	}
 }
 
 ?>
