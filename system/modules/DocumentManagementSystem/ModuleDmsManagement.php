@@ -70,13 +70,7 @@ class ModuleDmsManagement extends Module
 	 */
 	protected function compile()
 	{
-		if ($this->dmsTemplate != $strTemplate)
-		{
-			$this->strTemplate = $this->dmsTemplate;
-
-			$this->Template = new \FrontendTemplate($this->strTemplate);
-			$this->Template->setData($this->arrData);
-		}
+		
 		
 		/*
 		 *        kein submit                     --->  wenn ein Nutzer angemeldet ist :
@@ -382,23 +376,111 @@ class ModuleDmsManagement extends Module
 		 *
 		 *     Hauptmenü
 		 */
-		$this->import('FrontendUser', 'User');
-		$strUsername = $this->User->username;
-		$intUserId = $this->User->id;
-		if ($strUsername == "") // kein Frontenduser angemeldet
+		if (!FE_USER_LOGGED_IN)
 		{
 			$this->Template = new FrontendTemplate('mod_dms_mgmt_access_denied');
 			$this->Template->action = ampersand($this->Environment->request);
 		}
-		else // Frontenduser angemeldet			
+		else
 		{
-			$objDocumentManagementSystemUser = $this->Database->execute("SELECT * FROM tl_member WHERE id = $intUserId");
-			$arrGroups = unserialize($objDocumentManagementSystemUser->groups); // Usergruppen
-
-			$arrDocumentManagementSystemKat = $this->getCategoryTree(0, $arrGroups, 0);
-
-			$this->Template->DocumentManagementSystemKat = $arrDocumentManagementSystemKat;
+			if ($this->dmsTemplate != $strTemplate)
+			{
+				$this->strTemplate = $this->dmsTemplate;
+				
+				$this->Template = new \FrontendTemplate($this->strTemplate);
+				$this->Template->setData($this->arrData);
+			}
+			
+			$dmsLoader = DmsLoader::getInstance();
+			
+			$formId = "dms_management_" . $this->id;
+			
+			$arrErrors = array();
+			
+			// Prepare paramters for loader
+			$params = new DmsLoaderParams();
+			// TODO (#8) set a custom ROOT node id here --> module config
+			$params->rootCategoryId = 0;
+			$params->loadRootCategory = false;
+			$params->loadAccessRights = true;
+			$params->loadDocuments = true;
+			
+			if ($this->Input->post('FORM_SUBMIT') == $formId)
+			{
+				$uploadDocumentCategory = $this->Input->post('uploadDocumentCategory');
+				$manageDocumentCategory = $this->Input->post('manageDocumentCategory');
+				
+				if ($uploadDocumentCategory != '')
+				{
+					/* UPLOAD - SELECT */
+					if (is_numeric($uploadDocumentCategory))
+					{
+						// TODO (#8) check if uploading is really allowed
+						
+						$this->Template = new \FrontendTemplate("mod_dms_mgmt_upload_select_file");
+						$this->Template->setData($this->arrData);
+						
+						$params->loadAccessRights = false;
+						$params->loadDocuments = false;
+						$category = $dmsLoader->loadCategory($uploadDocumentCategory, $params);
+						
+						$this->Template->category = $category;
+						$this->Template->maxUploadFileSizeByte = DmsConfig::getMaxUploadFileSize(Document::FILE_SIZE_UNIT_BYTE, false);
+						$this->Template->maxUploadFileSizeByteFormatted = DmsConfig::getMaxUploadFileSize(Document::FILE_SIZE_UNIT_BYTE, true);
+						$this->Template->maxUploadFileSizeKbFormatted = DmsConfig::getMaxUploadFileSize(Document::FILE_SIZE_UNIT_KB, true);
+						$this->Template->maxUploadFileSizeMbFormatted = DmsConfig::getMaxUploadFileSize(Document::FILE_SIZE_UNIT_MB, true);
+						$this->Template->maxUploadFileSizeGbFormatted = DmsConfig::getMaxUploadFileSize(Document::FILE_SIZE_UNIT_GB, true);
+					}
+					else
+					{
+						$arrErrors[] = $GLOBALS['TL_LANG']['DMS']['ERR']['upload_document_illegal_parameter'];
+					}
+				}
+				else if ($manageDocumentCategory != '')
+				{
+					/* MANAGE - SELECT */
+					if (is_numeric($manageDocumentCategory))
+					{
+					
+					}
+					else
+					{
+						$arrErrors[] = $GLOBALS['TL_LANG']['DMS']['ERR']['manage_document_illegal_parameter'];
+					}
+				}
+			}
+			else
+			{
+				$arrCategories = $dmsLoader->loadCategories($params);
+				$intCategoryCount = count($arrCategories);
+				// apply the access permissions, to only show valid categories
+				$arrCategories = $this->applyAccessPermissionsToCategories($arrCategories);
+				// flatten the tree structure (easier to use in template)
+				$arrCategories = DmsLoader::flattenCategories($arrCategories);
+				
+				if (count($arrCategories) == 0)
+				{
+					// there are no categories to display, because of missing of access rights or because none exist
+					if ($intCategoryCount == 0)
+					{
+						// there was no category before applying access permissions
+						$arrErrors[] = $GLOBALS['TL_LANG']['DMS']['ERR']['no_categories_found'];
+					}
+					else
+					{
+						// all categories were removed cause of missing access rights
+						$arrErrors[] = $GLOBALS['TL_LANG']['DMS']['ERR']['no_access_rights_found'];
+					}
+				}
+				
+				// add all needed values to template
+				$this->Template->categories = $arrCategories;
+			}
+			// add all needed values to template
+			$this->Template->hideLockedCategories = $this->dmsHideLockedCategories;
+			$this->Template->formId = $formId;
 			$this->Template->action = ampersand($this->Environment->request);
+			$this->Template->errors = $arrErrors;
 		}
 	}
 
@@ -407,80 +489,6 @@ class ModuleDmsManagement extends Module
 	 **********************************************************************************************************************
 	 */
 
-	/**
-	 * Rekursives auslesen der Kategorien
-	 */
-	protected function getCategoryTree($parentId, $arrGroups, $category)
-	{
-		$catValues = array();
-		$objDocumentManagementSystemKat = $this->Database->execute("SELECT * FROM tl_dms_categories WHERE pid = $parentId ORDER BY name");
-		while ($objDocumentManagementSystemKat->next())
-		{
-
-			$intKategorieID = $objDocumentManagementSystemKat->id;
-			$strKategorieName = $objDocumentManagementSystemKat->name;
-			$tmp_lesen = 0;
-			$tmp_loeschen = 0;
-			$tmp_upload = 0;
-			$tmp_editieren = 0;
-			$tmp_veroeffentlichen = 0;
-
-			// Zugriffsrechte auslesen
-			$objZr = $this->Database->execute("SELECT * FROM tl_dms_access_rights WHERE pid = $intKategorieID");
-			while ($objZr->next())
-			{
-				// Array mit Zugriffsrechten erstellen
-				foreach ($arrGroups as $intGroup)
-				{
-					if ($objZr->member_group == $intGroup)
-					{
-						if ($objZr->read == 1)
-						{
-							$tmp_lesen = 1;
-						}
-						if ($objZr->upload == 1)
-						{
-							$tmp_upload = 1;
-						}
-						if ($objZr->delete == 1)
-						{
-							$tmp_loeschen = 1;
-						}
-						if ($objZr->edit == 1)
-						{
-							$tmp_editieren = 1;
-						}
-						if ($objZr->publish == 1)
-						{
-							$tmp_veroeffentlichen = 1;
-						}
-					}
-				}
-			}
-
-			$mrkRechtMehrAlsLesen = 0;
-			if ($tmp_upload == 1 || $tmp_loeschen == 1 || $tmp_editieren == 1 || $tmp_veroeffentlichen == 1)
-			{
-				$mrkRechtMehrAlsLesen = 1;
-			}
-			$mrkRechtVerwalten = 0;
-			if ($tmp_loeschen == 1 || $tmp_editieren == 1 || $tmp_veroeffentlichen == 1)
-			{
-				$mrkRechtVerwalten = 1;
-			}
-			$mrkRechtUpload = 0;
-			if ($tmp_upload == 1)
-			{
-				$mrkRechtUpload = 1;
-			}
-
-			$catValues[] = array('kategorieid' => $intKategorieID, 'kategoriename' => $strKategorieName, 'recht_mehralslesen' => $mrkRechtMehrAlsLesen, 'recht_verwalten' => $mrkRechtVerwalten, 'recht_upload' => $mrkRechtUpload, 'recht_editieren' => $tmp_editieren, 'recht_loeschen' => $tmp_loeschen, 'recht_veroeffentlichen' => $tmp_veroeffentlichen, 'category' => $category,);
-
-			$catValues = array_merge($catValues, $this->getCategoryTree($intKategorieID, $arrGroups, $category + 1));
-		}
-
-		return $catValues;
-	}
 
 	protected function dokument_upload_auswahl($intKategorieId, $strKategorieName, $strVeroeffentlichen)
 	{
@@ -985,7 +993,30 @@ class ModuleDmsManagement extends Module
 		}
 		return;
 	}
-
-} //end class
+	
+	/**
+	 * Apply the access permissions to the categories.
+	 *
+	 * @param	arr	$arrCategories	The structured array of categories.
+	 * @return	array	Returns a reduced array of categories (depends on the access permissions).
+	 */
+	private function applyAccessPermissionsToCategories(Array $arrCategories)
+	{
+		$arrSecureCategories = $arrCategories;
+		foreach ($arrSecureCategories as $category)
+		{
+			if (!$category->isPublished() || ($this->dmsHideLockedCategories && (!$category->isUploadableForCurrentMember() && !$category->isManageableForCurrentMember())))
+			{
+				unset($arrSecureCategories[$category->id]);
+			}
+			else if ($category->hasSubCategories())
+			{
+				$arrSecureSubCategories = $this->applyAccessPermissionsToCategories($category->subCategories);
+				$category->subCategories = $arrSecureSubCategories;
+			}
+		}
+		return $arrSecureCategories;
+	}
+}
 
 ?>

@@ -26,10 +26,23 @@
  * @package    DocumentManagementSystem
  * @license    LGPL
  */
- 
+
+/**
+ * Translations for management module
+ */
 $GLOBALS['TL_LANG']['DMS']['management_access_denied_headline'] = "Zugriff verweigert";
 $GLOBALS['TL_LANG']['DMS']['management_access_denied_text']     = "Nicht angemeldete Nutzer haben <u>grundsätzlich</u> kein Recht zum Verwaltungsbereich des Dokumenten Management System.";
+$GLOBALS['TL_LANG']['DMS']['management_thead_category']         = "Kategorie";
+$GLOBALS['TL_LANG']['DMS']['management_thead_action']           = "Aktion";
+$GLOBALS['TL_LANG']['DMS']['management_button_upload']          = "Hochladen";
+$GLOBALS['TL_LANG']['DMS']['management_button_manage']          = "Verwalten";
+$GLOBALS['TL_LANG']['DMS']['management_headline']               = "%s :: %s";
+$GLOBALS['TL_LANG']['DMS']['management_headline_upload']        = "Dokumentenupload";
+$GLOBALS['TL_LANG']['DMS']['management_headline_upload_select'] = "Dateiauswahl";
 
+/**
+ * Translations for listing module
+ */
 $GLOBALS['TL_LANG']['DMS']['listing_thead_category']            = "Kategorie";
 $GLOBALS['TL_LANG']['DMS']['listing_thead_filecount']           = "&sum;";
 $GLOBALS['TL_LANG']['DMS']['listing_thead_select']              = "Auswahl";
@@ -61,5 +74,10 @@ $GLOBALS['TL_LANG']['DMS']['file_size_format']['$thousands_sep']            = '.
 $GLOBALS['TL_LANG']['DMS']['ERR']['download_document_illegal_parameter'] = 'Die angeforderte Datei konnte nicht heruntergeladen werden, weil der Übergabeparameter unzulässig ist.';
 $GLOBALS['TL_LANG']['DMS']['ERR']['download_document_not_found']         = 'Die angeforderte Datei konnte nicht heruntergeladen werden, weil das Dokument nicht existiert.';
 $GLOBALS['TL_LANG']['DMS']['ERR']['download_file_not_found']             = 'Die angeforderte Datei konnte nicht heruntergeladen werden, weil sie nicht existiert.';
+$GLOBALS['TL_LANG']['DMS']['ERR']['no_categories_found']                 = 'Es existieren keine Kategorien.';
+$GLOBALS['TL_LANG']['DMS']['ERR']['no_access_rights_found']              = 'Sie haben keine Zugriffsrechte zu den Kategorien.';
+$GLOBALS['TL_LANG']['DMS']['ERR']['upload_document_illegal_parameter']   = 'Das Hochladen von Dokumenten in die angeforderte Kategorie ist nicht möglich, weil der Übergabeparameter unzulässig ist.';
+$GLOBALS['TL_LANG']['DMS']['ERR']['manage_document_illegal_parameter']   = 'Das Verwalten von Dokumenten in der angeforderte Kategorie ist nicht möglich, weil der Übergabeparameter unzulässig ist.';
+$GLOBALS['TL_LANG']['DMS']['ERR']['upload_no_file_selected']             = 'Es wurde keine Datei ausgewählt. Bitte selektieren Sie eine Datei von ihrer Festplatte!';
 
 ?>

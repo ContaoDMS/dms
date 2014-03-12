@@ -307,7 +307,7 @@ class Category extends System
 		}
 		else if ($this->generalReadPermission == self::GENERAL_READ_PERMISSION_CUSTOM && FE_USER_LOGGED_IN)
 		{
-			return $this->isAccessibleByCurrentMember(AccessRight::READ);
+			return $this->isAccessibleForCurrentMember(AccessRight::READ);
 		}
 		else if ($this->generalReadPermission == self::GENERAL_READ_PERMISSION_INHERIT && !$this->isRootCategory())
 		{
@@ -317,12 +317,34 @@ class Category extends System
 	}
 	
 	/**
-	 * Return if this category is accessible by the current logged member.
+	 * Return if the current logged member has upload access to this category.
 	 *
-	 * @param	string	$strAccessRight	True name of the right.
-	 * @return	bool	True if this category is accessible by the current logged member.
+	 * @return	bool	True if the current logged member has upload access to this category.
 	 */
-	public function isAccessibleByCurrentMember($strAccessRight)
+	public function isUploadableForCurrentMember()
+	{
+		return $this->isAccessibleForCurrentMember(AccessRight::UPLOAD);
+	}
+	
+	/**
+	 * Return if the current logged member has manage access (at least one of the rights: delete, edit or publish) to this category.
+	 *
+	 * @return	bool	True if the current logged member has manage access to this category.
+	 */
+	public function isManageableForCurrentMember()
+	{
+		return $this->isAccessibleForCurrentMember(AccessRight::DELETE) || 
+			   $this->isAccessibleForCurrentMember(AccessRight::EDIT) || 
+			   $this->isAccessibleForCurrentMember(AccessRight::PUBLISH);
+	}
+	
+	/**
+	 * Return if the current logged member has access with the given right to this category.
+	 *
+	 * @param	string	$strAccessRight	The name of the right.
+	 * @return	bool	True if the current logged member has access with the given right to this category.
+	 */
+	public function isAccessibleForCurrentMember($strAccessRight)
 	{
 		if (FE_USER_LOGGED_IN)
 		{

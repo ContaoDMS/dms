@@ -1,81 +1,73 @@
-
-<div class="mod_DokManSystem <?php echo $this->class; ?>"<?php echo $this->cssID; ?><?php if ($this->style): ?> style="<?php echo $this->style; ?>"<?php endif; ?>>
+<div class="mod_dms <?php echo $this->class; ?>"<?php echo $this->cssID; ?><?php if ($this->style): ?> style="<?php echo $this->style; ?>"<?php endif; ?>>
 <?php if ($this->headline): ?>
 
 <<?php echo $this->hl; ?>><?php echo $this->headline; ?></<?php echo $this->hl; ?>>
 <?php endif; ?>
 
-
-<form action="<?php echo $this->action; ?>" method="post" enctype="multipart/form-data">
-<?php foreach ($this->DocumentManagementSystemUp as $DocumentManagementSystemUp): ?>
-<table cellpadding="4" cellspacing="0" border="0" summary="DokManSystem">
-	<thead>
-	  <tr>
-		<th colspan="2" class="tabueb">Dokumentupload - Dateiauswahl</th>
-	  </tr>
-	</thead>
-	<tbody>
-	  <tr>
-		<td class="label">Kategorie</td>
-		<td><?php echo $DocumentManagementSystemUp['kategoriename']; ?></td>
-	  </tr>
-	  <tr>
-		<td class="label">Zul&auml;ssige Dateitypen</td>
-		<td><?php echo $DocumentManagementSystemUp['dateitypen']; ?></td>
-	  </tr>
-	  <tr>
-		<td class="label">Maximale Dateigr&ouml;ße</td>
-		<td>
-		<?php
-			$uploadMaxFilesize = trim(ini_get('upload_max_filesize'));
-			$last = strtolower($uploadMaxFilesize[strlen($uploadMaxFilesize)-1]);
-			$unit = 'Byte';
-			switch($last) {
-				case 'g':
-					$unit = 'GB';break;
-				case 'm':
-					$unit = 'MB';break;
-				case 'k':
-					$unit = 'kB';break;
-			}
-			
-			echo trim(substr($uploadMaxFilesize, 0, -1)) . ' ' . $unit;
-		?>
-		</td>
-	  </tr>
-	  <tr>
-		<td class="label">Dokumentauswahl</td>
-		<td><input type="file" name="DateiSource" id="file"/></td>
-	  </tr>
-	</tbody>
-	<tfoot>
-	  <tr>
-		<td colspan="2"><input type="submit" name="submit_ende" value="Abbrechen"/> <input onClick="return checkFile();" type="submit" name="submit_upload_auswahl" value="Upload starten"/></td>
-	  </tr>
-	<tfoot>
-</table>
-
-<input type="hidden" name="kategorieid" value="<?php echo $DocumentManagementSystemUp['kategorieid']; ?>" />
-<input type="hidden" name="kategoriename" value="<?php echo $DocumentManagementSystemUp['kategoriename']; ?>" />
-<input type="hidden" name="dateitypen" value="<?php echo $DocumentManagementSystemUp['dateitypen']; ?>" />
-<input type="hidden" name="recht_veroeffentlichen" value="<?php echo $DocumentManagementSystemUp['recht_veroeffentlichen']; ?>" />
+<form action="<?php echo $this->action; ?>" method="post" id="management" name="management">
+	<input type="hidden" name="FORM_SUBMIT" value="<?php echo $this->formId; ?>">
+	<input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}">
+	<input type="hidden" name="category" value="<?php echo $this->category->id; ?>">
 	
-<?php endforeach; ?>
+	<div id="dms_errors" style="display: none;">
+		<div class="error" id="file_error"></div>
+	</div>
+	
+	<table cellpadding="0" cellspacing="0" border="0">
+		<thead>
+			<tr>
+				<th colspan="2" class="headline"><?php echo sprintf($GLOBALS['TL_LANG']['DMS']['management_headline'], $GLOBALS['TL_LANG']['DMS']['management_headline_upload'], $GLOBALS['TL_LANG']['DMS']['management_headline_upload_select']); ?></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class="label">Kategorie</td>
+				<td><?php echo $this->category->name; ?></td>
+			</tr>
+			<tr>
+				<td class="label">Zul&auml;ssige Dateitypen</td>
+				<td><?php echo $this->category->fileTypes; ?></td>
+			</tr>
+			<tr>
+				<td class="label">Maximale Dateigr&ouml;ße</td>
+				<td><?php echo $this->maxUploadFileSizeMbFormatted; ?></td>
+			</tr>
+			<tr>
+				<td class="label">Dokumentauswahl</td>
+				<td>
+					<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $this->maxUploadFileSizeByte; ?>" />
+					<input type="file" name="file" id="file"/>
+				</td>
+			</tr>
+		</tbody>
+		<tfoot>
+			<tr>
+				<td colspan="2">
+					<input type="submit" name="submit_ende" value="Abbrechen"/>
+					<button onClick="return checkFile();" type="submit" name="uploadDocument" value="<?php echo $category->id; ?>"><?php echo $GLOBALS['TL_LANG']['DMS']['management_button_upload']; ?></button>
+				</td>
+			</tr>
+		<tfoot>
+	</table>
+
 </form>
-</div>
+
 <script type="text/javascript">
 <!--
-  function checkFile() {
-    if (document.getElementById("file").value != null && document.getElementById("file").value.length > 0) {
-      return true;
-    } else {
-    	alert("Es wurde keine Datei ausgewählt. Bitte wählen Sie eine Datei von ihrer Festplatte aus!");
-    	document.getElementById("file").style.background = "#ff0000";
-    	document.getElementById("file").style.color = "#ffffff";
-    	document.getElementById("file").focus();
-    	return false;
-    }
-  }
-
+	function checkFile()
+	{
+		if (document.getElementById("file").value != null && document.getElementById("file").value.length > 0)
+		{
+		  return true;
+		}
+		else
+		{
+			document.getElementById("file_error").innerHTML = "<?php echo $GLOBALS['TL_LANG']['DMS']['ERR']['upload_no_file_selected']; ?>";
+			document.getElementById("dms_errors").style.display = "block";
+			return false;
+		}
+	}
 -->
 </script>
+
+</div>
