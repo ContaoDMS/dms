@@ -73,17 +73,6 @@ class ModuleDmsManagement extends Module
 		
 		
 		/*
-		 *        kein submit                     --->  wenn ein Nutzer angemeldet ist :
-		 *                                              Anzeige der Kategorieauswahl
-		 *                                              Template : mod_dms_management
-		 *                                              wenn kein Nutzer angemeldet ist :
-		 *                                              Hinweis ausgeben                               
-		 *
-		 *        submit_kategorieauswahl         --->  Übernahme der Kategorieauswahleingaben
-		 *                                              Verzweigung: -> DokumentenUpload
-		 *                                                           -> DokumentenVerwaltung
-		 *
-		 *
 		 *        submit_upload_auswahl           --->  Übernahme der Datei für den Upload
 		 *                                              Eingabe aller Eigenschaften für diese Datei
 		 *                                              Versionsnummern-Kontrolle
@@ -371,11 +360,11 @@ class ModuleDmsManagement extends Module
 		}
 
 		/*
-		 *     =============================================================================================================
-		 *     kein Submit gedrückt
-		 *
-		 *     Hauptmenü
+		 * =============================================================================================================
+		 * NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW 
 		 */
+		 
+		
 		if (!FE_USER_LOGGED_IN)
 		{
 			$this->Template = new FrontendTemplate('mod_dms_mgmt_access_denied');
@@ -407,42 +396,44 @@ class ModuleDmsManagement extends Module
 			
 			$abort = (bool) $this->Input->post('abort');
 			
+			$blnShowStart = true;
+			
 			if ($this->Input->post('FORM_SUBMIT') == $formId && !$abort)
 			{
 				
-				$uploadDocumentCategory = $this->Input->post('uploadDocumentCategory');
-				$manageDocumentCategory = $this->Input->post('manageDocumentCategory');
+				$uploadCategory = $this->Input->post('uploadCategory');
+				$manageCategory = $this->Input->post('manageCategory');
 				
-				if ($uploadDocumentCategory != '')
+				if ($uploadCategory != '')
 				{
-					/* UPLOAD - SELECT */
-					if (is_numeric($uploadDocumentCategory))
+					/* UPLOAD */
+					if (is_numeric($uploadCategory))
 					{
-						// TODO (#8) check if uploading is really allowed
+						$doUpload = (bool) $this->Input->post('doUpload');
+						$storeProperties = (bool) $this->Input->post('storeProperties');
 						
-						$this->Template = new \FrontendTemplate("mod_dms_mgmt_upload_select_file");
-						$this->Template->setData($this->arrData);
+						if ($doUpload)
+						{
+							$this->uploadDoUpload($params, $dmsLoader, $uploadCategory, $arrErrors, $blnShowStart);
+						}
+						else if ($storeProperties)
+						{
 						
-						$params->loadAccessRights = false;
-						$params->loadDocuments = false;
-						$category = $dmsLoader->loadCategory($uploadDocumentCategory, $params);
-						
-						$this->Template->category = $category;
-						$this->Template->maxUploadFileSizeByte = DmsConfig::getMaxUploadFileSize(Document::FILE_SIZE_UNIT_BYTE, false);
-						$this->Template->maxUploadFileSizeByteFormatted = DmsConfig::getMaxUploadFileSize(Document::FILE_SIZE_UNIT_BYTE, true);
-						$this->Template->maxUploadFileSizeKbFormatted = DmsConfig::getMaxUploadFileSize(Document::FILE_SIZE_UNIT_KB, true);
-						$this->Template->maxUploadFileSizeMbFormatted = DmsConfig::getMaxUploadFileSize(Document::FILE_SIZE_UNIT_MB, true);
-						$this->Template->maxUploadFileSizeGbFormatted = DmsConfig::getMaxUploadFileSize(Document::FILE_SIZE_UNIT_GB, true);
+						}
+						else
+						{
+							$this->uploadSelectFile($params, $dmsLoader, $uploadCategory, $arrErrors, $blnShowStart);
+						}
 					}
 					else
 					{
 						$arrErrors[] = $GLOBALS['TL_LANG']['DMS']['ERR']['upload_document_illegal_parameter'];
 					}
 				}
-				else if ($manageDocumentCategory != '')
+				else if ($manageCategory != '')
 				{
 					/* MANAGE - SELECT */
-					if (is_numeric($manageDocumentCategory))
+					if (is_numeric($manageCategory))
 					{
 					
 					}
@@ -452,7 +443,8 @@ class ModuleDmsManagement extends Module
 					}
 				}
 			}
-			else
+			
+			if ($blnShowStart)
 			{
 				$arrCategories = $dmsLoader->loadCategories($params);
 				$intCategoryCount = count($arrCategories);
@@ -486,37 +478,68 @@ class ModuleDmsManagement extends Module
 			$this->Template->errors = $arrErrors;
 		}
 	}
+	
+	/**
+	 * Display the file select screen for upload
+	 */
+	private function uploadSelectFile(&$params, &$dmsLoader, &$uploadCategory, &$arrErrors, &$blnShowStart)
+	{
+		// TODO (#8) check if uploading is really allowed
+		
+		$this->Template = new \FrontendTemplate("mod_dms_mgmt_upload_select_file");
+		$this->Template->setData($this->arrData);
+		
+		$params->loadAccessRights = false;
+		$params->loadDocuments = false;
+		$category = $dmsLoader->loadCategory($uploadCategory, $params);
+		
+		$this->Template->category = $category;
+		$this->Template->maxUploadFileSizeByte = DmsConfig::getMaxUploadFileSize(Document::FILE_SIZE_UNIT_BYTE, false);
+		$this->Template->maxUploadFileSizeByteFormatted = DmsConfig::getMaxUploadFileSize(Document::FILE_SIZE_UNIT_BYTE, true);
+		$this->Template->maxUploadFileSizeKbFormatted = DmsConfig::getMaxUploadFileSize(Document::FILE_SIZE_UNIT_KB, true);
+		$this->Template->maxUploadFileSizeMbFormatted = DmsConfig::getMaxUploadFileSize(Document::FILE_SIZE_UNIT_MB, true);
+		$this->Template->maxUploadFileSizeGbFormatted = DmsConfig::getMaxUploadFileSize(Document::FILE_SIZE_UNIT_GB, true);
+		
+		$blnShowStart = false;
+	}
+	
+	/**
+	 * Uploads the file
+	 */
+	private function uploadDoUpload(&$params, &$dmsLoader, &$uploadCategory, &$arrErrors, &$blnShowStart)
+	{
+		if ($_FILES['file']['size'] > 200)
+		{
+			$arrErrors[] = "Size os incorrect: " . $_FILES['file']['size'];
+			$blnShowStart = false;
+			$this->uploadSelectFile($params, $dmsLoader, $uploadCategory, $arrErrors, $blnShowStart);
+		}
+		else
+		{
+			// TODO (#8) check if uploading is really allowed
+			
+			$this->Template = new \FrontendTemplate("mod_dms_mgmt_upload_enter_properties");
+			$this->Template->setData($this->arrData);
+			
+			$params->loadAccessRights = false;
+			$params->loadDocuments = false;
+			$category = $dmsLoader->loadCategory($uploadCategory, $params);
+			
+			$this->Template->category = $category;
+			$this->Template->maxUploadFileSizeByte = DmsConfig::getMaxUploadFileSize(Document::FILE_SIZE_UNIT_BYTE, false);
+			$this->Template->maxUploadFileSizeByteFormatted = DmsConfig::getMaxUploadFileSize(Document::FILE_SIZE_UNIT_BYTE, true);
+			$this->Template->maxUploadFileSizeKbFormatted = DmsConfig::getMaxUploadFileSize(Document::FILE_SIZE_UNIT_KB, true);
+			$this->Template->maxUploadFileSizeMbFormatted = DmsConfig::getMaxUploadFileSize(Document::FILE_SIZE_UNIT_MB, true);
+			$this->Template->maxUploadFileSizeGbFormatted = DmsConfig::getMaxUploadFileSize(Document::FILE_SIZE_UNIT_GB, true);
+		}
+	}
+	
+	
 
 	/*********************************************************************************************************************
 	 *        Funktionen
 	 **********************************************************************************************************************
 	 */
-
-
-	protected function dokument_upload_auswahl($intKategorieId, $strKategorieName, $strVeroeffentlichen)
-	{
-		/*
-		 *     Dokument uploaden (Dateiauswahl)
-		 *
-		 *     Auswahl der Datei die upgeloadet werden soll
-		 *
-		 */
-		$this->Template = new FrontendTemplate('mod_dms_mgmt_upload_select_file');
-		$arrDocumentManagementSystemUp = array();
-
-		$strDocumentManagementSystemUp1 = $this->Database->execute("SELECT * FROM tl_dms_categories WHERE id = $intKategorieId");
-		$strDateitypen = $strDocumentManagementSystemUp1->file_types;
-
-		// Anzeige der Daten
-		$arrDocumentManagementSystemUp[] = array('kategorieid' => $intKategorieId, 'kategoriename' => $strKategorieName, 'recht_veroeffentlichen' => $strVeroeffentlichen, 'dateitypen' => $strDateitypen,);
-
-		$this->Template->DocumentManagementSystemUp = $arrDocumentManagementSystemUp;
-		//$this->Template->maxUploadFileSize = 
-		$this->Template->action = ampersand($this->Environment->request);
-	}
-
-	// *********************************************************************************************************************
-
 	protected function dokument_upload_eigenschaften($intKategorieId, $strKategorieName, $strVeroeffentlichen, $strDateiTypen, $strUploadName, $strUploadTyp, $strUploadGroesse, $strUploadVerzeichnis, $strUploadFehler)
 	{
 		/*

@@ -4,14 +4,17 @@
 <<?php echo $this->hl; ?>><?php echo $this->headline; ?></<?php echo $this->hl; ?>>
 <?php endif; ?>
 
-<form action="<?php echo $this->action; ?>" method="post" id="management" name="management">
+<form action="<?php echo $this->action; ?>" method="POST" enctype="multipart/form-data" id="management" name="management">
 	<input type="hidden" name="FORM_SUBMIT" value="<?php echo $this->formId; ?>">
 	<input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}">
 	<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $this->maxUploadFileSizeByte; ?>" />
-	<input type="hidden" name="category" value="<?php echo $this->category->id; ?>">
+	<input type="hidden" name="uploadCategory" value="<?php echo $this->category->id; ?>">
 	
-	<div id="dms_errors" style="display: none;">
-		<div class="error" id="file_error"></div>
+	<div id="dms_errors"<?php if (count($this->errors) == 0) : ?> style="display: none;"<?php endif; ?>>
+		<?php foreach ($this->errors as $error): ?>
+		<div class="error"><?php echo $error; ?></div>
+		<?php endforeach; ?>
+		<div class="error" id="file_error" style="display: none;"></div>
 	</div>
 	
 	<table cellpadding="0" cellspacing="0" border="0">
@@ -44,7 +47,7 @@
 			<tr>
 				<td colspan="2">
 					<button type="submit" name="abort" value="true"><?php echo $GLOBALS['TL_LANG']['DMS']['management_button_abort']; ?></button>
-					<button onClick="return checkFile();" type="submit" name="uploadDocument" value="<?php echo $category->id; ?>"><?php echo $GLOBALS['TL_LANG']['DMS']['management_button_upload']; ?></button>
+					<button onClick="return checkFile();" type="submit" name="doUpload" value="true"><?php echo $GLOBALS['TL_LANG']['DMS']['management_button_upload']; ?></button>
 				</td>
 			</tr>
 		<tfoot>
@@ -63,6 +66,7 @@
 		else
 		{
 			document.getElementById("file_error").innerHTML = "<?php echo $GLOBALS['TL_LANG']['DMS']['ERR']['upload_no_file_selected']; ?>";
+			document.getElementById("file_error").style.display = "block";
 			document.getElementById("dms_errors").style.display = "block";
 			return false;
 		}
