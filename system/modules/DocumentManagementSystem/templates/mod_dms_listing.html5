@@ -11,7 +11,7 @@
 	
 	<?php if (count($this->errors) > 0): ?>
 	<!-- Errors -->
-	<div id="list_errors">
+	<div id="dms_errors">
 		<?php foreach ($this->errors as $error): ?>
 		<div class="error"><?php echo $error; ?></div>
 		<?php endforeach; ?>
@@ -20,9 +20,18 @@
 	
 	<!-- Search -->
 	<div id="list_search">
-		<input type="text" name="searchText" id="searchText" placeholder="<?php echo $GLOBALS['TL_LANG']['DMS']['listing_search_placeholder']; ?>" value="<?php if ($this->searchText != "") : ?><?php echo $this->searchText; ?><?php endif; ?>" />
-		<input type="button" onclick="resetSearch();" value="<?php echo $GLOBALS['TL_LANG']['DMS']['listing_reset_button']; ?>" />
-		<input type="submit" value="<?php echo $GLOBALS['TL_LANG']['DMS']['listing_search_button']; ?>" />
+		<div id="list_search_params">
+			<?php // TODO (#9) set the search type here (via Drop Down) ?>
+			<select name="searchType" id="searchType" style="visibility: hidden;">
+				<option value="<?php echo DmsLoaderParams::DOCUMENT_SEARCH_EXACT; ?>"><?php echo DmsLoaderParams::DOCUMENT_SEARCH_EXACT; ?></option>
+				<option value="<?php echo DmsLoaderParams::DOCUMENT_SEARCH_EXACT; ?>"><?php echo DmsLoaderParams::DOCUMENT_SEARCH_EXACT; ?></option>
+			</select>
+			<input type="text" name="searchText" id="searchText" placeholder="<?php echo $GLOBALS['TL_LANG']['DMS']['listing_search_placeholder']; ?>" value="<?php if ($this->searchText != "") : ?><?php echo $this->searchText; ?><?php endif; ?>" />
+		</div>
+		<div id="list_search_buttons">
+			<input type="button" id="button-reset" onclick="resetSearch();" value="<?php echo $GLOBALS['TL_LANG']['DMS']['listing_reset_button']; ?>" />
+			<input type="submit" id="button-search" value="<?php echo $GLOBALS['TL_LANG']['DMS']['listing_search_button']; ?>" />
+		</div>
 	</div>
 	
 	<!-- Table of categories -->
@@ -123,18 +132,22 @@
 
 <script type="text/javascript">
 <!--
-	function checkAllCategories (check) {
-		for (var i = 0; i < document.getElementsByName("expandedCatagories[]").length; i++){
+	function checkAllCategories (check)
+	{
+		for (var i = 0; i < document.getElementsByName("expandedCatagories[]").length; i++)
+		{
 			document.getElementsByName("expandedCatagories[]")[i].checked = check;
 		}
 	}
 	
-	function resetSearch () {
+	function resetSearch ()
+	{
 		document.getElementById('searchText').value = "";
 		document.getElementById('listing').submit();
 	}
 	
-	function downloadFile (docId) {
+	function downloadFile (docId)
+	{
 		document.getElementById('docId').value = docId;
 		document.getElementById('listing').submit();
 	}

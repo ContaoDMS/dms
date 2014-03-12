@@ -70,8 +70,6 @@ class ModuleDmsListing extends Module
 	 */
 	protected function compile()
 	{
-		$dmsLoader = DmsLoader::getInstance();
-		
 		/* set custom template if defined */
 		if ($this->dmsTemplate != $strTemplate)
 		{
@@ -80,8 +78,9 @@ class ModuleDmsListing extends Module
 			$this->Template->setData($this->arrData);
 		}
 		
-		/* extract data from post */
-		 $formId = "dms_listing_" . $this->id;
+		$dmsLoader = DmsLoader::getInstance();
+		
+		$formId = "dms_listing_" . $this->id;
 		 
 		$arrErrors = array();
 		$arrExpandedCategories = array();
@@ -101,12 +100,12 @@ class ModuleDmsListing extends Module
 			$docId = $this->Input->post('docId');
 			if ($docId != '')
 			{
-				if ($docId != '' && is_numeric($docId))
+				if (is_numeric($docId))
 				{
 					$document = $dmsLoader->loadDocument($docId); // with path to Root Category .... hier sowieso gesetzt
 					if ($document != null)
 					{
-						// TODO : check read permissions
+						// TODO (#9) : check read permissions
 						
 						// Send the file to the browser
 						$file = DmsConfig::getDocumentFilePath($document->getFileNameVersioned());
@@ -133,13 +132,13 @@ class ModuleDmsListing extends Module
 		
 		// Prepare paramters for loader
 		$params = new DmsLoaderParams();
-		// TODO (issue #9) set a custom ROOT node id here --> module config
+		// TODO (#9) set a custom ROOT node id here --> module config
 		$params->rootCategoryId = 0;
 		$params->loadRootCategory = false;
 		$params->loadAccessRights = true;
 		$params->loadDocuments = true;
 		$params->documentSearchText = $strSearchText;
-		// TODO (issue #9) get the search type from form here (via Drop Down)
+		// TODO (#9) get the search type from form here (via Drop Down)
 		$params->documentSearchType = DmsLoaderParams::DOCUMENT_SEARCH_LIKE;
 		
 		$arrCategories = $dmsLoader->loadCategories($params);
