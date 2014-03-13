@@ -39,6 +39,7 @@ $GLOBALS['TL_LANG']['DMS']['management_button_upload']          = "Hochladen";
 $GLOBALS['TL_LANG']['DMS']['management_button_manage']          = "Verwalten";
 $GLOBALS['TL_LANG']['DMS']['management_button_abort']           = "Abbrechen";
 $GLOBALS['TL_LANG']['DMS']['management_headline']               = "%s :: %s";
+$GLOBALS['TL_LANG']['DMS']['management_path_separator']         = " &raquo; ";
 
 // upload
 $GLOBALS['TL_LANG']['DMS']['management_upload_headline']           = "Dokumentenupload";

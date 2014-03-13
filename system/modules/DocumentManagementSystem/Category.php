@@ -61,6 +61,7 @@ class Category extends System
 	/**
 	 * reference to parent category
 	 */
+	private $intParentCategoryId = -1;
 	private $parentCategory = null;
 	
 	/**
@@ -123,6 +124,9 @@ class Category extends System
 			case 'documents':
 				$this->arrDocuments = $varValue;
 				break;
+			case 'parentCategoryId':
+				$this->intParentCategoryId = $varValue;
+				break;
 			case 'parentCategory':
 				$this->parentCategory = $varValue;
 				break;
@@ -171,6 +175,9 @@ class Category extends System
 				break;
 			case 'documents':
 				return $this->arrDocuments;
+				break;
+			case 'parentCategoryId':
+				return $this->intParentCategoryId;
 				break;
 			case 'parentCategory':
 				return $this->parentCategory;
@@ -319,7 +326,7 @@ class Category extends System
 		{
 			return $this->isAccessibleForCurrentMember(AccessRight::READ);
 		}
-		else if ($this->generalReadPermission == self::GENERAL_READ_PERMISSION_INHERIT && !$this->isRootCategory())
+		else if ($this->generalReadPermission == self::GENERAL_READ_PERMISSION_INHERIT && $this->hasParentCategory())
 		{
 			return $this->parentCategory->isReadableForCurrentMember();
 		}
@@ -373,7 +380,7 @@ class Category extends System
 			}
 			return $blnIsAccessible;
 		}
-		else if ($this->generalManagePermission == self::GENERAL_MANAGE_PERMISSION_INHERIT && !$this->isRootCategory())
+		else if ($this->generalManagePermission == self::GENERAL_MANAGE_PERMISSION_INHERIT && $this->hasParentCategory())
 		{
 			return $this->parentCategory->isAccessibleForCurrentMember($strAccessRight);
 		}
@@ -387,7 +394,17 @@ class Category extends System
 	 */
 	public function isRootCategory()
 	{
-		return $this->parentCategory == null;
+		return $this->parentCategoryId == 0;
+	}
+	
+	/**
+	 * Returns if this category has a defined parent node in context of the current structure of categories.
+	 *
+	 * @return	bool	True if this category has a parent category.
+	 */
+	public function hasParentCategory()
+	{
+		return $this->parentCategory != null;
 	}
 	
 	/**
@@ -397,7 +414,7 @@ class Category extends System
 	 */
 	public function getRootCategory()
 	{
-		if (!$this->isRootCategory())
+		if (!$this->isRootCategory() && $this->hasParentCategory())
 		{
 			return $this->parentCategory->getRootCategory();
 		}
@@ -409,17 +426,43 @@ class Category extends System
 	/**
 	 * Returns the path from the root node of this category to this category in context of the current structure of categories.
 	 *
+	 * @param	bool	$blnSkipThis	True if this category should be skipped.
 	 * @return	arr	All nodes in the path from the root node to this category.
 	 */
-	public function getPath()
+	public function getPath($blnSkipThis)
 	{
 		$arrPath = array();
 		
-		if (!$this->isRootCategory())
+		if (!$this->isRootCategory() && $this->hasParentCategory())
 		{
-			$arrPath = $this->parentCategory->getPath();
+			$arrPath = $this->parentCategory->getPath(false);
 		}
-		$arrPath[] = $this;
+		if (!$blnSkipThis)
+		{
+			$arrPath[] = $this;
+		}
+		
+		return $arrPath;
+	}
+	
+	/**
+	 * Returns the names in the path from the root node of this category to this category in context of the current structure of categories.
+	 *
+	 * @param	bool	$blnSkipThis	True if the name of this category should be skipped.
+	 * @return	arr	All nodes names in the path from the root node to this category.
+	 */
+	public function getPathNames($blnSkipThis)
+	{
+		$arrPath = array();
+		
+		if (!$this->isRootCategory() && $this->hasParentCategory())
+		{
+			$arrPath = $this->parentCategory->getPathNames(false);
+		}
+		if (!$blnSkipThis)
+		{
+			$arrPath[] = $this->name;
+		}
 		
 		return $arrPath;
 	}

@@ -127,6 +127,10 @@ class DmsLoader extends Controller
 			{
 				$category->documents = $this->getDocuments($category, $params);
 			}
+			if ($params->loadRootCategory)
+			{
+				$category->parentCategory = $this->loadCategory($category->parentCategoryId, $params);
+			}
 		}
 
 		return $category;
@@ -267,6 +271,7 @@ class DmsLoader extends Controller
 	private function buildCategory(Database_Result $objCategory)
 	{
 		$category = new Category($objCategory->id, $objCategory->name);
+		$category->parentCategoryId = $objCategory->pid;
 		$category->description = $objCategory->description;
 		$category->fileTypes = $objCategory->file_types;
 		$category->generalReadPermission = $objCategory->general_read_permission;

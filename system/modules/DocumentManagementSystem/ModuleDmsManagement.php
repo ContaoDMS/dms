@@ -390,7 +390,7 @@ class ModuleDmsManagement extends Module
 			$params = new DmsLoaderParams();
 			// TODO (#8) set a custom ROOT node id here --> module config
 			$params->rootCategoryId = 0;
-			$params->loadRootCategory = false;
+			$params->loadRootCategory = true; // get complete path to root, for checking inherited access rights
 			$params->loadAccessRights = true;
 			$params->loadDocuments = true;
 			
@@ -484,14 +484,15 @@ class ModuleDmsManagement extends Module
 	 */
 	private function uploadSelectFile(&$params, &$dmsLoader, &$uploadCategory, &$arrErrors, &$blnShowStart)
 	{
-		// TODO (#8) check if uploading is really allowed
-		
 		$this->Template = new \FrontendTemplate("mod_dms_mgmt_upload_select_file");
 		$this->Template->setData($this->arrData);
 		
-		$params->loadAccessRights = false;
+		$params->loadRootCategory = true; // get complete path to root, for checking inherited access rights
+		$params->loadAccessRights = true;
 		$params->loadDocuments = false;
 		$category = $dmsLoader->loadCategory($uploadCategory, $params);
+		
+		// TODO (#8) check if uploading is really allowed
 		
 		$this->Template->category = $category;
 		$this->Template->maxUploadFileSizeByte = DmsConfig::getMaxUploadFileSize(Document::FILE_SIZE_UNIT_BYTE, false);
@@ -516,14 +517,15 @@ class ModuleDmsManagement extends Module
 		}
 		else
 		{
-			// TODO (#8) check if uploading is really allowed
-			
 			$this->Template = new \FrontendTemplate("mod_dms_mgmt_upload_enter_properties");
 			$this->Template->setData($this->arrData);
 			
-			$params->loadAccessRights = false;
+			$params->loadRootCategory = true; // get complete path to root, for checking inherited access rights
+			$params->loadAccessRights = true;
 			$params->loadDocuments = false;
 			$category = $dmsLoader->loadCategory($uploadCategory, $params);
+			
+			// TODO (#8) check if uploading is really allowed
 			
 			$this->Template->category = $category;
 			$this->Template->maxUploadFileSizeByte = DmsConfig::getMaxUploadFileSize(Document::FILE_SIZE_UNIT_BYTE, false);
