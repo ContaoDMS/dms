@@ -474,7 +474,7 @@ class Category extends System
 	 */
 	public function getLevel()
 	{
-		return count($this->getPath());
+		return count($this->getPath(false));
 	}
 }
 

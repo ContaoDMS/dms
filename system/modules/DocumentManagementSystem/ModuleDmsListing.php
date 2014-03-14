@@ -134,7 +134,7 @@ class ModuleDmsListing extends Module
 		$params = new DmsLoaderParams();
 		// TODO (#9) set a custom ROOT node id here --> module config
 		$params->rootCategoryId = 0;
-		$params->loadRootCategory = true // get complete path to root, for checking inherited access rights;
+		$params->loadRootCategory = true; // get complete path to root, for checking inherited access rights;
 		$params->loadAccessRights = true;
 		$params->loadDocuments = true;
 		$params->documentSearchText = $strSearchText;
