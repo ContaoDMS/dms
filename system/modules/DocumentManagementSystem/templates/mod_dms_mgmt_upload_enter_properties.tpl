@@ -7,7 +7,6 @@
 <form action="<?php echo $this->action; ?>" method="POST" enctype="multipart/form-data" id="management" name="management">
 	<input type="hidden" name="FORM_SUBMIT" value="<?php echo $this->formId; ?>">
 	<input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}">
-	<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $this->maxUploadFileSizeByte; ?>" />
 	<input type="hidden" name="uploadCategory" value="<?php echo $this->category->id; ?>">
 	<input type="hidden" name="tempFileName" value="<?php echo $this->tempFileName; ?>">
 	
@@ -16,6 +15,7 @@
 		<div class="error"><?php echo $error; ?></div>
 		<?php endforeach; ?>
 		<div class="error" id="name_error" style="display: none;"></div>
+		<div class="error" id="version_error" style="display: none;"></div>
 	</div>
 	
 	<table cellpadding="0" cellspacing="0" border="0">
@@ -74,7 +74,7 @@
 				<td class="label" colspan="2"><?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_headline']; ?></td>
 			</tr>
 			<tr>
-				<td class="label"><?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_name']; ?> <span class="mandatory">*</span><span class="explanation" title="<?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_name_explanation']; ?>">(?)</span></td>
+				<td class="label"><?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_name']; ?><span class="mandatory" title="<?php echo $GLOBALS['TL_LANG']['DMS']['management_mandatory']; ?>">*</span><span class="explanation" title="<?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_name_explanation']; ?>">(?)</span></td>
 				<td><input type="text" id="documentName" name="documentName" maxlength="255" value="<?php echo $this->proposedDocumentName; ?>" /></td>
 			</tr>
 			<tr>
@@ -86,7 +86,7 @@
 				<td><input type="text" id="documentKeywords" name="documentKeywords" maxlength="255" value="<?php echo $this->proposedDocumentKeywords; ?>" /></td>
 			</tr>
 			<tr>
-				<td class="label"><?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_version']; ?><span class="explanation" title="<?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_version_explanation']; ?>">(?)</span></td>
+				<td class="label"><?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_version']; ?><span class="mandatory" title="<?php echo $GLOBALS['TL_LANG']['DMS']['management_mandatory']; ?>">*</span><span class="explanation" title="<?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_version_explanation']; ?>">(?)</span></td>
 				<td>
 					<input type="text" id="documentVersionMajor" name="documentVersionMajor" maxlength="3" size="3" value="<?php echo $this->proposedDocumentVersionMajor; ?>" />
 					.
@@ -111,7 +111,7 @@
 			<tr>
 				<td colspan="2">
 					<button type="submit" name="abort" value="true"><?php echo $GLOBALS['TL_LANG']['DMS']['management_button_abort']; ?></button>
-					<button onClick="return checkDocumentName();" type="submit" name="storeProperties" value="true"><?php echo $GLOBALS['TL_LANG']['DMS']['management_button_store_properties']; ?></button>
+					<button onClick="return checkMandatoryFields();" type="submit" name="storeProperties" value="true"><?php echo $GLOBALS['TL_LANG']['DMS']['management_button_store_properties']; ?></button>
 				</td>
 			</tr>
 		</tfoot>
@@ -120,20 +120,47 @@
 
 <script type="text/javascript">
 <!--
-	function checkDocumentName()
+	function checkMandatoryFields()
 	{
+		var alreadyFocused = false;
+		var send = false;
 		if (document.getElementById("documentName").value != null &&document.getElementById("documentName").value.length > 0)
 		{
-		  return true;
+			send = true;
+			document.getElementById("name_error").style.display = "none";
 		}
 		else
 		{
 			document.getElementById("name_error").innerHTML = "<?php echo $GLOBALS['TL_LANG']['DMS']['ERR']['upload_no_name_set']; ?>";
 			document.getElementById("name_error").style.display = "block";
 			document.getElementById("dms_errors").style.display = "block";
-			document.getElementById("documentName").focus();
-			return false;
+			if (!alreadyFocused)
+			{
+				document.getElementById("documentName").focus();
+				alreadyFocused = true;
+			}
+			send = false;
 		}
+		if (document.getElementById("documentVersionMajor").value != null &&document.getElementById("documentVersionMajor").value.length > 0 &&
+			document.getElementById("documentVersionMinor").value != null &&document.getElementById("documentVersionMinor").value.length > 0 &&
+			document.getElementById("documentVersionPatch").value != null &&document.getElementById("documentVersionPatch").value.length > 0)
+		{
+			send = send && true;
+			document.getElementById("version_error").style.display = "none";
+		}
+		else
+		{
+			document.getElementById("version_error").innerHTML = "<?php echo $GLOBALS['TL_LANG']['DMS']['ERR']['upload_no_version_set']; ?>";
+			document.getElementById("version_error").style.display = "block";
+			document.getElementById("dms_errors").style.display = "block";
+			if (!alreadyFocused)
+			{
+				document.getElementById("documentVersionMajor").focus();
+				alreadyFocused = true;
+			}
+			send = send && false;
+		}
+		return send;
 	}
 -->
 </script>

@@ -66,9 +66,9 @@ $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_name']        
 $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_name_explanation']     = "Bitte beachten Sie, dass bei einer Änderung des Namen anderen Versionen des Dokuments nicht mehr korrekt zugeordnet werden können.";
 $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_description']          = "Beschreibung";
 $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_keywords']             = "Schlüsselworte";
-$GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_keywords_explanation'] = "Bitte geben Sie eine kommaseparierte Liste von Schlüsselwörtern an.";
+$GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_keywords_explanation'] = "Bitte geben Sie eine Liste von Schlüsselwörtern an.";
 $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_version']              = "Version";
-$GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_version_explanation']  = "Es handelt sich um eine vorgeschlagene Versionsnummer. Diese kann beiebig geändert werden.";
+$GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_version_explanation']  = "Es handelt sich um eine vorgeschlagene Versionsnummer. Diese kann beliebig geändert werden.";
 $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_publish']              = "Veröffentlichen";
 $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_publish_explanation']  = "Nur veröffentlichte Dokumente stehen in der Auflistung zur Verfügung.";
 $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_publish_not_allowed']  = "Sie dürfen Dokumente in dieser Kategorie nicht veröffentlichen.";
@@ -120,6 +120,7 @@ $GLOBALS['TL_LANG']['DMS']['ERR']['upload_no_file_selected']             = 'Es w
 $GLOBALS['TL_LANG']['DMS']['ERR']['upload_php_error']                    = 'Der Upload wurde abgebrochen, weil ein Systemfehler aufgetreten ist. Bitte wenden sie sich an ihren Systemadministrator. Der Fehlercode lautet: %s';
 $GLOBALS['TL_LANG']['DMS']['ERR']['upload_file_size_exceeded']           = 'Der Upload wurde abgebrochen, weil die hochgeladene Datei die maximal zulässige Upload Dateigröße von <b>%s</b> überschritten hat.';
 $GLOBALS['TL_LANG']['DMS']['ERR']['upload_file_type_not_allowed']        = 'Der Upload wurde abgebrochen, weil der Typ <b>%s</b> der hochgeladenen Datei in dieser Kategorie nicht erlaubt ist.';
-$GLOBALS['TL_LANG']['DMS']['ERR']['upload_no_name_set']                  = 'Es wurde kein Name für das Document angegeben. Bitte legen Sie einen Name fest!';
+$GLOBALS['TL_LANG']['DMS']['ERR']['upload_no_name_set']                  = 'Es wurde kein Name für das Dokument angegeben. Bitte legen Sie einen Name fest!';
+$GLOBALS['TL_LANG']['DMS']['ERR']['upload_no_version_set']               = 'Es wurde keine korrekte Version für das Dokument angegeben. Bitte tragen Sie für alle 3 Felder einen Wert ein!';
 
 ?>
