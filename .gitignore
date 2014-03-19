@@ -1,3 +1,11 @@
+#############
+## custom
+#############
+
+tl_files/dms/preview/*
+tl_files/dms/temp/*
+!.gitignore
+
 #################
 ## Eclipse
 #################

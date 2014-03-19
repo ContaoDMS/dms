@@ -483,7 +483,8 @@ class ModuleDmsManagement extends Module
 				// load possible documents for file name
 				$arrDocuments = $dmsLoader->loadDocuments($arrFileParts['fileName'], $arrFileParts['fileType']);
 				
-				$proposedDocumentName = Document::splitFileName($strFileName)['fileName']; // propose original file name (uncleaned but unversioned) as document name
+				$arrFileNameParts = Document::splitFileName($strFileName);
+				$proposedDocumentName = $arrFileNameParts['fileName']; // propose original file name (uncleaned but unversioned) as document name
 				$proposedDocumentDescription = "";
 				$proposedDocumentKeywords = "";
 				$proposedDocumentVersionMajor = 1;
@@ -566,7 +567,7 @@ class ModuleDmsManagement extends Module
 				9. store document
 			   10. return data in template
 			*/
-			
+			/*
 			// move the uploaded file to dms temp dir
 			move_uploaded_file($_FILES['dmsFile']['tmp_name'], DmsConfig::getTempDirectory(true) . $strFileNameUnversioned);
 			
@@ -590,11 +591,11 @@ class ModuleDmsManagement extends Module
 				$proposedDocumentVersionMinor = $lastDocument->versionMinor;
 				$proposedDocumentVersionPatch = $lastDocument->versionPatch + 1;
 			}
-			
-			$this->Template = new \FrontendTemplate("mod_dms_mgmt_upload_enter_properties");
+			*/
+			$this->Template = new \FrontendTemplate("mod_dms_mgmt_upload_processing");
 			$this->Template->setData($this->arrData);
 			
-			$this->Template->category = $category;
+			/*$this->Template->category = $category;
 			$this->Template->fileName = $strFileName;
 			$this->Template->tempFileName = $strFileNameUnversioned;
 			$this->Template->fileType = $arrFileParts['fileType'];
@@ -608,7 +609,7 @@ class ModuleDmsManagement extends Module
 			$this->Template->proposedDocumentKeywords = $proposedDocumentKeywords;
 			$this->Template->proposedDocumentVersionMajor = $proposedDocumentVersionMajor;
 			$this->Template->proposedDocumentVersionMinor = $proposedDocumentVersionMinor;
-			$this->Template->proposedDocumentVersionPatch = $proposedDocumentVersionPatch;
+			$this->Template->proposedDocumentVersionPatch = $proposedDocumentVersionPatch;*/
 			
 			$blnShowStart = false;
 		}
