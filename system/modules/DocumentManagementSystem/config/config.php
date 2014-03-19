@@ -66,5 +66,19 @@ array_insert($GLOBALS['FE_MOD'], 1, array
 		'dms_management' => 'ModuleDmsManagement'
 	)
 ));
+
+/**
+ * Special characters and replacement
+ */
+$GLOBALS['TL_DMS']['SPECIALCHARS'] = array
+(
+	"&" => "_",
+	" " => "_",
+	"#" => "_",
+	"," => "_",
+	";" => "_",
+	":" => "_"
+);
+ 
  
 ?>

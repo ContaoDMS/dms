@@ -344,15 +344,45 @@ class Category extends System
 	}
 	
 	/**
+	 * Return if the current logged member has delete access to this category.
+	 *
+	 * @return	bool	True if the current logged member has delete access to this category.
+	 */
+	public function isDeletableForCurrentMember()
+	{
+		return $this->isAccessibleForCurrentMember(AccessRight::DELETE);
+	}
+	
+	/**
+	 * Return if the current logged member has edit access to this category.
+	 *
+	 * @return	bool	True if the current logged member has edit access to this category.
+	 */
+	public function isEditableForCurrentMember()
+	{
+		return $this->isAccessibleForCurrentMember(AccessRight::EDIT);
+	}
+	
+	/**
+	 * Return if the current logged member has publish access to this category.
+	 *
+	 * @return	bool	True if the current logged member has publish access to this category.
+	 */
+	public function isPublishableForCurrentMember()
+	{
+		return $this->isAccessibleForCurrentMember(AccessRight::PUBLISH);
+	}
+	
+	/**
 	 * Return if the current logged member has manage access (at least one of the rights: delete, edit or publish) to this category.
 	 *
 	 * @return	bool	True if the current logged member has manage access to this category.
 	 */
 	public function isManageableForCurrentMember()
 	{
-		return $this->isAccessibleForCurrentMember(AccessRight::DELETE) || 
-			   $this->isAccessibleForCurrentMember(AccessRight::EDIT) || 
-			   $this->isAccessibleForCurrentMember(AccessRight::PUBLISH);
+		return $this->isDeletableForCurrentMember() || 
+			   $this->isEditableForCurrentMember() || 
+			   $this->isPublishableForCurrentMember();
 	}
 	
 	/**
@@ -475,6 +505,35 @@ class Category extends System
 	public function getLevel()
 	{
 		return count($this->getPath(false));
+	}
+	
+	/**
+	 * Returns an array of file types which are allowed to be uploaded into this category.
+	 *
+	 * @return	array	The array of file types which are allowed.
+	 */
+	public function getAllowedFileTypes()
+	{
+		return array_map('trim', explode(",", $this->fileTypes));
+	}
+	
+	/**
+	 * Returns the given file type is allowed to be uploaded into this category.
+	 *
+	 * @param	string	$strFileType	The file type to be checked.
+	 * @param	bool	$blnCaseSensitive	True if checking should be done case sensitive.
+	 * @return	bool	True if the given file type is allowed to be uploaded into this category.
+	 */
+	public function isFileTypeAllowed($strFileType, $blnCaseSensitive = false)
+	{
+		$arrAllowedFileTypes = $this->getAllowedFileTypes();
+		if ($blnCaseSensitive)
+		{
+			$arrAllowedFileTypes = array_map('strtoupper', $arrAllowedFileTypes);
+			$strFileType = strtoupper($strFileType);
+		}
+		
+		return in_array($strFileType, $arrAllowedFileTypes);
 	}
 }
 

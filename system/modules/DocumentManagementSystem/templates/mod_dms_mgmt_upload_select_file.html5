@@ -30,16 +30,16 @@
 			</tr>
 			<tr>
 				<td class="label"><?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_select_filetypes']; ?></td>
-				<td><?php echo $this->category->fileTypes; ?></td>
+				<td><?php echo implode(", ", $this->category->getAllowedFileTypes()); ?></td>
 			</tr>
 			<tr>
 				<td class="label"><?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_select_max_size']; ?></td>
 				<td><?php echo $this->maxUploadFileSizeMbFormatted; ?></td>
 			</tr>
 			<tr>
-				<td class="label"><?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_select_file_select']; ?></td>
+				<td class="label"><?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_select_file_select']; ?><span class="mandatory" title="<?php echo $GLOBALS['TL_LANG']['DMS']['management_mandatory']; ?>">*</span></td>
 				<td>
-					<input type="file" name="file" id="file"/>
+					<input type="file" name="dmsFile" id="dmsFile"/>
 				</td>
 			</tr>
 		</tbody>
@@ -59,7 +59,7 @@
 <!--
 	function checkFile()
 	{
-		if (document.getElementById("file").value != null && document.getElementById("file").value.length > 0)
+		if (document.getElementById("dmsFile").value != null && document.getElementById("dmsFile").value.length > 0)
 		{
 		  return true;
 		}
@@ -68,6 +68,7 @@
 			document.getElementById("file_error").innerHTML = "<?php echo $GLOBALS['TL_LANG']['DMS']['ERR']['upload_no_file_selected']; ?>";
 			document.getElementById("file_error").style.display = "block";
 			document.getElementById("dms_errors").style.display = "block";
+			document.getElementById("dmsFile").focus();
 			return false;
 		}
 	}

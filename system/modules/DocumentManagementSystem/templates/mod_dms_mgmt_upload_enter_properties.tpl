@@ -74,7 +74,7 @@
 				<td class="label" colspan="2"><?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_headline']; ?></td>
 			</tr>
 			<tr>
-				<td class="label"><?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_name']; ?><span class="mandatory" title="<?php echo $GLOBALS['TL_LANG']['DMS']['management_mandatory']; ?>">*</span><span class="explanation" title="<?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_name_explanation']; ?>">(?)</span></td>
+				<td class="label"><?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_name']; ?> <span class="mandatory">*</span><span class="explanation" title="<?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_name_explanation']; ?>">(?)</span></td>
 				<td><input type="text" id="documentName" name="documentName" maxlength="255" value="<?php echo $this->proposedDocumentName; ?>" /></td>
 			</tr>
 			<tr>

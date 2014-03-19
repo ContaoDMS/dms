@@ -162,6 +162,32 @@ class DmsLoader extends Controller
 	}
 	
 	/**
+	 * Load the documents for the given file name and type.
+	 *
+	 * @param	string	$strFileName	The common file name for the documents to load.
+	 * @param	string	$strFileType	The common file type for the documents to load.
+	 * @return	array	Returns an array of matching the documents.
+	 */
+	public function loadDocuments($strFileName, $strFileType)
+	{
+		$arrDocuments = array();
+		$objDocument = $this->Database->prepare("SELECT d.*, CONCAT(m1.firstname, ' ', m1.lastname) AS upload_member_name, CONCAT(m2.firstname, ' ', m2.lastname) AS lastedit_member_name "
+											  . "FROM tl_dms_documents d "
+											  . "LEFT JOIN tl_member m1 ON m1.id = d.upload_member "
+											  . "LEFT JOIN tl_member m2 ON m2.id = d.lastedit_member "
+											  . "WHERE d.file_name = ? AND d.file_type = ? "
+											  . "ORDER BY d.version_major, d.version_minor, d.version_patch")
+									  ->execute(array($strFileName, $strFileType));
+		
+		while ($objDocument->next())
+		{
+			$arrDocuments[] = $this->buildDocument($objDocument);
+		}
+
+		return $arrDocuments;
+	}
+	
+	/**
 	 * Recursively reading the categories
 	 */
 	protected function getCategoryLevel($parentCategoryId, Category $parentCategory=null, DmsLoaderParams $params)

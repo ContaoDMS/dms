@@ -36,7 +36,8 @@ class DmsConfig
 	/**
 	 * Define constants.
 	 */
-	const PREVIEW_DIRECTORY_NAME = "preview";
+	const DIRECTORY_NAME_PREVIEW = "preview";
+	const DIRECTORY_NAME_TEMP = "temp";
 	
 	/**
 	 * Return base directory for the DMS documents, defined in system settings.
@@ -46,7 +47,7 @@ class DmsConfig
 	 */
 	public static function getBaseDirectory($blnAddTrailingSlash)
 	{
-		$path = $GLOBALS['TL_CONFIG']['dmsBaseDirectory'];
+		$path = TL_ROOT . '/' . $GLOBALS['TL_CONFIG']['dmsBaseDirectory'];
 		
 		if ($blnAddTrailingSlash)
 		{
@@ -63,7 +64,24 @@ class DmsConfig
 	 */
 	public static function getPreviewDirectory($blnAddTrailingSlash)
 	{
-		$path = self::getBaseDirectory(true) . self::PREVIEW_DIRECTORY_NAME;
+		$path = self::getBaseDirectory(true) . self::DIRECTORY_NAME_PREVIEW;
+		
+		if ($blnAddTrailingSlash)
+		{
+			$path .= "/";
+		}
+		return $path;
+	}
+	
+	/**
+	 * Return temp directory for the DMS documents.
+	 *
+	 * @param	bool	$blnAddTrailingSlash	True if a trailing slash should be added.
+	 * @return	string	The path to the temp directory.
+	 */
+	public static function getTempDirectory($blnAddTrailingSlash)
+	{
+		$path = self::getBaseDirectory(true) . self::DIRECTORY_NAME_TEMP;
 		
 		if ($blnAddTrailingSlash)
 		{
