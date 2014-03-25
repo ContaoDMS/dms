@@ -42,14 +42,14 @@ class DmsConfig
 	/**
 	 * Return base directory for the DMS documents, defined in system settings.
 	 *
-	 * @param	bool	$blnAddTrailingSlash	True if a trailing slash should be added.
+	 * @param	bool	$blnAppendTrailingSlash	True if a trailing slash should be appended.
 	 * @return	string	The path to the base directory.
 	 */
-	public static function getBaseDirectory($blnAddTrailingSlash)
+	public static function getBaseDirectory($blnAppendTrailingSlash)
 	{
-		$path = TL_ROOT . '/' . $GLOBALS['TL_CONFIG']['dmsBaseDirectory'];
+		$path = $GLOBALS['TL_CONFIG']['dmsBaseDirectory'];
 		
-		if ($blnAddTrailingSlash)
+		if ($blnAppendTrailingSlash)
 		{
 			$path .= "/";
 		}
@@ -59,14 +59,14 @@ class DmsConfig
 	/**
 	 * Return preview directory for the DMS document preview images.
 	 *
-	 * @param	bool	$blnAddTrailingSlash	True if a trailing slash should be added.
+	 * @param	bool	$blnAppendTrailingSlash	True if a trailing slash should be appended.
 	 * @return	string	The path to the preview directory.
 	 */
-	public static function getPreviewDirectory($blnAddTrailingSlash)
+	public static function getPreviewDirectory($blnAppendTrailingSlash)
 	{
 		$path = self::getBaseDirectory(true) . self::DIRECTORY_NAME_PREVIEW;
 		
-		if ($blnAddTrailingSlash)
+		if ($blnAppendTrailingSlash)
 		{
 			$path .= "/";
 		}
@@ -76,14 +76,14 @@ class DmsConfig
 	/**
 	 * Return temp directory for the DMS documents.
 	 *
-	 * @param	bool	$blnAddTrailingSlash	True if a trailing slash should be added.
+	 * @param	bool	$blnAppendTrailingSlash	True if a trailing slash should be appended.
 	 * @return	string	The path to the temp directory.
 	 */
-	public static function getTempDirectory($blnAddTrailingSlash)
+	public static function getTempDirectory($blnAppendTrailingSlash)
 	{
 		$path = self::getBaseDirectory(true) . self::DIRECTORY_NAME_TEMP;
 		
-		if ($blnAddTrailingSlash)
+		if ($blnAppendTrailingSlash)
 		{
 			$path .= "/";
 		}

@@ -115,7 +115,7 @@ class ModuleDmsListing extends Module
 						}
 						else
 						{
-							$arrErrors[] = $GLOBALS['TL_LANG']['DMS']['ERR']['download_document_not_found'];
+							$arrErrors[] = $GLOBALS['TL_LANG']['DMS']['ERR']['download_file_not_found'];
 						}
 					}
 					else
