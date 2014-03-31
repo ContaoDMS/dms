@@ -26,7 +26,13 @@
 		<tbody>
 			<tr>
 				<td class="label"><?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_select_category']; ?></td>
-				<td><?php echo $this->category->name; ?> (<?php echo implode($GLOBALS['TL_LANG']['DMS']['management_path_separator'], $this->category->getPathNames(true)); ?>)</td>
+				<td>
+					<?php echo $this->category->name; ?>
+					<?php $arrPathNames = $this->category->getPathNames(true); ?>
+					<?php if (count($arrPathNames) > 0): ?>
+						(<?php echo implode($GLOBALS['TL_LANG']['DMS']['management_path_separator'], $this->category->getPathNames(true)); ?>)
+					<?php endif; ?>
+				</td>
 			</tr>
 			<tr>
 				<td class="label"><?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_select_filetypes']; ?></td>
