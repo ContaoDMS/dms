@@ -16,4 +16,8 @@ Version 2.0.0 (2014-xx-xx)
 - added recursive inheritance of rights (categories without defined access right inherit the restictions from her parent category)
 - added templates for Contao 2.10.x, 2.11.x
 - added secure download (download folder is protected by `.htaccess`)
-- reworked file name and document name checking (remove special chars)
+- reworked file name and document name checking (removing of special chars, etc.)
+- added version auto detection from file name (used for proposing next version, check existing versions)
+- added displaying upload member and date
+- added displaying lastedit member and date
+- added additional check for access rights, before downloading, uploading, managing (avoid 'hack' from other form)
