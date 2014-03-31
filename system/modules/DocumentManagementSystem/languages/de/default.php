@@ -58,9 +58,14 @@ $GLOBALS['TL_LANG']['DMS']['management_upload_properties_file_name']            
 $GLOBALS['TL_LANG']['DMS']['management_upload_properties_file_type']                     = "Dateityp";
 $GLOBALS['TL_LANG']['DMS']['management_upload_properties_file_size']                     = "Dateigröße";
 $GLOBALS['TL_LANG']['DMS']['management_upload_properties_existing_headline']             = "Es existieren bereits folgende Versionen dieses Dokuments";
-$GLOBALS['TL_LANG']['DMS']['management_upload_properties_existing_version']              = "Version";
+$GLOBALS['TL_LANG']['DMS']['management_upload_properties_existing_name']                 = "Version";
+$GLOBALS['TL_LANG']['DMS']['management_upload_properties_existing_version']              = "(V. %s)";
 $GLOBALS['TL_LANG']['DMS']['management_upload_properties_existing_published']            = "Veröffentlicht";
 $GLOBALS['TL_LANG']['DMS']['management_upload_properties_existing_unpublished']          = "Unveröffentlicht";
+$GLOBALS['TL_LANG']['DMS']['management_upload_properties_existing_size']                 = "Dateigröße: %s";
+$GLOBALS['TL_LANG']['DMS']['management_upload_properties_existing_uploaded']             = "Hochgeladen: %s (%s)";
+$GLOBALS['TL_LANG']['DMS']['management_upload_properties_existing_lastedited']           = "Zuletzt bearbeitet: %s (%s)";
+$GLOBALS['TL_LANG']['DMS']['management_upload_properties_existing_category']             = "Kategorie: %s %s";
 $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_headline']             = "Eigenschaften des Dokuments";
 $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_name']                 = "Name";
 $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_name_explanation']     = "Bitte beachten Sie, dass bei einer Änderung des Namen anderen Versionen des Dokuments nicht mehr korrekt zugeordnet werden können.";
@@ -72,10 +77,6 @@ $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_version_explan
 $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_publish']              = "Veröffentlichen";
 $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_publish_explanation']  = "Nur veröffentlichte Dokumente stehen in der Auflistung zur Verfügung.";
 $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_publish_not_allowed']  = "Sie dürfen Dokumente in dieser Kategorie nicht veröffentlichen.";
-$GLOBALS['TL_LANG']['DMS']['management_upload_properties_version']                       = "(V. %s)";
-$GLOBALS['TL_LANG']['DMS']['management_upload_properties_size']                          = "Dateigröße: %s";
-$GLOBALS['TL_LANG']['DMS']['management_upload_properties_uploaded']                      = "Hochgeladen: %s (%s)";
-$GLOBALS['TL_LANG']['DMS']['management_upload_properties_lastedited']                    = "Zuletzt bearbeitet: %s (%s)";
 
 /**
  * Translations for listing module
@@ -109,6 +110,8 @@ $GLOBALS['TL_LANG']['DMS']['file_size_format']['$thousands_sep']            = '.
  * File size units
  */
 $GLOBALS['TL_LANG']['DMS']['ERR']['download_document_illegal_parameter'] = 'Die angeforderte Datei konnte nicht heruntergeladen werden, weil der Übergabeparameter unzulässig ist.';
+$GLOBALS['TL_LANG']['DMS']['ERR']['download_document_not_found']         = 'Die angeforderte Datei konnte nicht heruntergeladen werden, weil das Dokument nicht existiert.';
+$GLOBALS['TL_LANG']['DMS']['ERR']['download_document_not_allowed']       = 'Die angeforderte Datei konnte nicht heruntergeladen werden, weil Sie keine Leserechte für die Kategorie haben.';
 $GLOBALS['TL_LANG']['DMS']['ERR']['download_document_not_found']         = 'Die angeforderte Datei konnte nicht heruntergeladen werden, weil das Dokument nicht existiert.';
 $GLOBALS['TL_LANG']['DMS']['ERR']['download_file_not_found']             = 'Die angeforderte Datei konnte nicht heruntergeladen werden, weil sie nicht existiert.';
 $GLOBALS['TL_LANG']['DMS']['ERR']['no_categories_found']                 = 'Es existieren keine Kategorien.';
