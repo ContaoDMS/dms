@@ -44,6 +44,7 @@ class DmsLoaderParams
 	 */
 	private $intRootCategoryId = 0;
 	private $blnLoadRootCategory = false;
+	private $blnLoadCategory = false;
 	private $blnLoadAccessRights = false;
 	private $blnLoadDocuments = false;
 	private $strDocumentSearchText = "";
@@ -71,6 +72,9 @@ class DmsLoaderParams
 				break;
 			case 'loadRootCategory':
 				$this->blnLoadRootCategory = (bool) $varValue;
+				break;
+			case 'loadCategory':
+				$this->blnLoadCategory = (bool) $varValue;
 				break;
 			case 'loadAccessRights':
 				$this->blnLoadAccessRights = (bool) $varValue;
@@ -112,6 +116,9 @@ class DmsLoaderParams
 				break;
 			case 'loadRootCategory':
 				return $this->blnLoadRootCategory;
+				break;
+			case 'loadCategory':
+				return $this->blnLoadCategory;
 				break;
 			case 'loadAccessRights':
 				return $this->blnLoadAccessRights;

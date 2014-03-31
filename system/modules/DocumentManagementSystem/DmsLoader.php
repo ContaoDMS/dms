@@ -140,9 +140,10 @@ class DmsLoader extends Controller
 	 * Load the document with the given id.
 	 *
 	 * @param	int	$documentId	The id of the document to load.
+	 * @param	DmsLoaderParams	$params	The configured params to use while loading.
 	 * @return	document	Returns the document.
 	 */
-	public function loadDocument($documentId)
+	public function loadDocument($documentId, DmsLoaderParams $params)
 	{
 		$objDocument = $this->Database->prepare("SELECT d.*, CONCAT(m1.firstname, ' ', m1.lastname) AS upload_member_name, CONCAT(m2.firstname, ' ', m2.lastname) AS lastedit_member_name "
 											  . "FROM tl_dms_documents d "
@@ -156,6 +157,10 @@ class DmsLoader extends Controller
 		if ($objDocument->numRows)
 		{
 			$document = $this->buildDocument($objDocument);
+			if ($params->loadCategory)
+			{
+				$document->category = $this->loadCategory($document->categoryId, $params);
+			}
 		}
 
 		return $document;
@@ -166,9 +171,10 @@ class DmsLoader extends Controller
 	 *
 	 * @param	string	$strFileName	The common file name for the documents to load.
 	 * @param	string	$strFileType	The common file type for the documents to load.
+	 * @param	DmsLoaderParams	$params	The configured params to use while loading.
 	 * @return	array	Returns an array of matching the documents.
 	 */
-	public function loadDocuments($strFileName, $strFileType)
+	public function loadDocuments($strFileName, $strFileType, DmsLoaderParams $params)
 	{
 		$arrDocuments = array();
 		$objDocument = $this->Database->prepare("SELECT d.*, CONCAT(m1.firstname, ' ', m1.lastname) AS upload_member_name, CONCAT(m2.firstname, ' ', m2.lastname) AS lastedit_member_name "
@@ -179,9 +185,15 @@ class DmsLoader extends Controller
 											  . "ORDER BY d.version_major, d.version_minor, d.version_patch")
 									  ->execute(array($strFileName, $strFileType));
 		
+		$document = null;
 		while ($objDocument->next())
 		{
-			$arrDocuments[] = $this->buildDocument($objDocument);
+			$document = $this->buildDocument($objDocument);
+			if ($params->loadCategory)
+			{
+				$document->category = $this->loadCategory($document->categoryId, $params);
+			}
+			$arrDocuments[] = $document;
 		}
 
 		return $arrDocuments;
@@ -315,6 +327,7 @@ class DmsLoader extends Controller
 	private function buildAccessRight(Database_Result $objAccessRight)
 	{
 		$accessRight = new AccessRight($objAccessRight->id, $objAccessRight->member_group);
+		$accessRight->categoryId = $objAccessRight->pid;
 		$strRight = accessRight::READ;
 		$accessRight->$strRight = $objAccessRight->right_read;
 		$strRight = accessRight::UPLOAD;
@@ -337,6 +350,7 @@ class DmsLoader extends Controller
 	private function buildDocument(Database_Result $objDocument)
 	{
 		$document = new Document($objDocument->id, $objDocument->name);
+		$document->categoryId = $objDocument->pid;
 		$document->description = $objDocument->description;
 		$document->keywords = $objDocument->keywords;
 		$document->fileName = $objDocument->file_name;

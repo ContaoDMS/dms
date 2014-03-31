@@ -66,6 +66,7 @@ class Document
 	/**
 	 * reference to category
 	 */
+	private $intCategoryId = -1;
 	private $category = null;
 	
 	/**
@@ -144,6 +145,9 @@ class Document
 			case 'published':
 				$this->blnPublished = (bool) $varValue;
 				break;
+			case 'categoryId':
+				$this->intCategoryId = (int) $varValue;
+				break;
 			case 'category':
 				$this->category = $varValue;
 				break;
@@ -216,6 +220,9 @@ class Document
 				break;
 			case 'published':
 				return $this->blnPublished;
+				break;
+			case 'categoryId':
+				return $this->intCategoryId;
 				break;
 			case 'category':
 				return $this->category;

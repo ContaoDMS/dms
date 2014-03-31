@@ -56,6 +56,7 @@ class AccessRight
 	/**
 	 * reference to category
 	 */
+	private $intCategoryId = -1;
 	private $category = null;
 	
 	/**
@@ -101,6 +102,9 @@ class AccessRight
 			case self::PUBLISH:
 				$this->blnPublish = (bool) $varValue;
 				break;
+			case 'categoryId':
+				$this->intCategoryId = (int) $varValue;
+				break;
 			case 'category':
 				$this->category = $varValue;
 				break;
@@ -140,6 +144,9 @@ class AccessRight
 				break;
 			case self::PUBLISH:
 				return $this->blnPublish;
+				break;
+			case 'categoryId':
+				return $this->intCategoryId;
 				break;
 			case 'category':
 				return $this->category;
