@@ -481,7 +481,9 @@ class ModuleDmsManagement extends Module
 				move_uploaded_file($_FILES['dmsFile']['tmp_name'], DmsConfig::getTempDirectory(true) . $strFileNameUnversioned);
 				
 				// load possible documents for file name
-				$arrDocuments = $dmsLoader->loadDocuments($arrFileParts['fileName'], $arrFileParts['fileType']);
+				$params->loadCategory = true; // need the category of existing documents
+				$arrDocuments = $dmsLoader->loadDocuments($arrFileParts['fileName'], $arrFileParts['fileType'], $params);
+				$params->loadCategory = false;
 				
 				$arrFileNameParts = Document::splitFileName($strFileName);
 				$proposedDocumentName = $arrFileNameParts['fileName']; // propose original file name (uncleaned but unversioned) as document name
@@ -500,6 +502,19 @@ class ModuleDmsManagement extends Module
 					$proposedDocumentVersionMajor = $lastDocument->versionMajor;
 					$proposedDocumentVersionMinor = $lastDocument->versionMinor;
 					$proposedDocumentVersionPatch = $lastDocument->versionPatch + 1;
+				}
+				
+				// recheck the proposed version (if file name version is higher, than proposed
+				if ($arrFileNameParts['hasVersion'])
+				{
+					if ($arrFileNameParts['versionMajor'] > $proposedDocumentVersionMajor ||
+						($arrFileNameParts['versionMajor'] == $proposedDocumentVersionMajor && $arrFileNameParts['versionMinor'] > $proposedDocumentVersionMinor) ||
+						($arrFileNameParts['versionMajor'] == $proposedDocumentVersionMajor && $arrFileNameParts['versionMinor'] == $proposedDocumentVersionMinor && $arrFileNameParts['versionPatch'] > $proposedDocumentVersionPatch))
+					{
+						$proposedDocumentVersionMajor = $arrFileNameParts['versionMajor'];
+						$proposedDocumentVersionMinor = $arrFileNameParts['versionMinor'];
+						$proposedDocumentVersionPatch = $arrFileNameParts['versionPatch'];
+					}
 				}
 				
 				$this->Template = new \FrontendTemplate("mod_dms_mgmt_upload_enter_properties");
