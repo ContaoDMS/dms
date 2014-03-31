@@ -400,7 +400,7 @@ class Document
 	 */
 	public function getUploadDate()
 	{
-		// TODO get a format from config here
+		// TODO: get a format from config here
 		return date('d.m.Y H:i:s', $this->intUploadDate);
 	}
 	
@@ -411,7 +411,7 @@ class Document
 	 */
 	public function getLasteditDate()
 	{
-		// TODO get a format from config here
+		// TODO: get a format from config here
 		return date('d.m.Y H:i:s', $this->intLasteditDate);
 	}
 	

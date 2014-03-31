@@ -285,8 +285,8 @@ class tl_dms_documents extends Backend
 		$doc = $dc->activeRecord;
 		
 		$arrFileNameParts = Document::splitFileName(substr($varValue, strlen(DmsConfig::getBaseDirectory(true))));
-		// TODO reset the new fileType
-		// TODO geht version parts from POST ... maybe changed ... or reduce fileName via finding and counting underscores and removing them
+		// TODO: reset the new fileType
+		// TODO: get version parts from POST ... maybe changed ... or reduce fileName via finding and counting underscores and removing them
 		
 		return $arrFileNameParts['fileName'];
 	}

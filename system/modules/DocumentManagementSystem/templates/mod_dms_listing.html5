@@ -21,7 +21,7 @@
 	<!-- Search -->
 	<div id="list_search">
 		<div id="list_search_params">
-			<?php // TODO (#9) set the search type here (via Drop Down) ?>
+			<?php // TODO: (#9) set the search type here (via Drop Down) ?>
 			<select name="searchType" id="searchType" style="visibility: hidden;">
 				<option value="<?php echo DmsLoaderParams::DOCUMENT_SEARCH_EXACT; ?>"><?php echo DmsLoaderParams::DOCUMENT_SEARCH_EXACT; ?></option>
 				<option value="<?php echo DmsLoaderParams::DOCUMENT_SEARCH_EXACT; ?>"><?php echo DmsLoaderParams::DOCUMENT_SEARCH_EXACT; ?></option>

@@ -300,7 +300,7 @@ class ModuleDmsManagement extends Module
 			
 			// Prepare paramters for loader
 			$params = new DmsLoaderParams();
-			// TODO (#8) set a custom ROOT node id here --> module config
+			// TODO: (#8) set a custom ROOT node id here --> module config
 			$params->rootCategoryId = 0;
 			
 			$abort = (bool) $this->Input->post('abort');

@@ -105,7 +105,7 @@ class ModuleDmsListing extends Module
 					$document = $dmsLoader->loadDocument($docId); // with path to Root Category .... hier sowieso gesetzt
 					if ($document != null)
 					{
-						// TODO (#9) : check read permissions
+						// TODO: (#9) : check read permissions
 						
 						// Send the file to the browser
 						$file = DmsConfig::getDocumentFilePath($document->getFileNameVersioned());
@@ -132,13 +132,13 @@ class ModuleDmsListing extends Module
 		
 		// Prepare paramters for loader
 		$params = new DmsLoaderParams();
-		// TODO (#9) set a custom ROOT node id here --> module config
+		// TODO: (#9) set a custom ROOT node id here --> module config
 		$params->rootCategoryId = 0;
 		$params->loadRootCategory = true; // get complete path to root, for checking inherited access rights;
 		$params->loadAccessRights = true;
 		$params->loadDocuments = true;
 		$params->documentSearchText = $strSearchText;
-		// TODO (#9) get the search type from form here (via Drop Down)
+		// TODO: (#9) get the search type from form here (via Drop Down)
 		$params->documentSearchType = DmsLoaderParams::DOCUMENT_SEARCH_LIKE;
 		
 		$arrCategories = $dmsLoader->loadCategories($params);

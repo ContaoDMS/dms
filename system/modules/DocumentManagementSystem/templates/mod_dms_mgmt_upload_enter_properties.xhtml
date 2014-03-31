@@ -98,7 +98,7 @@
 			<tr>
 				<td class="label"><?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_publish']; ?><span class="explanation" title="<?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_publish_explanation']; ?>">(?)</span></td>
 			<?php if ($this->category->isPublishableForCurrentMember()) : ?>
-				<td><input type="checkbox" id="documentPublish" name="documentPublish" value="true" /><? /* TODO set default publishing behavoir here (see #7) */ ?></td>
+				<td><input type="checkbox" id="documentPublish" name="documentPublish" value="true" /><? /* TODO: set default publishing behavoir here (see #7) */ ?></td>
 			<?php else : ?>
 				<td>
 					<div class="not_allowed"><?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_publish_not_allowed']; ?></div>
