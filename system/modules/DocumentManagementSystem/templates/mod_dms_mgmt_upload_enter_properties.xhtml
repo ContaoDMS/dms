@@ -27,7 +27,13 @@
 		<tbody>
 			<tr>
 				<td class="label"><?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_category']; ?></td>
-				<td><?php echo $this->category->name; ?> (<?php echo implode($GLOBALS['TL_LANG']['DMS']['management_path_separator'], $this->category->getPathNames(true)); ?>)</td>
+				<td>
+					<?php echo $this->category->name; ?>
+					<?php $arrPathNames = $this->category->getPathNames(true); ?>
+					<?php if (count($arrPathNames) > 0): ?>
+						(<?php echo implode($GLOBALS['TL_LANG']['DMS']['management_path_separator'], $this->category->getPathNames(true)); ?>)
+					<?php endif; ?>
+				</td>
 			</tr>
 			<tr class="subheadline">
 				<td class="label" colspan="2"><?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_file_headline']; ?></td>
@@ -50,21 +56,29 @@
 			</tr>
 		<?php foreach ($this->existingDocuments as $document) : ?>
 			<tr>
-				<td class="label"><?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_existing_version']; ?></td>
+				<td class="label"><?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_existing_name']; ?></td>
 				<td>
 					<?php
-						$title = sprintf($GLOBALS['TL_LANG']['DMS']['management_upload_properties_size'], $document->getFileSize(Document::FILE_SIZE_UNIT_MB, true));
+						$title = sprintf($GLOBALS['TL_LANG']['DMS']['management_upload_properties_existing_size'], $document->getFileSize(Document::FILE_SIZE_UNIT_MB, true));
 						if (strlen($document->getUploadDate() > 0) && $document->hasUploadMemberName())
 						{
-							$title .= "\n" . sprintf($GLOBALS['TL_LANG']['DMS']['management_upload_properties_uploaded'], $document->getUploadDate(), $document->uploadMemberName);
+							$title .= "\n" . sprintf($GLOBALS['TL_LANG']['DMS']['management_upload_properties_existing_uploaded'], $document->getUploadDate(), $document->uploadMemberName);
 						}
 						if (strlen($document->getLasteditDate() > 0) && $document->hasLasteditMemberName())
 						{
-							$title .= "\n" . sprintf($GLOBALS['TL_LANG']['DMS']['management_upload_properties_lastedited'], $document->getLasteditDate(), $document->lasteditMemberName);
+							$title .= "\n" . sprintf($GLOBALS['TL_LANG']['DMS']['management_upload_properties_existing_lastedited'], $document->getLasteditDate(), $document->lasteditMemberName);
 						}
+						$arrPathNames = $document->category->getPathNames(true);
+						$categoryPath = "";
+						if (count($arrPathNames) > 0)
+						{
+							$categoryPath = "(" . implode($GLOBALS['TL_LANG']['DMS']['management_path_separator'], $this->category->getPathNames(true)) . ")";
+						}
+						$title .= "\n" . sprintf($GLOBALS['TL_LANG']['DMS']['management_upload_properties_existing_category'], $document->category->name, $categoryPath);
 					?> 
 					<span class="existingDocument" title="<?php echo $title; ?>">
-						<?php echo $document->name; ?> <?php echo sprintf($GLOBALS['TL_LANG']['DMS']['management_upload_properties_version'], $document->getVersion()); ?> [<?php if ($document->isPublished()) : ?><?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_existing_published']; ?><?php else: ?><?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_existing_unpublished']; ?><?php endif; ?>]
+						<?php echo $document->name; ?> <?php echo sprintf($GLOBALS['TL_LANG']['DMS']['management_upload_properties_existing_version'], $document->getVersion()); ?> 
+						[<?php if ($document->isPublished()) : ?><?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_existing_published']; ?><?php else: ?><?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_existing_unpublished']; ?><?php endif; ?>]
 					</span>
 				</td>
 			</tr>
