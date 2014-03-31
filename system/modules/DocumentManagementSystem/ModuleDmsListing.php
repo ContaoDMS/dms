@@ -79,6 +79,16 @@ class ModuleDmsListing extends Module
 		}
 		
 		$dmsLoader = DmsLoader::getInstance();
+		$params = new DmsLoaderParams();
+		// Prepare paramters for loader
+		// TODO: (#9) set a custom ROOT node id here --> module config
+		$params->rootCategoryId = 0;
+		$params->loadRootCategory = true; // get complete path to root, for checking inherited access rights;
+		$params->loadAccessRights = true;
+		$params->loadDocuments = true;
+		$params->documentSearchText = $strSearchText;
+		// TODO: (#9) get the search type from form here (via Drop Down)
+		$params->documentSearchType = DmsLoaderParams::DOCUMENT_SEARCH_LIKE;
 		
 		$formId = "dms_listing_" . $this->id;
 		 
@@ -102,20 +112,32 @@ class ModuleDmsListing extends Module
 			{
 				if (is_numeric($docId))
 				{
-					$document = $dmsLoader->loadDocument($docId); // with path to Root Category .... hier sowieso gesetzt
+					$params->loadCategory = true; // need the category of the document to check access rights
+					$document = $dmsLoader->loadDocument($docId, $params); // with path to Root Category .... hier sowieso gesetzt
+					$params->loadCategory = false;
+					
 					if ($document != null)
 					{
-						// TODO: (#9) : check read permissions
-						
-						// Send the file to the browser
-						$file = DmsConfig::getDocumentFilePath($document->getFileNameVersioned());
-						if (file_exists(TL_ROOT . '/' . $file))
+						if (!$document->isPublished())
 						{
-							$this->sendFileToBrowser($file);
+							$arrErrors[] = $GLOBALS['TL_LANG']['DMS']['ERR']['download_document_not_published'];
+						}
+						else if (!$document->category->isPublished() || !$document->category->isReadableForCurrentMember())
+						{
+							$arrErrors[] = $GLOBALS['TL_LANG']['DMS']['ERR']['download_document_not_allowed'];
 						}
 						else
 						{
-							$arrErrors[] = $GLOBALS['TL_LANG']['DMS']['ERR']['download_file_not_found'];
+							// Send the file to the browser
+							$file = DmsConfig::getDocumentFilePath($document->getFileNameVersioned());
+							if (file_exists(TL_ROOT . '/' . $file))
+							{
+								$this->sendFileToBrowser($file);
+							}
+							else
+							{
+								$arrErrors[] = $GLOBALS['TL_LANG']['DMS']['ERR']['download_file_not_found'];
+							}
 						}
 					}
 					else
@@ -129,17 +151,6 @@ class ModuleDmsListing extends Module
 				}
 			}
 		}
-		
-		// Prepare paramters for loader
-		$params = new DmsLoaderParams();
-		// TODO: (#9) set a custom ROOT node id here --> module config
-		$params->rootCategoryId = 0;
-		$params->loadRootCategory = true; // get complete path to root, for checking inherited access rights;
-		$params->loadAccessRights = true;
-		$params->loadDocuments = true;
-		$params->documentSearchText = $strSearchText;
-		// TODO: (#9) get the search type from form here (via Drop Down)
-		$params->documentSearchType = DmsLoaderParams::DOCUMENT_SEARCH_LIKE;
 		
 		$arrCategories = $dmsLoader->loadCategories($params);
 		// apply the read permissions, to only show valid categories
