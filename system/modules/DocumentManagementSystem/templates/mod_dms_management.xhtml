@@ -8,11 +8,38 @@
 	<input type="hidden" name="FORM_SUBMIT" value="<?php echo $this->formId; ?>">
 	<input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}">
 	
-	<?php if (count($this->errors) > 0): ?>
+	<?php if (count($this->messages['errors']) > 0): ?>
 	<!-- Errors -->
 	<div id="dms_errors">
-		<?php foreach ($this->errors as $error): ?>
+		<?php foreach ($this->messages['errors'] as $error): ?>
 		<div class="error"><?php echo $error; ?></div>
+		<?php endforeach; ?>
+	</div>
+	<?php endif; ?>
+	
+	<?php if (count($this->messages['warnings']) > 0): ?>
+	<!-- Warnings -->
+	<div id="dms_warnings">
+		<?php foreach ($this->messages['warnings'] as $warning): ?>
+		<div class="warning"><?php echo $warning; ?></div>
+		<?php endforeach; ?>
+	</div>
+	<?php endif; ?>
+	
+	<?php if (count($this->messages['successes']) > 0): ?>
+	<!-- Successes -->
+	<div id="dms_successes">
+		<?php foreach ($this->messages['successes'] as $success): ?>
+		<div class="success"><?php echo $success; ?></div>
+		<?php endforeach; ?>
+	</div>
+	<?php endif; ?>
+	
+	<?php if (count($this->messages['infos']) > 0): ?>
+	<!-- Infos -->
+	<div id="dms_infos">
+		<?php foreach ($this->messages['infos'] as $info): ?>
+		<div class="info"><?php echo $info; ?></div>
 		<?php endforeach; ?>
 	</div>
 	<?php endif; ?>

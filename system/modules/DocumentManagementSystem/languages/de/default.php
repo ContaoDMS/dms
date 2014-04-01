@@ -107,7 +107,7 @@ $GLOBALS['TL_LANG']['DMS']['file_size_format']['dec_point']                 = ',
 $GLOBALS['TL_LANG']['DMS']['file_size_format']['$thousands_sep']            = '.';
 
 /**
- * File size units
+ * Errors
  */
 $GLOBALS['TL_LANG']['DMS']['ERR']['download_document_illegal_parameter'] = 'Die angeforderte Datei konnte nicht heruntergeladen werden, weil der Übergabeparameter unzulässig ist.';
 $GLOBALS['TL_LANG']['DMS']['ERR']['download_document_not_found']         = 'Die angeforderte Datei konnte nicht heruntergeladen werden, weil das Dokument nicht existiert.';
@@ -125,5 +125,10 @@ $GLOBALS['TL_LANG']['DMS']['ERR']['upload_file_size_exceeded']           = 'Der 
 $GLOBALS['TL_LANG']['DMS']['ERR']['upload_file_type_not_allowed']        = 'Der Upload wurde abgebrochen, weil der Typ <b>%s</b> der hochgeladenen Datei in dieser Kategorie nicht erlaubt ist.';
 $GLOBALS['TL_LANG']['DMS']['ERR']['upload_no_name_set']                  = 'Es wurde kein Name für das Dokument angegeben. Bitte legen Sie einen Name fest!';
 $GLOBALS['TL_LANG']['DMS']['ERR']['upload_no_version_set']               = 'Es wurde keine korrekte Version für das Dokument angegeben. Bitte tragen Sie für alle 3 Felder einen Wert ein!';
+
+/**
+ * Warnings
+ */
+$GLOBALS['TL_LANG']['DMS']['WARN']['existing_document_in_another_catagory'] = 'Es existiert mindestens eine Dokumentenversionen zu diesem Dateinamen in einer andere Kategorie als der aktuell gewählten. Da der Dateiname als Schlüssel für die Dokumente verwendet wird, sollte er so gewählt sein, dass er systemweit eindeutig ist.';
 
 ?>

@@ -10,12 +10,40 @@
 	<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $this->maxUploadFileSizeByte; ?>" />
 	<input type="hidden" name="uploadCategory" value="<?php echo $this->category->id; ?>">
 	
-	<div id="dms_errors"<?php if (count($this->errors) == 0) : ?> style="display: none;"<?php endif; ?>>
-		<?php foreach ($this->errors as $error): ?>
+	<!-- Errors -->
+	<div id="dms_errors"<?php if (count($this->messages['errors']) == 0) : ?> style="display: none;"<?php endif; ?>>
+		<?php foreach ($this->messages['errors'] as $error): ?>
 		<div class="error"><?php echo $error; ?></div>
 		<?php endforeach; ?>
 		<div class="error" id="file_error" style="display: none;"></div>
 	</div>
+	
+	<?php if (count($this->messages['warnings']) > 0): ?>
+	<!-- Warnings -->
+	<div id="dms_warnings">
+		<?php foreach ($this->messages['warnings'] as $warning): ?>
+		<div class="warning"><?php echo $warning; ?></div>
+		<?php endforeach; ?>
+	</div>
+	<?php endif; ?>
+	
+	<?php if (count($this->messages['successes']) > 0): ?>
+	<!-- Successes -->
+	<div id="dms_successes">
+		<?php foreach ($this->messages['successes'] as $success): ?>
+		<div class="success"><?php echo $success; ?></div>
+		<?php endforeach; ?>
+	</div>
+	<?php endif; ?>
+	
+	<?php if (count($this->messages['infos']) > 0): ?>
+	<!-- Infos -->
+	<div id="dms_infos">
+		<?php foreach ($this->messages['infos'] as $info): ?>
+		<div class="info"><?php echo $info; ?></div>
+		<?php endforeach; ?>
+	</div>
+	<?php endif; ?>
 	
 	<table cellpadding="0" cellspacing="0" border="0">
 		<thead>

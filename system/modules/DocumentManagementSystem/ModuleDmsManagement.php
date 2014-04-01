@@ -296,7 +296,7 @@ class ModuleDmsManagement extends Module
 			
 			$formId = "dms_management_" . $this->id;
 			
-			$arrErrors = array();
+			$arrMessages = array('errors' => array(), 'warnings' => array(), 'successes' => array(), 'infos' => array());
 			
 			// Prepare paramters for loader
 			$params = new DmsLoaderParams();
@@ -323,20 +323,20 @@ class ModuleDmsManagement extends Module
 						
 						if ($doUpload)
 						{
-							$this->uploadDoUpload($params, $dmsLoader, $uploadCategory, $arrErrors, $blnShowStart);
+							$this->uploadDoUpload($params, $dmsLoader, $uploadCategory, $arrMessages, $blnShowStart);
 						}
 						else if ($storeProperties)
 						{
-							$this->uploadStoreProperties($params, $dmsLoader, $uploadCategory, $arrErrors, $blnShowStart);
+							$this->uploadStoreProperties($params, $dmsLoader, $uploadCategory, $arrMessages, $blnShowStart);
 						}
 						else
 						{
-							$this->uploadSelectFile($params, $dmsLoader, $uploadCategory, $arrErrors, $blnShowStart);
+							$this->uploadSelectFile($params, $dmsLoader, $uploadCategory, $arrMessages, $blnShowStart);
 						}
 					}
 					else
 					{
-						$arrErrors[] = $GLOBALS['TL_LANG']['DMS']['ERR']['upload_document_illegal_parameter'];
+						$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['upload_document_illegal_parameter'];
 					}
 				}
 				else if ($manageCategory != '')
@@ -348,7 +348,7 @@ class ModuleDmsManagement extends Module
 					}
 					else
 					{
-						$arrErrors[] = $GLOBALS['TL_LANG']['DMS']['ERR']['manage_document_illegal_parameter'];
+						$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['manage_document_illegal_parameter'];
 					}
 				}
 			}
@@ -381,12 +381,12 @@ class ModuleDmsManagement extends Module
 					if ($intCategoryCount == 0)
 					{
 						// there was no category before applying access permissions
-						$arrErrors[] = $GLOBALS['TL_LANG']['DMS']['ERR']['no_categories_found'];
+						$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['no_categories_found'];
 					}
 					else
 					{
 						// all categories were removed cause of missing access rights
-						$arrErrors[] = $GLOBALS['TL_LANG']['DMS']['ERR']['no_access_rights_found'];
+						$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['no_access_rights_found'];
 					}
 				}
 				
@@ -397,14 +397,14 @@ class ModuleDmsManagement extends Module
 			$this->Template->hideLockedCategories = $this->dmsHideLockedCategories;
 			$this->Template->formId = $formId;
 			$this->Template->action = ampersand($this->Environment->request);
-			$this->Template->errors = $arrErrors;
+			$this->Template->messages = $arrMessages;
 		}
 	}
 	
 	/**
 	 * Display the file select screen for upload
 	 */
-	private function uploadSelectFile(&$params, &$dmsLoader, &$uploadCategory, &$arrErrors, &$blnShowStart)
+	private function uploadSelectFile(&$params, &$dmsLoader, &$uploadCategory, &$arrMessages, &$blnShowStart)
 	{
 		$params->loadRootCategory = true; // get complete path to root, for checking inherited access rights
 		$params->loadAccessRights = true;
@@ -427,7 +427,7 @@ class ModuleDmsManagement extends Module
 		}
 		else
 		{
-			$arrErrors[] = $GLOBALS['TL_LANG']['DMS']['ERR']['upload_document_not_allowed'];
+			$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['upload_document_not_allowed'];
 			$blnShowStart = true;
 		}
 	}
@@ -435,7 +435,7 @@ class ModuleDmsManagement extends Module
 	/**
 	 * Uploads the file
 	 */
-	private function uploadDoUpload(&$params, &$dmsLoader, &$uploadCategory, &$arrErrors, &$blnShowStart)
+	private function uploadDoUpload(&$params, &$dmsLoader, &$uploadCategory, &$arrMessages, &$blnShowStart)
 	{
 		$strFileName = basename($_FILES['dmsFile']['name']);
 		$strFileNameCleaned = strtr(utf8_romanize($strFileName), $GLOBALS['TL_DMS']['SPECIALCHARS']);
@@ -451,27 +451,27 @@ class ModuleDmsManagement extends Module
 		
 		if ($intUploadError > UPLOAD_ERR_OK && $intUploadError != UPLOAD_ERR_FORM_SIZE && $intUploadError != UPLOAD_ERR_NO_FILE)
 		{
-			$arrErrors[] = sprintf($GLOBALS['TL_LANG']['DMS']['ERR']['upload_php_error'], $strUploadError);
+			$arrMessages['errors'][] = sprintf($GLOBALS['TL_LANG']['DMS']['ERR']['upload_php_error'], $strUploadError);
 			$blnShowStart = false;
-			$this->uploadSelectFile($params, $dmsLoader, $uploadCategory, $arrErrors, $blnShowStart);
+			$this->uploadSelectFile($params, $dmsLoader, $uploadCategory, $arrMessages, $blnShowStart);
 		}
 		else if ($intUploadError == UPLOAD_ERR_NO_FILE)
 		{
-			$arrErrors[] = $GLOBALS['TL_LANG']['DMS']['ERR']['upload_no_file_selected'];
+			$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['upload_no_file_selected'];
 			$blnShowStart = false;
-			$this->uploadSelectFile($params, $dmsLoader, $uploadCategory, $arrErrors, $blnShowStart);
+			$this->uploadSelectFile($params, $dmsLoader, $uploadCategory, $arrMessages, $blnShowStart);
 		}
 		else if ($intFileSize > DmsConfig::getMaxUploadFileSize(Document::FILE_SIZE_UNIT_BYTE, false) || $intUploadError == UPLOAD_ERR_FORM_SIZE)
 		{
-			$arrErrors[] = sprintf($GLOBALS['TL_LANG']['DMS']['ERR']['upload_file_size_exceeded'], DmsConfig::getMaxUploadFileSize(Document::FILE_SIZE_UNIT_MB, true));
+			$arrMessages['errors'][] = sprintf($GLOBALS['TL_LANG']['DMS']['ERR']['upload_file_size_exceeded'], DmsConfig::getMaxUploadFileSize(Document::FILE_SIZE_UNIT_MB, true));
 			$blnShowStart = false;
-			$this->uploadSelectFile($params, $dmsLoader, $uploadCategory, $arrErrors, $blnShowStart);
+			$this->uploadSelectFile($params, $dmsLoader, $uploadCategory, $arrMessages, $blnShowStart);
 		}
 		else if (!$category->isFileTypeAllowed($arrFileParts['fileType']))
 		{
-			$arrErrors[] = sprintf($GLOBALS['TL_LANG']['DMS']['ERR']['upload_file_type_not_allowed'], $arrFileParts['fileType']);
+			$arrMessages['errors'][] = sprintf($GLOBALS['TL_LANG']['DMS']['ERR']['upload_file_type_not_allowed'], $arrFileParts['fileType']);
 			$blnShowStart = false;
-			$this->uploadSelectFile($params, $dmsLoader, $uploadCategory, $arrErrors, $blnShowStart);
+			$this->uploadSelectFile($params, $dmsLoader, $uploadCategory, $arrMessages, $blnShowStart);
 		}
 		else
 		{
@@ -495,6 +495,7 @@ class ModuleDmsManagement extends Module
 				
 				if (count($arrDocuments) > 0)
 				{
+					// the list of documents is ordered by version, so the highest should be at end
 					$lastDocument = end($arrDocuments);
 					$proposedDocumentName = $lastDocument->name;
 					$proposedDocumentDescription = $lastDocument->description;
@@ -515,6 +516,18 @@ class ModuleDmsManagement extends Module
 						$proposedDocumentVersionMinor = $arrFileNameParts['versionMinor'];
 						$proposedDocumentVersionPatch = $arrFileNameParts['versionPatch'];
 					}
+				}
+				
+				// check if an existing document is in another category
+				$blnCategoriesDiffer = false;
+				foreach ($arrDocuments as $existingDocument)
+				{
+					// will be true, if one is true (keep true status, if once set)
+					$blnCategoriesDiffer = $blnCategoriesDiffer || ($category->id != $existingDocument->categoryId);
+				}
+				if ($blnCategoriesDiffer)
+				{
+					$arrMessages['warnings'][] = $GLOBALS['TL_LANG']['DMS']['WARN']['existing_document_in_another_catagory'];
 				}
 				
 				$this->Template = new \FrontendTemplate("mod_dms_mgmt_upload_enter_properties");
@@ -540,7 +553,7 @@ class ModuleDmsManagement extends Module
 			}
 			else
 			{
-				$arrErrors[] = $GLOBALS['TL_LANG']['DMS']['ERR']['upload_document_not_allowed'];
+				$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['upload_document_not_allowed'];
 				$blnShowStart = true;
 			}
 		}
@@ -549,7 +562,7 @@ class ModuleDmsManagement extends Module
 	/**
 	 * Store the uploaded file
 	 */
-	private function uploadStoreProperties(&$params, &$dmsLoader, &$uploadCategory, &$arrErrors, &$blnShowStart)
+	private function uploadStoreProperties(&$params, &$dmsLoader, &$uploadCategory, &$arrMessages, &$blnShowStart)
 	{
 		/*
 		- get 'tempFileName'
@@ -630,7 +643,7 @@ class ModuleDmsManagement extends Module
 		}
 		else
 		{
-			$arrErrors[] = $GLOBALS['TL_LANG']['DMS']['ERR']['upload_document_not_allowed'];
+			$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['upload_document_not_allowed'];
 			$blnShowStart = true;
 		}
 	}

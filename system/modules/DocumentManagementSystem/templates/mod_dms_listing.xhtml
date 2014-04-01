@@ -9,11 +9,38 @@
 	<input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}">
 	<input type="hidden" name="docId" id="docId" value="">
 	
-	<?php if (count($this->errors) > 0): ?>
+	<?php if (count($this->messages['errors']) > 0): ?>
 	<!-- Errors -->
 	<div id="dms_errors">
-		<?php foreach ($this->errors as $error): ?>
+		<?php foreach ($this->messages['errors'] as $error): ?>
 		<div class="error"><?php echo $error; ?></div>
+		<?php endforeach; ?>
+	</div>
+	<?php endif; ?>
+	
+	<?php if (count($this->messages['warnings']) > 0): ?>
+	<!-- Warnings -->
+	<div id="dms_warnings">
+		<?php foreach ($this->messages['warnings'] as $warning): ?>
+		<div class="warning"><?php echo $warning; ?></div>
+		<?php endforeach; ?>
+	</div>
+	<?php endif; ?>
+	
+	<?php if (count($this->messages['successes']) > 0): ?>
+	<!-- Successes -->
+	<div id="dms_successes">
+		<?php foreach ($this->messages['successes'] as $success): ?>
+		<div class="success"><?php echo $success; ?></div>
+		<?php endforeach; ?>
+	</div>
+	<?php endif; ?>
+	
+	<?php if (count($this->messages['infos']) > 0): ?>
+	<!-- Infos -->
+	<div id="dms_infos">
+		<?php foreach ($this->messages['infos'] as $info): ?>
+		<div class="info"><?php echo $info; ?></div>
 		<?php endforeach; ?>
 	</div>
 	<?php endif; ?>
@@ -29,8 +56,8 @@
 			<input type="text" name="searchText" id="searchText" placeholder="<?php echo $GLOBALS['TL_LANG']['DMS']['listing_search_placeholder']; ?>" value="<?php if ($this->searchText != "") : ?><?php echo $this->searchText; ?><?php endif; ?>" />
 		</div>
 		<div id="list_search_buttons">
-			<input type="button" id="button-reset" onclick="resetSearch();" value="<?php echo $GLOBALS['TL_LANG']['DMS']['listing_reset_button']; ?>" />
-			<input type="submit" id="button-search" value="<?php echo $GLOBALS['TL_LANG']['DMS']['listing_search_button']; ?>" />
+			<button type="button" id="button-reset" onclick="resetSearch();"><?php echo $GLOBALS['TL_LANG']['DMS']['listing_reset_button']; ?></button>
+			<button type="button" id="button-search" onclick="search();"><?php echo $GLOBALS['TL_LANG']['DMS']['listing_search_button']; ?></button>
 		</div>
 	</div>
 	
@@ -60,7 +87,7 @@
 				</td>
 				<td class="category_select centered">
 	<?php if ($category->isReadableForCurrentMember() && $category->hasDocuments()) : ?>    
-					<input onchange="listing.submit();" type="checkbox" name="expandedCatagories[]" value="<?php echo $category->id; ?>" <?php if (in_array($category->id, $this->expandedCategories)) : ?> checked="checked" <?php endif; ?> />
+					<input onchange="expandCollapseCategory();" type="checkbox" name="expandedCatagories[]" value="<?php echo $category->id; ?>" <?php if (in_array($category->id, $this->expandedCategories)) : ?> checked="checked" <?php endif; ?> />
 	<?php else : ?>
 					&nbsp;
 	<?php endif; ?>
@@ -123,8 +150,8 @@
 			<tr>
 				<td colspan="3">
 				<?php if ($fileCount > 0) : ?> 
-					<input type="submit" name="submit_kategorieauswahl" class="submit" value="<?php echo $GLOBALS['TL_LANG']['DMS']['listing_button_show_all_documents']; ?>" onclick="checkAllCategories(true);"/>
-					<input type="submit" name ="submit_kategorieauswahl_loeschen" class="submit" value="<?php echo $GLOBALS['TL_LANG']['DMS']['listing_button_hide_all_documents']; ?>" onclick="checkAllCategories(false);"/>
+					<button type="button" onclick="expandCollapseCategories(true);"><?php echo $GLOBALS['TL_LANG']['DMS']['listing_button_show_all_documents']; ?></button>
+					<button type="button" onclick="expandCollapseCategories(false);"/><?php echo $GLOBALS['TL_LANG']['DMS']['listing_button_hide_all_documents']; ?></button>
 				<?php endif;  ?> 
 				</td>
 			</tr>
@@ -134,17 +161,32 @@
 
 <script type="text/javascript">
 <!--
-	function checkAllCategories (check)
+	function expandCollapseCategory ()
+	{
+		document.getElementById('docId').value = "";
+		document.getElementById('listing').submit();
+	}
+	
+	function expandCollapseCategories (check)
 	{
 		for (var i = 0; i < document.getElementsByName("expandedCatagories[]").length; i++)
 		{
 			document.getElementsByName("expandedCatagories[]")[i].checked = check;
 		}
+		document.getElementById('docId').value = "";
+		document.getElementById('listing').submit();
+	}
+	
+	function search ()
+	{
+		document.getElementById('docId').value = "";
+		document.getElementById('listing').submit();
 	}
 	
 	function resetSearch ()
 	{
 		document.getElementById('searchText').value = "";
+		document.getElementById('docId').value = "";
 		document.getElementById('listing').submit();
 	}
 	

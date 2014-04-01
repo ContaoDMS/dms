@@ -81,18 +81,17 @@ class ModuleDmsListing extends Module
 		$dmsLoader = DmsLoader::getInstance();
 		$params = new DmsLoaderParams();
 		// Prepare paramters for loader
-		// TODO: (#9) set a custom ROOT node id here --> module config
+		// TODO: (#9) set a custom ROOT node id here --> module config (set an info text, if ROOT not is 0)
 		$params->rootCategoryId = 0;
 		$params->loadRootCategory = true; // get complete path to root, for checking inherited access rights;
 		$params->loadAccessRights = true;
 		$params->loadDocuments = true;
-		$params->documentSearchText = $strSearchText;
 		// TODO: (#9) get the search type from form here (via Drop Down)
 		$params->documentSearchType = DmsLoaderParams::DOCUMENT_SEARCH_LIKE;
 		
 		$formId = "dms_listing_" . $this->id;
 		 
-		$arrErrors = array();
+		$arrMessages = array('errors' => array(), 'warnings' => array(), 'successes' => array(), 'infos' => array());
 		$arrExpandedCategories = array();
 		$strSearchText = "";
 		
@@ -120,11 +119,11 @@ class ModuleDmsListing extends Module
 					{
 						if (!$document->isPublished())
 						{
-							$arrErrors[] = $GLOBALS['TL_LANG']['DMS']['ERR']['download_document_not_published'];
+							$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['download_document_not_published'];
 						}
 						else if (!$document->category->isPublished() || !$document->category->isReadableForCurrentMember())
 						{
-							$arrErrors[] = $GLOBALS['TL_LANG']['DMS']['ERR']['download_document_not_allowed'];
+							$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['download_document_not_allowed'];
 						}
 						else
 						{
@@ -136,21 +135,23 @@ class ModuleDmsListing extends Module
 							}
 							else
 							{
-								$arrErrors[] = $GLOBALS['TL_LANG']['DMS']['ERR']['download_file_not_found'];
+								$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['download_file_not_found'];
 							}
 						}
 					}
 					else
 					{
-						$arrErrors[] = $GLOBALS['TL_LANG']['DMS']['ERR']['download_document_not_found'];
+						$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['download_document_not_found'];
 					}
 				}
 				else
 				{
-					$arrErrors[] = $GLOBALS['TL_LANG']['DMS']['ERR']['download_document_illegal_parameter'];
+					$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['download_document_illegal_parameter'];
 				}
 			}
 		}
+		
+		$params->documentSearchText = $strSearchText;
 		
 		$arrCategories = $dmsLoader->loadCategories($params);
 		// apply the read permissions, to only show valid categories
@@ -164,7 +165,7 @@ class ModuleDmsListing extends Module
 		$this->Template->hideLockedCategories = $this->dmsHideLockedCategories;
 		$this->Template->formId = $formId;
 		$this->Template->action = ampersand($this->Environment->request);
-		$this->Template->errors = $arrErrors;
+		$this->Template->messages = $arrMessages;
 		
 		// add collected post data
 		$this->Template->expandedCategories = $arrExpandedCategories;
