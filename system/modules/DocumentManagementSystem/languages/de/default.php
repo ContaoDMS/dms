@@ -39,19 +39,22 @@ $GLOBALS['TL_LANG']['DMS']['management_button_upload']           = "Hochladen";
 $GLOBALS['TL_LANG']['DMS']['management_button_store_properties'] = "Dokument speichern";
 $GLOBALS['TL_LANG']['DMS']['management_button_manage']           = "Verwalten";
 $GLOBALS['TL_LANG']['DMS']['management_button_abort']            = "Abbrechen";
+$GLOBALS['TL_LANG']['DMS']['management_button_back']             = "Zurück zur Übersicht";
+$GLOBALS['TL_LANG']['DMS']['management_button_upload_another']   = "Weiteres Dokument hochladen";
 $GLOBALS['TL_LANG']['DMS']['management_headline']                = "%s :: %s";
 $GLOBALS['TL_LANG']['DMS']['management_path_separator']          = " &raquo; ";
 $GLOBALS['TL_LANG']['DMS']['management_mandatory']               = "Pflichtfeld: dieses Feld muss ausgefüllt werden.";
+$GLOBALS['TL_LANG']['DMS']['management_explanation']             = "(?)";
 
 // upload :: select
 $GLOBALS['TL_LANG']['DMS']['management_upload_headline']           = "Dokumentenupload";
-$GLOBALS['TL_LANG']['DMS']['management_upload_select_headline']    = "Dateiauswahl";
+$GLOBALS['TL_LANG']['DMS']['management_upload_select_headline']    = "Datei auswählen";
 $GLOBALS['TL_LANG']['DMS']['management_upload_select_category']    = "Kategorie";
 $GLOBALS['TL_LANG']['DMS']['management_upload_select_filetypes']   = "Zulässige Dateitypen";
 $GLOBALS['TL_LANG']['DMS']['management_upload_select_max_size']    = "Maximale Dateigröße";
 $GLOBALS['TL_LANG']['DMS']['management_upload_select_file_select'] = "Dateitauswahl";
 // upload :: properties
-$GLOBALS['TL_LANG']['DMS']['management_upload_properties_headline']                      = "Dokumenteigenschaften";
+$GLOBALS['TL_LANG']['DMS']['management_upload_properties_headline']                      = "Dokumenteigenschaften eintragen";
 $GLOBALS['TL_LANG']['DMS']['management_upload_properties_category']                      = "Kategorie";
 $GLOBALS['TL_LANG']['DMS']['management_upload_properties_file_headline']                 = "Eigenschaften der hochgeladenen Datei";
 $GLOBALS['TL_LANG']['DMS']['management_upload_properties_file_name']                     = "Dateiname";
@@ -77,6 +80,12 @@ $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_version_explan
 $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_publish']              = "Veröffentlichen";
 $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_publish_explanation']  = "Nur veröffentlichte Dokumente stehen in der Auflistung zur Verfügung.";
 $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_publish_not_allowed']  = "Sie dürfen Dokumente in dieser Kategorie nicht veröffentlichen.";
+
+// upload :: processed
+$GLOBALS['TL_LANG']['DMS']['management_upload_processed_headline']    = "Dokument hochgeladen";
+$GLOBALS['TL_LANG']['DMS']['management_upload_processed_published']   = "Veröffentlicht";
+$GLOBALS['TL_LANG']['DMS']['management_upload_processed_unpublished'] = "Uneröffentlicht";
+
 
 /**
  * Translations for listing module
@@ -124,11 +133,18 @@ $GLOBALS['TL_LANG']['DMS']['ERR']['upload_php_error']                    = 'Der 
 $GLOBALS['TL_LANG']['DMS']['ERR']['upload_file_size_exceeded']           = 'Der Upload wurde abgebrochen, weil die hochgeladene Datei die maximal zulässige Upload Dateigröße von <b>%s</b> überschritten hat.';
 $GLOBALS['TL_LANG']['DMS']['ERR']['upload_file_type_not_allowed']        = 'Der Upload wurde abgebrochen, weil der Typ <b>%s</b> der hochgeladenen Datei in dieser Kategorie nicht erlaubt ist.';
 $GLOBALS['TL_LANG']['DMS']['ERR']['upload_no_name_set']                  = 'Es wurde kein Name für das Dokument angegeben. Bitte legen Sie einen Name fest!';
-$GLOBALS['TL_LANG']['DMS']['ERR']['upload_no_version_set']               = 'Es wurde keine korrekte Version für das Dokument angegeben. Bitte tragen Sie für alle 3 Felder einen Wert ein!';
+$GLOBALS['TL_LANG']['DMS']['ERR']['upload_no_version_set']               = 'Es wurde keine korrekte Version für das Dokument angegeben. Bitte tragen Sie für alle 3 Felder einen numerischen Wert ein!';
+$GLOBALS['TL_LANG']['DMS']['ERR']['upload_version_already_used']         = 'Die gewählte Version ist bereits belegt. Bitte geben Sie eine andere Version an!';
+$GLOBALS['TL_LANG']['DMS']['ERR']['upload_temp_file_not_found']          = 'Die hochgeladene Datei wurde nicht gefunden. Entweder wurde sie bereits erfolgreich als Dokument gespeichert, oder es ein Fehler beim Upload aufgetreten. Bitte prüfen Sie die Dokument oder versuchen Sie es erneut!';
 
 /**
  * Warnings
  */
 $GLOBALS['TL_LANG']['DMS']['WARN']['existing_document_in_another_catagory'] = 'Es existiert mindestens eine Dokumentenversionen zu diesem Dateinamen in einer andere Kategorie als der aktuell gewählten. Da der Dateiname als Schlüssel für die Dokumente verwendet wird, sollte er so gewählt sein, dass er systemweit eindeutig ist.';
+
+/**
+ * Warnings
+ */
+$GLOBALS['TL_LANG']['DMS']['SUCCESS']['document_successfully_uploaded'] = 'Das Dokument wurde erfolgreich hochgeladen.';
 
 ?>
