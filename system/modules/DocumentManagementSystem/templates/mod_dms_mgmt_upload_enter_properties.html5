@@ -9,6 +9,9 @@
 	<input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}">
 	<input type="hidden" name="uploadCategory" value="<?php echo $this->category->id; ?>">
 	<input type="hidden" name="tempFileName" value="<?php echo $this->tempFileName; ?>">
+	<input type="hidden" name="fileName" value="<?php echo $this->fileName; ?>">
+	<input type="hidden" name="fileType" value="<?php echo $this->fileType; ?>">
+	<input type="hidden" name="fileSize" value="<?php echo $this->fileSize; ?>">
 	
 	<!-- Errors -->
 	<div id="dms_errors"<?php if (count($this->messages['errors']) == 0) : ?> style="display: none;"<?php endif; ?>>
@@ -104,9 +107,10 @@
 						}
 						$title .= "\n" . sprintf($GLOBALS['TL_LANG']['DMS']['management_upload_properties_existing_category'], $document->category->name, $categoryPath);
 					?> 
-					<span class="existingDocument" title="<?php echo $title; ?>">
+					<span class="existingDocument <?php if ($document->isPublished()) : ?>published<?php else: ?>unpublished<?php endif; ?>">
 						<?php echo $document->name; ?> <?php echo sprintf($GLOBALS['TL_LANG']['DMS']['management_upload_properties_existing_version'], $document->getVersion()); ?> 
-						[<?php if ($document->isPublished()) : ?><?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_existing_published']; ?><?php else: ?><?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_existing_unpublished']; ?><?php endif; ?>]
+						 - <?php if ($document->isPublished()) : ?><?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_existing_published']; ?><?php else: ?><?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_existing_unpublished']; ?><?php endif; ?>
+						<span class="explanation" title="<?php echo $title; ?>"><?php echo $GLOBALS['TL_LANG']['DMS']['management_explanation']; ?></span>
 					</span>
 				</td>
 			</tr>
@@ -116,35 +120,35 @@
 				<td class="label" colspan="2"><?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_headline']; ?></td>
 			</tr>
 			<tr>
-				<td class="label"><?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_name']; ?><span class="mandatory" title="<?php echo $GLOBALS['TL_LANG']['DMS']['management_mandatory']; ?>">*</span><span class="explanation" title="<?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_name_explanation']; ?>">(?)</span></td>
-				<td><input type="text" id="documentName" name="documentName" maxlength="255" value="<?php echo $this->proposedDocumentName; ?>" /></td>
+				<td class="label"><?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_name']; ?><span class="mandatory" title="<?php echo $GLOBALS['TL_LANG']['DMS']['management_mandatory']; ?>">*</span><span class="explanation" title="<?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_name_explanation']; ?>"><?php echo $GLOBALS['TL_LANG']['DMS']['management_explanation']; ?></span></td>
+				<td><input type="text" id="documentName" name="documentName" maxlength="255" value="<?php echo $this->documentName; ?>" /></td>
 			</tr>
 			<tr>
 				<td class="label"><?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_description']; ?></td>
-				<td><textarea id="documentDescription" name="documentDescription" cols="50" rows="5"><?php echo $this->proposedDocumentDescription; ?></textarea></td>
+				<td><textarea id="documentDescription" name="documentDescription" cols="50" rows="5"><?php echo $this->documentDescription; ?></textarea></td>
 			</tr>
 			<tr>
-				<td class="label"><?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_keywords']; ?><span class="explanation" title="<?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_keywords_explanation']; ?>">(?)</span></td>
-				<td><input type="text" id="documentKeywords" name="documentKeywords" maxlength="255" value="<?php echo $this->proposedDocumentKeywords; ?>" /></td>
+				<td class="label"><?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_keywords']; ?><span class="explanation" title="<?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_keywords_explanation']; ?>"><?php echo $GLOBALS['TL_LANG']['DMS']['management_explanation']; ?></span></td>
+				<td><input type="text" id="documentKeywords" name="documentKeywords" maxlength="255" value="<?php echo $this->documentKeywords; ?>" /></td>
 			</tr>
 			<tr>
-				<td class="label"><?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_version']; ?><span class="mandatory" title="<?php echo $GLOBALS['TL_LANG']['DMS']['management_mandatory']; ?>">*</span><span class="explanation" title="<?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_version_explanation']; ?>">(?)</span></td>
+				<td class="label"><?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_version']; ?><span class="mandatory" title="<?php echo $GLOBALS['TL_LANG']['DMS']['management_mandatory']; ?>">*</span><span class="explanation" title="<?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_version_explanation']; ?>"><?php echo $GLOBALS['TL_LANG']['DMS']['management_explanation']; ?></span></td>
 				<td>
-					<input type="text" id="documentVersionMajor" name="documentVersionMajor" maxlength="3" size="3" value="<?php echo $this->proposedDocumentVersionMajor; ?>" />
+					<input type="text" id="documentVersionMajor" name="documentVersionMajor" maxlength="3" size="3" value="<?php echo $this->documentVersionMajor; ?>" />
 					.
-					<input type="text" id="documentVersionMinor" name="documentVersionMinor" maxlength="3" size="3" value="<?php echo $this->proposedDocumentVersionMinor; ?>" />
+					<input type="text" id="documentVersionMinor" name="documentVersionMinor" maxlength="3" size="3" value="<?php echo $this->documentVersionMinor; ?>" />
 					.
-					<input type="text" id="documentVersionPatch" name="documentVersionPatch" maxlength="3" size="3" value="<?php echo $this->proposedDocumentVersionPatch; ?>" />
+					<input type="text" id="documentVersionPatch" name="documentVersionPatch" maxlength="3" size="3" value="<?php echo $this->documentVersionPatch; ?>" />
 				</td>
 			</tr>
 			<tr>
-				<td class="label"><?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_publish']; ?><span class="explanation" title="<?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_publish_explanation']; ?>">(?)</span></td>
+				<td class="label"><?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_publish']; ?><span class="explanation" title="<?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_publish_explanation']; ?>"><?php echo $GLOBALS['TL_LANG']['DMS']['management_explanation']; ?></span></td>
 			<?php if ($this->category->isPublishableForCurrentMember()) : ?>
-				<td><input type="checkbox" id="documentPublish" name="documentPublish" value="true" /><? /* TODO: set default publishing behavoir here (see #7) */ ?></td>
+				<td><input type="checkbox" id="documentPublish" name="documentPublish" value="true"<?php if ($this->documentPublish) : ?> checked="checked"<?php endif; ?> /></td>
 			<?php else : ?>
 				<td>
 					<div class="not_allowed"><?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_publish_not_allowed']; ?></div>
-					<input type="hidden" name="documentPublish" value="false"/>
+					<input type="hidden" name="documentPublish" value="<?php echo $this->documentPublish; ?>"/>
 				</td>
 			<?php endif; ?>
 			</tr>
@@ -153,7 +157,7 @@
 			<tr>
 				<td colspan="2">
 					<button type="submit" name="abort" value="true"><?php echo $GLOBALS['TL_LANG']['DMS']['management_button_abort']; ?></button>
-					<button onClick="return checkMandatoryFields();" type="submit" name="storeProperties" value="true"><?php echo $GLOBALS['TL_LANG']['DMS']['management_button_store_properties']; ?></button>
+					<button type="submit" name="storeProperties" value="true"><?php echo $GLOBALS['TL_LANG']['DMS']['management_button_store_properties']; ?></button>
 				</td>
 			</tr>
 		</tfoot>
@@ -183,9 +187,9 @@
 			}
 			send = false;
 		}
-		if (document.getElementById("documentVersionMajor").value != null &&document.getElementById("documentVersionMajor").value.length > 0 &&
-			document.getElementById("documentVersionMinor").value != null &&document.getElementById("documentVersionMinor").value.length > 0 &&
-			document.getElementById("documentVersionPatch").value != null &&document.getElementById("documentVersionPatch").value.length > 0)
+		if (document.getElementById("documentVersionMajor").value != null &&document.getElementById("documentVersionMajor").value.length > 0 && !isNaN(document.getElementById("documentVersionMajor").value) && 
+			document.getElementById("documentVersionMinor").value != null &&document.getElementById("documentVersionMinor").value.length > 0 && !isNaN(document.getElementById("documentVersionMinor").value) && 
+			document.getElementById("documentVersionPatch").value != null &&document.getElementById("documentVersionPatch").value.length > 0 && !isNaN(document.getElementById("documentVersionPatch").value))
 		{
 			send = send && true;
 			document.getElementById("version_error").style.display = "none";
