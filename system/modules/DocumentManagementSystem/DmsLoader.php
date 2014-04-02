@@ -181,7 +181,7 @@ class DmsLoader extends Controller
 											  . "FROM tl_dms_documents d "
 											  . "LEFT JOIN tl_member m1 ON m1.id = d.upload_member "
 											  . "LEFT JOIN tl_member m2 ON m2.id = d.lastedit_member "
-											  . "WHERE d.file_name = ? AND d.file_type = ? "
+											  . "WHERE d.data_file_name = ? AND d.data_file_type = ? "
 											  . "ORDER BY d.version_major, d.version_minor, d.version_patch")
 									  ->execute(array($strFileName, $strFileType));
 		
@@ -353,10 +353,10 @@ class DmsLoader extends Controller
 		$document->categoryId = $objDocument->pid;
 		$document->description = $objDocument->description;
 		$document->keywords = $objDocument->keywords;
-		$document->fileName = $objDocument->file_name;
-		$document->fileType = $objDocument->file_type;
-		$document->fileSize = $objDocument->file_size;
-		$document->filePreview = $objDocument->file_preview;
+		$document->fileName = $objDocument->data_file_name;
+		$document->fileType = $objDocument->data_file_type;
+		$document->fileSize = $objDocument->data_file_size;
+		$document->filePreview = $objDocument->data_file_preview;
 		$document->versionMajor = $objDocument->version_major;
 		$document->versionMinor = $objDocument->version_minor;
 		$document->versionPatch = $objDocument->version_patch;
