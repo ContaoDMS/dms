@@ -75,18 +75,18 @@ class ModuleDmsManagement extends Module
 		/*
 		 *        submit_upload_eigenschaften     --->  Übernahme der Eigenschaften des Dokumentes für den Upload
 		 *                                              Übernahme des Bildes für das Dokument
-		 *                                              Upload 
+		 *                                              Upload
 		 *
 		 *
 		 *        submit_verwaltung_auswahl       --->  Übernahme der Auswahlen des Verwaltungsmenues
 		 *                                              Übernahme Rechte an der KategorieId
-		 * 
+		 *
 		 */
 
 		/*
 		 *     =============================================================================================================
 		 *     submit_kategorieauswahl gedrückt
-		 *     
+		 *
 		 *     Modulteil : Kategorieauswahl
 		 *                 es wurde eine Kategorie ausgewählt und Upload/Verwaltung entschieden
 		 */
@@ -273,9 +273,9 @@ class ModuleDmsManagement extends Module
 
 		/*
 		 * =============================================================================================================
-		 * NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW 
+		 * NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW
 		 */
-		 
+		
 		
 		if (!FE_USER_LOGGED_IN)
 		{
@@ -398,6 +398,8 @@ class ModuleDmsManagement extends Module
 			$this->Template->formId = $formId;
 			$this->Template->action = ampersand($this->Environment->request);
 			$this->Template->messages = $arrMessages;
+			
+			$this->Input->resetCache();
 		}
 	}
 	
@@ -449,7 +451,12 @@ class ModuleDmsManagement extends Module
 		$params->loadDocuments = false;
 		$category = $dmsLoader->loadCategory($uploadCategory, $params);
 		
-		if ($intUploadError > UPLOAD_ERR_OK && $intUploadError != UPLOAD_ERR_FORM_SIZE && $intUploadError != UPLOAD_ERR_NO_FILE)
+		if (!$category->isUploadableForCurrentMember())
+		{
+			$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['upload_document_not_allowed'];
+			$blnShowStart = true;
+		}
+		else if ($intUploadError > UPLOAD_ERR_OK && $intUploadError != UPLOAD_ERR_FORM_SIZE && $intUploadError != UPLOAD_ERR_NO_FILE)
 		{
 			$arrMessages['errors'][] = sprintf($GLOBALS['TL_LANG']['DMS']['ERR']['upload_php_error'], $strUploadError);
 			$blnShowStart = false;
@@ -475,134 +482,16 @@ class ModuleDmsManagement extends Module
 		}
 		else
 		{
-			if ($category->isUploadableForCurrentMember())
-			{
-				// move the uploaded file to dms temp dir
-				move_uploaded_file($_FILES['dmsFile']['tmp_name'], DmsConfig::getTempDirectory(true) . $strFileNameUnversioned);
-				
-				// load possible documents for file name
-				$params->loadCategory = true; // need the category of existing documents
-				$arrDocuments = $dmsLoader->loadDocuments($arrFileParts['fileName'], $arrFileParts['fileType'], $params);
-				$params->loadCategory = false;
-				
-				$arrFileNameParts = Document::splitFileName($strFileName);
-				$proposedDocumentName = $arrFileNameParts['fileName']; // propose original file name (uncleaned but unversioned) as document name
-				$proposedDocumentDescription = "";
-				$proposedDocumentKeywords = "";
-				$proposedDocumentVersionMajor = 1;
-				$proposedDocumentVersionMinor = 0;
-				$proposedDocumentVersionPatch = 0;
-				
-				if (count($arrDocuments) > 0)
-				{
-					// the list of documents is ordered by version, so the highest should be at end
-					$lastDocument = end($arrDocuments);
-					$proposedDocumentName = $lastDocument->name;
-					$proposedDocumentDescription = $lastDocument->description;
-					$proposedDocumentKeywords = $lastDocument->keywords;
-					$proposedDocumentVersionMajor = $lastDocument->versionMajor;
-					$proposedDocumentVersionMinor = $lastDocument->versionMinor;
-					$proposedDocumentVersionPatch = $lastDocument->versionPatch + 1;
-				}
-				
-				// recheck the proposed version (if file name version is higher, than proposed
-				if ($arrFileNameParts['hasVersion'])
-				{
-					if ($arrFileNameParts['versionMajor'] > $proposedDocumentVersionMajor ||
-						($arrFileNameParts['versionMajor'] == $proposedDocumentVersionMajor && $arrFileNameParts['versionMinor'] > $proposedDocumentVersionMinor) ||
-						($arrFileNameParts['versionMajor'] == $proposedDocumentVersionMajor && $arrFileNameParts['versionMinor'] == $proposedDocumentVersionMinor && $arrFileNameParts['versionPatch'] > $proposedDocumentVersionPatch))
-					{
-						$proposedDocumentVersionMajor = $arrFileNameParts['versionMajor'];
-						$proposedDocumentVersionMinor = $arrFileNameParts['versionMinor'];
-						$proposedDocumentVersionPatch = $arrFileNameParts['versionPatch'];
-					}
-				}
-				
-				// check if an existing document is in another category
-				$blnCategoriesDiffer = false;
-				foreach ($arrDocuments as $existingDocument)
-				{
-					// will be true, if one is true (keep true status, if once set)
-					$blnCategoriesDiffer = $blnCategoriesDiffer || ($category->id != $existingDocument->categoryId);
-				}
-				if ($blnCategoriesDiffer)
-				{
-					$arrMessages['warnings'][] = $GLOBALS['TL_LANG']['DMS']['WARN']['existing_document_in_another_catagory'];
-				}
-				
-				$this->Template = new \FrontendTemplate("mod_dms_mgmt_upload_enter_properties");
-				$this->Template->setData($this->arrData);
-				
-				$this->Template->category = $category;
-				$this->Template->fileName = $strFileName;
-				$this->Template->tempFileName = $strFileNameUnversioned;
-				$this->Template->fileType = $arrFileParts['fileType'];
-				$this->Template->fileSizeByteFormatted = Document::formatFileSize($intFileSize, Document::FILE_SIZE_UNIT_BYTE);
-				$this->Template->fileSizeKbFormatted = Document::formatFileSize(Document::convertFileSize($intFileSize, Document::FILE_SIZE_UNIT_BYTE, Document::FILE_SIZE_UNIT_KB), Document::FILE_SIZE_UNIT_KB);
-				$this->Template->fileSizeMbFormatted = Document::formatFileSize(Document::convertFileSize($intFileSize, Document::FILE_SIZE_UNIT_BYTE, Document::FILE_SIZE_UNIT_MB), Document::FILE_SIZE_UNIT_MB);
-				$this->Template->fileSizeGbFormatted = Document::formatFileSize(Document::convertFileSize($intFileSize, Document::FILE_SIZE_UNIT_BYTE, Document::FILE_SIZE_UNIT_GB), Document::FILE_SIZE_UNIT_GB);
-				$this->Template->existingDocuments = $arrDocuments;
-				$this->Template->proposedDocumentName = $proposedDocumentName;
-				$this->Template->proposedDocumentDescription = $proposedDocumentDescription;
-				$this->Template->proposedDocumentKeywords = $proposedDocumentKeywords;
-				$this->Template->proposedDocumentVersionMajor = $proposedDocumentVersionMajor;
-				$this->Template->proposedDocumentVersionMinor = $proposedDocumentVersionMinor;
-				$this->Template->proposedDocumentVersionPatch = $proposedDocumentVersionPatch;
-				
-				$blnShowStart = false;
-			}
-			else
-			{
-				$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['upload_document_not_allowed'];
-				$blnShowStart = true;
-			}
-		}
-	}
-		
-	/**
-	 * Store the uploaded file
-	 */
-	private function uploadStoreProperties(&$params, &$dmsLoader, &$uploadCategory, &$arrMessages, &$blnShowStart)
-	{
-		/*
-		- get 'tempFileName'
-		- check version
-		- check documentName ( need to rename all other versions )
-		*/
-		$strFileName = basename($_FILES['dmsFile']['name']);
-		$strFileNameCleaned = strtr(utf8_romanize($strFileName), $GLOBALS['TL_DMS']['SPECIALCHARS']);
-		$arrFileParts = Document::splitFileName($strFileNameCleaned);
-		$strFileNameUnversioned = $arrFileParts['fileName'] . "." . $arrFileParts['fileType'];
-		$intFileSize = (int) $_FILES['dmsFile']['size']; // this will always be bytes ... so no conversion is needed
-		$intUploadError = (int) $_FILES['dmsFile']['error'];
-		
-		$params->loadRootCategory = true; // get complete path to root, for checking inherited access rights
-		$params->loadAccessRights = true;
-		$params->loadDocuments = false;
-		$category = $dmsLoader->loadCategory($uploadCategory, $params);
-		
-		if ($category->isUploadableForCurrentMember())
-		{
-			/**
-				1. collect POST parameter
-				2. check if doc name is set -> ERR
-				3. check if version is set -> ERR
-				4. check if version parts are numeric -> ERR
-				5. get 'tempFileName' from POST
-				6. get documents for tempFileName
-				7. check if defined version is free -> ERR
-				8. move temp file with verison number
-				9. store document
-			   10. return data in template
-			*/
-			/*
 			// move the uploaded file to dms temp dir
 			move_uploaded_file($_FILES['dmsFile']['tmp_name'], DmsConfig::getTempDirectory(true) . $strFileNameUnversioned);
 			
 			// load possible documents for file name
-			$arrDocuments = $dmsLoader->loadDocuments($arrFileParts['fileName'], $arrFileParts['fileType']);
+			$params->loadCategory = true; // need the category of existing documents
+			$arrDocuments = $dmsLoader->loadDocuments($arrFileParts['fileName'], $arrFileParts['fileType'], $params);
+			$params->loadCategory = false;
 			
-			$proposedDocumentName = Document::splitFileName($strFileName)['fileName']; // propose original file name (uncleaned but unversioned) as document name
+			$arrFileNameParts = Document::splitFileName($strFileName);
+			$proposedDocumentName = $arrFileNameParts['fileName']; // propose original file name (uncleaned but unversioned) as document name
 			$proposedDocumentDescription = "";
 			$proposedDocumentKeywords = "";
 			$proposedDocumentVersionMajor = 1;
@@ -611,6 +500,7 @@ class ModuleDmsManagement extends Module
 			
 			if (count($arrDocuments) > 0)
 			{
+				// the list of documents is ordered by version, so the highest should be at end
 				$lastDocument = end($arrDocuments);
 				$proposedDocumentName = $lastDocument->name;
 				$proposedDocumentDescription = $lastDocument->description;
@@ -619,32 +509,189 @@ class ModuleDmsManagement extends Module
 				$proposedDocumentVersionMinor = $lastDocument->versionMinor;
 				$proposedDocumentVersionPatch = $lastDocument->versionPatch + 1;
 			}
-			*/
-			$this->Template = new \FrontendTemplate("mod_dms_mgmt_upload_processing");
+			
+			// recheck the proposed version (if file name version is higher, than proposed
+			if ($arrFileNameParts['hasVersion'])
+			{
+				if ($arrFileNameParts['versionMajor'] > $proposedDocumentVersionMajor ||
+					($arrFileNameParts['versionMajor'] == $proposedDocumentVersionMajor && $arrFileNameParts['versionMinor'] > $proposedDocumentVersionMinor) ||
+					($arrFileNameParts['versionMajor'] == $proposedDocumentVersionMajor && $arrFileNameParts['versionMinor'] == $proposedDocumentVersionMinor && $arrFileNameParts['versionPatch'] > $proposedDocumentVersionPatch))
+				{
+					$proposedDocumentVersionMajor = $arrFileNameParts['versionMajor'];
+					$proposedDocumentVersionMinor = $arrFileNameParts['versionMinor'];
+					$proposedDocumentVersionPatch = $arrFileNameParts['versionPatch'];
+				}
+			}
+			
+			// check if an existing document is in another category
+			$blnCategoriesDiffer = false;
+			foreach ($arrDocuments as $existingDocument)
+			{
+				// will be true, if one is true (keep true status, if once set)
+				$blnCategoriesDiffer = $blnCategoriesDiffer || ($category->id != $existingDocument->categoryId);
+			}
+			if ($blnCategoriesDiffer)
+			{
+				$arrMessages['warnings'][] = $GLOBALS['TL_LANG']['DMS']['WARN']['existing_document_in_another_catagory'];
+			}
+			
+			$this->Template = new \FrontendTemplate("mod_dms_mgmt_upload_enter_properties");
 			$this->Template->setData($this->arrData);
 			
-			/*$this->Template->category = $category;
-			$this->Template->fileName = $strFileName;
+			$this->Template->category = $category;
 			$this->Template->tempFileName = $strFileNameUnversioned;
+			$this->Template->fileName = $strFileName;
 			$this->Template->fileType = $arrFileParts['fileType'];
+			$this->Template->fileSize = $intFileSize;
 			$this->Template->fileSizeByteFormatted = Document::formatFileSize($intFileSize, Document::FILE_SIZE_UNIT_BYTE);
 			$this->Template->fileSizeKbFormatted = Document::formatFileSize(Document::convertFileSize($intFileSize, Document::FILE_SIZE_UNIT_BYTE, Document::FILE_SIZE_UNIT_KB), Document::FILE_SIZE_UNIT_KB);
 			$this->Template->fileSizeMbFormatted = Document::formatFileSize(Document::convertFileSize($intFileSize, Document::FILE_SIZE_UNIT_BYTE, Document::FILE_SIZE_UNIT_MB), Document::FILE_SIZE_UNIT_MB);
 			$this->Template->fileSizeGbFormatted = Document::formatFileSize(Document::convertFileSize($intFileSize, Document::FILE_SIZE_UNIT_BYTE, Document::FILE_SIZE_UNIT_GB), Document::FILE_SIZE_UNIT_GB);
 			$this->Template->existingDocuments = $arrDocuments;
-			$this->Template->proposedDocumentName = $proposedDocumentName;
-			$this->Template->proposedDocumentDescription = $proposedDocumentDescription;
-			$this->Template->proposedDocumentKeywords = $proposedDocumentKeywords;
-			$this->Template->proposedDocumentVersionMajor = $proposedDocumentVersionMajor;
-			$this->Template->proposedDocumentVersionMinor = $proposedDocumentVersionMinor;
-			$this->Template->proposedDocumentVersionPatch = $proposedDocumentVersionPatch;*/
+			$this->Template->documentName = $proposedDocumentName;
+			$this->Template->documentDescription = $proposedDocumentDescription;
+			$this->Template->documentKeywords = $proposedDocumentKeywords;
+			$this->Template->documentVersionMajor = $proposedDocumentVersionMajor;
+			$this->Template->documentVersionMinor = $proposedDocumentVersionMinor;
+			$this->Template->documentVersionPatch = $proposedDocumentVersionPatch;
+			$this->Template->documentPublish = false; // TODO: set default publishing behavoir here (see #7)
 			
 			$blnShowStart = false;
 		}
-		else
+	}
+		
+	/**
+	 * Store the uploaded file
+	 */
+	private function uploadStoreProperties(&$params, &$dmsLoader, &$uploadCategory, &$arrMessages, &$blnShowStart)
+	{
+		$tempFileName = $this->Input->post('tempFileName');
+		$tempFileNameCleaned = strtr(utf8_romanize($tempFileName), $GLOBALS['TL_DMS']['SPECIALCHARS']); // only to ensure that the transmitted value from hidden field is clean
+		$arrTempFileParts = Document::splitFileName($tempFileNameCleaned, false);
+		$intFileSize = (int) $this->Input->post('fileSize');
+		
+		$documentName = $this->Input->post('documentName');
+		$documentDescription = $this->Input->post('documentDescription');
+		$documentKeywords = $this->Input->post('documentKeywords');
+		$documentVersionMajor = $this->Input->post('documentVersionMajor');
+		$documentVersionMinor = $this->Input->post('documentVersionMinor');
+		$documentVersionPatch = $this->Input->post('documentVersionPatch');
+		$documentPublish = (bool) $this->Input->post('documentPublish');
+		
+		$params->loadRootCategory = true; // get complete path to root, for checking inherited access rights
+		$params->loadAccessRights = true;
+		$params->loadDocuments = false;
+		$category = $dmsLoader->loadCategory($uploadCategory, $params);
+		
+		if (!$category->isUploadableForCurrentMember())
 		{
 			$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['upload_document_not_allowed'];
 			$blnShowStart = true;
+		}
+		else if (!file_exists(TL_ROOT . '/' . DmsConfig::getTempDirectory(true) . $tempFileNameCleaned))
+		{
+			$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['upload_temp_file_not_found'];
+			$blnShowStart = false;
+			$this->uploadSelectFile($params, $dmsLoader, $uploadCategory, $arrMessages, $blnShowStart);
+		}
+		else
+		{
+			// load possible documents for file name
+			$params->loadCategory = true; // need the category of existing documents
+			$arrDocuments = $dmsLoader->loadDocuments($arrTempFileParts['fileName'], $arrTempFileParts['fileType'], $params);
+			$params->loadCategory = false;
+			
+			if (strlen($documentName) == 0)
+			{
+				$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['upload_no_name_set'];
+				if (count($arrDocuments) > 0)
+				{
+				// the list of documents is ordered by version, so the highest should be at end
+					$lastDocument = end($arrDocuments);
+					$documentName = $lastDocument->name;
+				}
+			}
+			if (strlen($documentVersionMajor) == 0 || !is_numeric($documentVersionMajor) ||
+					 strlen($documentVersionMinor) == 0 || !is_numeric($documentVersionMinor) ||
+					 strlen($documentVersionPatch) == 0 || !is_numeric($documentVersionPatch))
+			{
+				$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['upload_no_version_set'];
+			}
+			
+			foreach ($arrDocuments as $existingDocument)
+			{
+				// will be true, if one is true (keep true status, if once set)
+				if ($existingDocument->versionMajor == $documentVersionMajor &&
+					$existingDocument->versionMinor == $documentVersionMinor &&
+					$existingDocument->versionPatch == $documentVersionPatch)
+				{
+					$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['upload_version_already_used'];
+				}
+			}
+			
+			if (count($arrMessages['errors']) > 0)
+			{
+				$this->Template = new \FrontendTemplate("mod_dms_mgmt_upload_enter_properties");
+				$this->Template->setData($this->arrData);
+				
+				$this->Template->documentName = $documentName;
+				$this->Template->documentDescription = $documentDescription;
+				$this->Template->documentKeywords = $documentKeywords;
+				$this->Template->documentVersionMajor = $documentVersionMajor;
+				$this->Template->documentVersionMinor = $documentVersionMinor;
+				$this->Template->documentVersionPatch = $documentVersionPatch;
+				$this->Template->documentPublish = $documentPublish;
+			}
+			else
+			{
+				$documentVersion = Document::buildVersionForFileName($documentVersionMajor, $documentVersionMinor, $documentVersionPatch);
+				$fileFileNameVersioned = Document::buildFileNameVersioned($arrTempFileParts['fileName'], $documentVersion, $arrTempFileParts['fileType']);
+				
+				// move the temp file to dms dir and append version
+				rename(DmsConfig::getTempDirectory(true) . $tempFileNameCleaned, DmsConfig::getBaseDirectory(true) . $fileFileNameVersioned);
+				
+				$this->import('FrontendUser', 'User');
+				// store document
+				$document = new Document(-1, $documentName);
+				$document->categoryId = $category->id;
+				$document->description = $documentDescription;
+				$document->keywords = $documentKeywords;
+				$document->fileName = $arrTempFileParts['fileName'];
+				$document->fileType = $arrTempFileParts['fileType'];
+				$document->fileSize = $intFileSize;
+				$document->filePreview = null; // TODO: maybe filled in #12
+				$document->versionMajor = $documentVersionMajor;
+				$document->versionMinor = $documentVersionMinor;
+				$document->versionPatch = $documentVersionPatch;
+				$document->uploadMemberId = $this->User->id;
+				$document->uploadDate = time();
+				$document->lasteditMemberId = 0;
+				$document->lasteditDate = '';
+				$document->published = $documentPublish;
+				
+				$dmsWriter = DmsWriter::getInstance();
+				$document = $dmsWriter->storeDocument($document);
+				
+				$this->Template = new \FrontendTemplate("mod_dms_mgmt_upload_processing");
+				$this->Template->setData($this->arrData);
+				
+				$this->Template->document = $document;
+				
+				$arrMessages['successes'][] = $GLOBALS['TL_LANG']['DMS']['SUCCESS']['document_successfully_uploaded'];
+			}
+			
+			$this->Template->category = $category;
+			$this->Template->tempFileName = $tempFileNameCleaned;
+			$this->Template->fileName = $this->Input->post('fileName');
+			$this->Template->fileType = $this->Input->post('fileType');
+			$this->Template->fileSize = $intFileSize;
+			$this->Template->fileSizeByteFormatted = Document::formatFileSize($intFileSize, Document::FILE_SIZE_UNIT_BYTE);
+			$this->Template->fileSizeKbFormatted = Document::formatFileSize(Document::convertFileSize($intFileSize, Document::FILE_SIZE_UNIT_BYTE, Document::FILE_SIZE_UNIT_KB), Document::FILE_SIZE_UNIT_KB);
+			$this->Template->fileSizeMbFormatted = Document::formatFileSize(Document::convertFileSize($intFileSize, Document::FILE_SIZE_UNIT_BYTE, Document::FILE_SIZE_UNIT_MB), Document::FILE_SIZE_UNIT_MB);
+			$this->Template->fileSizeGbFormatted = Document::formatFileSize(Document::convertFileSize($intFileSize, Document::FILE_SIZE_UNIT_BYTE, Document::FILE_SIZE_UNIT_GB), Document::FILE_SIZE_UNIT_GB);
+			$this->Template->existingDocuments = $arrDocuments;
+			
+			$blnShowStart = false;
 		}
 	}
 	
@@ -747,7 +794,7 @@ class ModuleDmsManagement extends Module
 		 *     Eingabe aller Beschreibungsteile für die zu uploadende Datei
 		 *
 		 *     Prüfung, ob Versionnummer zulässig ist. Ja:Verarbeitung / Nein:Abbruch
-		 */ 
+		 */
 		$dir = trim($GLOBALS['TL_CONFIG']['dmsBaseDirectory']);
 		$dirTemp = $dir . "/temp";
 		$dirGrafik = $dir . "/preview";
@@ -833,7 +880,7 @@ class ModuleDmsManagement extends Module
 
 	/* **********************************************************************************************************************************************
 	 *  **********************************************************************************************************************************************
-	 *  						V e r w a l t u n g 
+	 *  						V e r w a l t u n g
 	 *  **********************************************************************************************************************************************
 	 *  **********************************************************************************************************************************************
 	 */
@@ -1095,7 +1142,7 @@ class ModuleDmsManagement extends Module
 
 	/* **********************************************************************************************************************************************
 	 *  **********************************************************************************************************************************************
-	 *  						mehrfach verwendbare Funktionen 
+	 *  						mehrfach verwendbare Funktionen
 	 *  **********************************************************************************************************************************************
 	 *  **********************************************************************************************************************************************
 	 */
