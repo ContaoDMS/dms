@@ -475,9 +475,10 @@ class Document
 	 * Return the split file name (splitted into name, version and type).
 	 *
 	 * @param	string	$strFileName	The files name to split.
+	 * @param	bool	$blnExtractVersion	True if the version should be extracted.
 	 * @return	array	The splitted parts of the file name.
 	 */
-	public static function splitFileName($strFileName)
+	public static function splitFileName($strFileName, $blnExtractVersion = true)
 	{
 		$arrParts = array();
 		
@@ -491,22 +492,25 @@ class Document
 		$versionMinor = null;
 		$versionPatch = null;
 		
-		$arrFileNameParts = explode("_", $fileName);
-		if (count($arrFileNameParts) >= 4)
+		if ($blnExtractVersion)
 		{
-			$versionMajorTemp = $arrFileNameParts[count($arrFileNameParts) - 3];
-			$versionMinorTemp = $arrFileNameParts[count($arrFileNameParts) - 2];
-			$versionPatchTemp = $arrFileNameParts[count($arrFileNameParts) - 1];
-			
-			if (is_numeric($versionMajorTemp) && is_numeric($versionMinorTemp) && is_numeric($versionPatchTemp))
+			$arrFileNameParts = explode("_", $fileName);
+			if (count($arrFileNameParts) >= 4)
 			{
-				$hasVersion = true;
-				$version = self::buildVersionForFileName($versionMajorTemp, $versionMinorTemp, $versionPatchTemp);
-				$versionMajor = $versionMajorTemp;
-				$versionMinor = $versionMinorTemp;
-				$versionPatch = $versionPatchTemp;
+				$versionMajorTemp = $arrFileNameParts[count($arrFileNameParts) - 3];
+				$versionMinorTemp = $arrFileNameParts[count($arrFileNameParts) - 2];
+				$versionPatchTemp = $arrFileNameParts[count($arrFileNameParts) - 1];
 				
-				$fileName = substr($fileName, 0, strrpos($fileName, "_$version"));
+				if (is_numeric($versionMajorTemp) && is_numeric($versionMinorTemp) && is_numeric($versionPatchTemp))
+				{
+					$hasVersion = true;
+					$version = self::buildVersionForFileName($versionMajorTemp, $versionMinorTemp, $versionPatchTemp);
+					$versionMajor = $versionMajorTemp;
+					$versionMinor = $versionMinorTemp;
+					$versionPatch = $versionPatchTemp;
+					
+					$fileName = substr($fileName, 0, strrpos($fileName, "_$version"));
+				}
 			}
 		}
 		
