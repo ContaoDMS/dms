@@ -38,7 +38,11 @@ $GLOBALS['TL_DCA']['tl_dms_documents'] = array
 	(
 		'dataContainer'               => 'Table',
 		'ptable'                      => 'tl_dms_categories',
-		'closed'                      => true
+		'closed'                      => true,
+		'onload_callback'             => array
+		(
+			array('tl_dms_documents', 'resortDocuments')
+		)
 	),
 	
 	// List
@@ -78,6 +82,13 @@ $GLOBALS['TL_DCA']['tl_dms_documents'] = array
 				'href'                => 'act=edit',
 				'icon'                => 'edit.gif'
 			),
+			'cut' => array
+			(
+				'label'               => &$GLOBALS['TL_LANG']['tl_content']['cut'],
+				'href'                => 'act=paste&amp;mode=cut',
+				'icon'                => 'cut.gif',
+				'attributes'          => 'onclick="Backend.getScrollOffset()"'
+			),
 			'delete' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_dms_documents']['delete'],
@@ -97,7 +108,7 @@ $GLOBALS['TL_DCA']['tl_dms_documents'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{document_legend},name,description,keywords;{file_legend},file_name,file_type,file_size,file_preview;{version_legend},version_major,version_minor,version_patch;{modification_legend},upload_member,upload_date,lastedit_member,lastedit_date;{publish_legend},published'
+		'default'                     => '{document_legend},name,description,keywords;{file_legend},data_file_name,data_file_type,data_file_size,data_file_preview;{version_legend},version_major,version_minor,version_patch;{modification_legend},upload_member,upload_date,lastedit_member,lastedit_date;{publish_legend},published'
 	),
 
 	// Fields
@@ -129,35 +140,35 @@ $GLOBALS['TL_DCA']['tl_dms_documents'] = array
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'tl_class'=>'long', 'maxlength'=>255)
 		),
-		'file_name' => array
+		'data_file_name' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_documents']['file_name'],
+			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_documents']['data_file_name'],
 			'inputType'               => 'fileTree',
 			'eval'                    => array('files'=>true, 'filesOnly'=>true, 'fieldType'=>'radio', 'path'=>DmsConfig::getBaseDirectory(false), 'extensions'=>tl_dms_documents::getValidFileTypesForCategory()),
-			'load_callback' => array
+			'load_callback'           => array
 			(
 				array('tl_dms_documents', 'getFullFilePath')
 			),
-			'save_callback' => array
+			'save_callback'           => array
 			(
 				array('tl_dms_documents', 'reduceFilePath')
 			)
 		),
-		'file_type' => array
+		'data_file_type' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_documents']['file_type'],
+			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_documents']['data_file_type'],
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'alnum', 'tl_class'=>'w50 clr', 'maxlength'=>5)
 		),
-		'file_size' => array
+		'data_file_size' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_documents']['file_size'],
+			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_documents']['data_file_size'],
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'digit', 'tl_class'=>'w50', 'maxlength'=>10)
 		),
-		/*'file_preview' => array
+		/*'data_file_preview' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_documents']['file_preview'],
+			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_documents']['data_file_preview'],
 			'inputType'               => 'fileTree',
 			'eval'                    => array('files'=>true, 'filesOnly'=>true, 'extensions'=>'jpg,png,gif', 'fieldType'=>'radio', 'path'=>DmsConfig::getPreviewDirectory(false))
 		),*/
@@ -258,6 +269,26 @@ class tl_dms_documents extends Backend
 	}
 	
 	/**
+	 * Resort the document sorting value
+	 * @param DataContainer
+	 */
+	public function resortDocuments(DataContainer $dc)
+	{
+		if (!$this->Input->get('act'))
+		{
+			$db = Database::getInstance();
+			$stmt = "UPDATE tl_dms_documents doc, "
+				  . " (SELECT @rownum := @rownum + 1 ROWNUM, t.id ID "
+				  . " FROM "
+				  . " (SELECT @rownum := 0) r, "
+				  . " (SELECT * FROM tl_dms_documents ORDER BY pid, name, version_major, version_minor, version_patch) t) tsub "
+				  . "SET doc.sorting = (tsub.ROWNUM *64) "
+				  . "WHERE doc.id = tsub.ID";
+			$db->prepare($stmt)->execute();
+		}
+	}
+	
+	/**
 	 * Return the complete file path
 	 * @param mixed
 	 * @param DataContainer
@@ -269,7 +300,7 @@ class tl_dms_documents extends Backend
 		return DmsConfig::getDocumentFilePath(
 						Document::buildFileNameVersioned($varValue, 
 								Document::buildVersionForFileName($doc->version_major,  $doc->version_minor, $doc->version_patch), 
-														 $doc->file_type
+														 $doc->data_file_type
 														)
 											  );
 	}
