@@ -16,7 +16,7 @@ http://www.contao.org/de/extension-list/view/DokManSystem.html
 Tracker
 -------
 
-https://github.com/cliffparnitzky/DocumentManagementSystem/issues
+https://github.com/ContaoDMS/dms/issues
 
 
 Compatibility
@@ -35,18 +35,22 @@ Dependency
 Migration
 ---------
 
-If you are trying to migrate from version 1.* to 2.* please backup the database and use the migration instructions at https://github.com/cliffparnitzky/DocumentManagementSystem-Migration
+For migrating from version 1.* to 2.* please backup the database and use the migration instructions at https://github.com/ContaoDMS/migration
 
 
-Documentation, Customization and Configuration
+Documentation, Configuration and Customization
 ----------------------------------------------
 
-If you need configuration hints or customization examples please look at https://github.com/cliffparnitzky/DocumentManagementSystem-Documentation-Configuration-Customization
+For documentation hints please have a look at https://github.com/ContaoDMS/documentation.
+
+For configuration hints please have a look at https://github.com/ContaoDMS/configuration.
+
+For customization hints please have a look at https://github.com/ContaoDMS/customization.
 
 
 Screenshots
 -----------
 
-![Screenshot: Access rights](https://raw.github.com/cliffparnitzky/DocumentManagementSystem/master/screenshot_access_rights.jpg)
+![Screenshot: Access rights](https://raw.github.com/ContaoDMS/dms/master/screenshot_access_rights.jpg)
 
-![Screenshot: categories](https://raw.github.com/cliffparnitzky/DocumentManagementSystem/master/screenshot_categories.jpg)
+![Screenshot: categories](https://raw.github.com/ContaoDMS/dms/master/screenshot_categories.jpg)
