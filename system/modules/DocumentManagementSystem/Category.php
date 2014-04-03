@@ -228,6 +228,22 @@ class Category extends System
 		return !empty($this->arrDocuments);
 	}
 	
+	/**
+	 * Return if this category has published documents.
+	 *
+	 * @return	bool	True if there are published documents.
+	 */
+	public function hasPublishedDocuments()
+	{
+		foreach ($this->arrDocuments as $document)
+		{
+			if ($document->isPublished())
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 	
 	/**
 	 * Return if this category has a description.
@@ -305,6 +321,24 @@ class Category extends System
 	public function getDocumentCount()
 	{
 		return count($this->arrDocuments);
+	}
+	
+	/**
+	 * Get the number of published documents.
+	 *
+	 * @return	int	The number of published documents.
+	 */
+	public function getPublishedDocumentCount()
+	{
+		$count = 0;
+		foreach ($this->arrDocuments as $document)
+		{
+			if ($document->isPublished())
+			{
+				$count++;
+			}
+		}
+		return $count;
 	}
 	
 	/**

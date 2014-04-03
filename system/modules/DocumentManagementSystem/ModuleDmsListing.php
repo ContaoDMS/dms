@@ -183,7 +183,7 @@ class ModuleDmsListing extends Module
 		$arrSecureCategories = $arrCategories;
 		foreach ($arrSecureCategories as $category)
 		{
-			if (!$category->isPublished() || ($this->dmsHideEmptyCategories && !$category->hasDocuments()) || ($this->dmsHideLockedCategories && !$category->isReadableForCurrentMember()))
+			if (!$category->isPublished() || ($this->dmsHideEmptyCategories && !$category->hasPublishedDocuments()) || ($this->dmsHideLockedCategories && !$category->isReadableForCurrentMember()))
 			{
 				unset($arrSecureCategories[$category->id]);
 			}

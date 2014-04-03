@@ -75,18 +75,18 @@
 <?php $fileCount = 0; ?>
 <?php foreach ($this->categories as $category): ?>
 			<!-- category -->
-			<tr class="category level_<?php echo $category->getLevel(); ?><?php if (!$category->isReadableForCurrentMember()) : ?> locked<?php endif; ?><?php if (!$category->hasDocuments()) : ?> empty<?php endif; ?>">
+			<tr class="category level_<?php echo $category->getLevel(); ?><?php if (!$category->isReadableForCurrentMember()) : ?> locked<?php endif; ?><?php if (!$category->hasPublishedDocuments()) : ?> empty<?php endif; ?>">
 				<td class="category_name"><?php echo $category->name; ?></td>
 				<td class="category_filecount centered">
 	<?php if ($category->isReadableForCurrentMember()) : ?>
-					<?php echo $category->getDocumentCount(); ?>
-					<?php $fileCount += $category->getDocumentCount(); ?>
+					<?php echo $category->getPublishedDocumentCount(); ?>
+					<?php $fileCount += $category->getPublishedDocumentCount(); ?>
 	<?php else : ?>
 					&nbsp;
 	<?php endif; ?>
 				</td>
 				<td class="category_select centered">
-	<?php if ($category->isReadableForCurrentMember() && $category->hasDocuments()) : ?>    
+	<?php if ($category->isReadableForCurrentMember() && $category->hasPublishedDocuments()) : ?>    
 					<input onchange="expandCollapseCategory();" type="checkbox" name="expandedCatagories[]" value="<?php echo $category->id; ?>" <?php if (in_array($category->id, $this->expandedCategories)) : ?> checked="checked" <?php endif; ?> />
 	<?php else : ?>
 					&nbsp;
@@ -95,11 +95,11 @@
 			</tr>
 	<?php if ($category->hasDescription()) : ?>
 			<!-- category description -->
-			<tr class="description category_description level_<?php echo $category->getLevel(); ?><?php if (!$category->isReadableForCurrentMember()) : ?> locked<?php endif; ?><?php if (!$category->hasDocuments()) : ?> empty<?php endif; ?>">
+			<tr class="description category_description level_<?php echo $category->getLevel(); ?><?php if (!$category->isReadableForCurrentMember()) : ?> locked<?php endif; ?><?php if (!$category->hasPublishedDocuments()) : ?> empty<?php endif; ?>">
 				<td colspan="3" class="category_description"><?php echo $category->description; ?></td>
 			</tr>
 	<?php endif; ?>
-	<?php if ($category->isReadableForCurrentMember() && $category->hasDocuments() && in_array($category->id, $this->expandedCategories)) : ?>
+	<?php if ($category->isReadableForCurrentMember() && $category->hasPublishedDocuments() && in_array($category->id, $this->expandedCategories)) : ?>
 			<!-- documents -->
 		<?php foreach ($category->documents as $document) : ?>
 			<?php if ($document->isPublished()) : ?>
