@@ -31,21 +31,22 @@
 /**
  * Fields
  */
-$GLOBALS['TL_LANG']['tl_dms_documents']['name']              = array('Name', 'Gibt den Namen für dieses Dokument an.');
-$GLOBALS['TL_LANG']['tl_dms_documents']['description']       = array('Beschreibung', 'Gibt die Beschreibung für dieses Dokument an.');
-$GLOBALS['TL_LANG']['tl_dms_documents']['keywords']          = array('Schlüsselworte', 'Gibt eine Komma getrennt Liste von Schlüsselworten für dieses Dokument an.');
-$GLOBALS['TL_LANG']['tl_dms_documents']['data_file_name']    = array('Dateiquelle', 'Gibt die Datei für dieses Dokument an.');
-$GLOBALS['TL_LANG']['tl_dms_documents']['data_file_type']    = array('Dateityp', 'Gibt den Typ der Datei für dieses Dokument an.');
-$GLOBALS['TL_LANG']['tl_dms_documents']['data_file_size']    = array('Dateigröße [Byte]', 'Gibt die Größe der Datei für dieses Dokument an. Diese wird beim Upload automatisch ermittelt.');
-$GLOBALS['TL_LANG']['tl_dms_documents']['data_file_preview'] = array('Dateivorschau', 'Gibt ein Vorschaubild für dieses Dokument an.');
-$GLOBALS['TL_LANG']['tl_dms_documents']['version_major']     = array('Hauptversionsnummer (MAJOR)', 'Gibt die Hauptversionsnummer für dieses Dokument an.');
-$GLOBALS['TL_LANG']['tl_dms_documents']['version_minor']     = array('Nebenversionsnummer (MINOR)', 'Gibt die Nebenversionsnummer für dieses Dokument an.');
-$GLOBALS['TL_LANG']['tl_dms_documents']['version_patch']     = array('Patchnummer', 'Gibt die Patchnummer für dieses Dokument an.');
-$GLOBALS['TL_LANG']['tl_dms_documents']['upload_member']     = array('Upload Mitglied', 'Gibt das Mitglied an, welches dieses Dokument hochgeladen hat.');
-$GLOBALS['TL_LANG']['tl_dms_documents']['upload_date']       = array('Upload Datum', 'Gibt das Datum des Uploads für dieses Dokument hat.');
-$GLOBALS['TL_LANG']['tl_dms_documents']['lastedit_member']   = array('Letzter Bearbeiter', 'Gibt das letzte Mitglied an, welches dieses Dokument bearbeitet hat.');
-$GLOBALS['TL_LANG']['tl_dms_documents']['lastedit_date']     = array('Letztes Bearbeitungsdatum', 'Gibt das Datum der letzten Bearbeitung für dieses Dokument an.');
-$GLOBALS['TL_LANG']['tl_dms_documents']['published']         = array('Dokument veröffentlichen', 'Gibt an, ob das Dokument veröffentlicht ist, oder nicht.');
+$GLOBALS['TL_LANG']['tl_dms_documents']['name']               = array('Name', 'Gibt den Namen für dieses Dokument an.');
+$GLOBALS['TL_LANG']['tl_dms_documents']['description']        = array('Beschreibung', 'Gibt die Beschreibung für dieses Dokument an.');
+$GLOBALS['TL_LANG']['tl_dms_documents']['keywords']           = array('Schlüsselworte', 'Gibt eine Komma getrennt Liste von Schlüsselworten für dieses Dokument an.');
+$GLOBALS['TL_LANG']['tl_dms_documents']['data_file_name_org'] = array('Dateiname', 'Gibt den Namen der Datei für dieses Dokument an. Der Dateiname kann nur über die Auswahl der Dateiquelle geändert werden.');
+$GLOBALS['TL_LANG']['tl_dms_documents']['data_file_name']     = array('Dateiquelle', 'Gibt die Datei für dieses Dokument an.');
+$GLOBALS['TL_LANG']['tl_dms_documents']['data_file_type']     = array('Dateityp', 'Gibt den Typ der Datei für dieses Dokument an.');
+$GLOBALS['TL_LANG']['tl_dms_documents']['data_file_size']     = array('Dateigröße [Byte]', 'Gibt die Größe der Datei für dieses Dokument an. Diese wird beim Upload automatisch ermittelt.');
+$GLOBALS['TL_LANG']['tl_dms_documents']['data_file_preview']  = array('Dateivorschau', 'Gibt ein Vorschaubild für dieses Dokument an.');
+$GLOBALS['TL_LANG']['tl_dms_documents']['version_major']      = array('Hauptversionsnummer (MAJOR)', 'Gibt die Hauptversionsnummer für dieses Dokument an.');
+$GLOBALS['TL_LANG']['tl_dms_documents']['version_minor']      = array('Nebenversionsnummer (MINOR)', 'Gibt die Nebenversionsnummer für dieses Dokument an.');
+$GLOBALS['TL_LANG']['tl_dms_documents']['version_patch']      = array('Patchnummer', 'Gibt die Patchnummer für dieses Dokument an.');
+$GLOBALS['TL_LANG']['tl_dms_documents']['upload_member']      = array('Upload Mitglied', 'Gibt das Mitglied an, welches dieses Dokument hochgeladen hat.');
+$GLOBALS['TL_LANG']['tl_dms_documents']['upload_date']        = array('Upload Datum', 'Gibt das Datum des Uploads für dieses Dokument hat.');
+$GLOBALS['TL_LANG']['tl_dms_documents']['lastedit_member']    = array('Letzter Bearbeiter', 'Gibt das letzte Mitglied an, welches dieses Dokument bearbeitet hat.');
+$GLOBALS['TL_LANG']['tl_dms_documents']['lastedit_date']      = array('Letztes Bearbeitungsdatum', 'Gibt das Datum der letzten Bearbeitung für dieses Dokument an.');
+$GLOBALS['TL_LANG']['tl_dms_documents']['published']          = array('Dokument veröffentlichen', 'Gibt an, ob das Dokument veröffentlicht ist, oder nicht.');
 
 /**
  * Legends

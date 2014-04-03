@@ -109,7 +109,7 @@ $GLOBALS['TL_DCA']['tl_dms_documents'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{document_legend},name,description,keywords;{file_legend},data_file_name,data_file_type,data_file_size,data_file_preview;{version_legend},version_major,version_minor,version_patch;{modification_legend},upload_member,upload_date,lastedit_member,lastedit_date;{publish_legend},published'
+		'default'                     => '{document_legend},name,description,keywords;{file_legend},data_file_name_org,data_file_name,data_file_type,data_file_size,data_file_preview;{version_legend},version_major,version_minor,version_patch;{modification_legend},upload_member,upload_date,lastedit_member,lastedit_date;{publish_legend},published'
 	),
 
 	// Fields
@@ -141,11 +141,16 @@ $GLOBALS['TL_DCA']['tl_dms_documents'] = array
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'tl_class'=>'long', 'maxlength'=>255)
 		),
+		'data_file_name_org' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_documents']['data_file_name_org'],
+			'input_field_callback'    => array('tl_dms_documents', 'getOriginalFileNameWidget')
+		),
 		'data_file_name' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_documents']['data_file_name'],
 			'inputType'               => 'fileTree',
-			'eval'                    => array('files'=>true, 'filesOnly'=>true, 'fieldType'=>'radio', 'path'=>DmsConfig::getBaseDirectory(false), 'extensions'=>tl_dms_documents::getValidFileTypesForCategory()),
+			'eval'                    => array('files'=>true, 'filesOnly'=>true, 'fieldType'=>'radio', 'path'=>DmsConfig::getBaseDirectory(false), 'extensions'=>tl_dms_documents::getValidFileTypesForCategory(), 'tl_class'=>'clr'),
 			'load_callback'           => array
 			(
 				array('tl_dms_documents', 'getFullFilePath')
@@ -209,7 +214,7 @@ $GLOBALS['TL_DCA']['tl_dms_documents'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_documents']['lastedit_member'],
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_member.CONCAT(firstname," ",lastname)',
-			'eval'                    => array('tl_class'=>'w50 clr', 'includeBlankOption'=>true)
+			'eval'                    => array('tl_class'=>'w50 clr', 'includeBlankOption'=>true, 'blankOptionLabel'=>'&nbsp;')
 		),
 		'lastedit_date' => array
 		(
@@ -324,6 +329,26 @@ class tl_dms_documents extends Backend
 		return (($arrClipboard['mode'] == 'cut' && $arrClipboard['id'] == $row['id']) || ($arrClipboard['mode'] == 'cutAll' && in_array($row['id'], $arrClipboard['id'])) || (!$this->User->isAdmin && !$this->User->isAllowed(5, $objPage->row())) || $cr) ? $this->generateImage('pasteafter_.gif', '', 'class="blink"').' ' : ''; //'<a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&amp;mode=1&amp;pid='.$row['id'].(!is_array($arrClipboard['id']) ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.specialchars(sprintf($GLOBALS['TL_LANG'][$dc->table]['pasteafter'][1], $row['id'])).'" onclick="Backend.getScrollOffset()">'.$imagePasteAfter.'</a> '; 	}
 	}
 	
+	
+	
+	/**
+	 * Return the complete file path
+	 * @param DataContainer
+	 * @return string
+	 */
+	public function getOriginalFileNameWidget(DataContainer $dc)
+	{
+		$doc = $dc->activeRecord;
+		
+		return '
+<div class="w50">
+  <h3><label for="ctrl_purge">'.$GLOBALS['TL_LANG']['tl_dms_documents']['data_file_name_org'][0].'</label></h3>
+  <div id="data_file_name_org" class="tl_text">' . $doc->data_file_name . '</div>
+  <p class="tl_help tl_tip">'.$GLOBALS['TL_LANG']['tl_dms_documents']['data_file_name_org'][1].'</p>
+</div>';
+	}
+	
+	
 	/**
 	 * Return the complete file path
 	 * @param mixed
@@ -333,6 +358,7 @@ class tl_dms_documents extends Backend
 	public function getFullFilePath($varValue, DataContainer $dc)
 	{
 		$doc = $dc->activeRecord;
+		
 		return DmsConfig::getDocumentFilePath(
 						Document::buildFileNameVersioned($varValue, 
 								Document::buildVersionForFileName($doc->version_major,  $doc->version_minor, $doc->version_patch), 
