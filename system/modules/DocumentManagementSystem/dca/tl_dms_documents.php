@@ -50,7 +50,8 @@ $GLOBALS['TL_DCA']['tl_dms_documents'] = array
 	(
 		'sorting' => array
 		(
-			'mode'                    => 6
+			'mode'                    => 6,
+			'paste_button_callback'   => array('tl_dms_documents', 'pasteDocument'), 
 		),
 		'label' => array
 		(
@@ -84,7 +85,7 @@ $GLOBALS['TL_DCA']['tl_dms_documents'] = array
 			),
 			'cut' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_content']['cut'],
+				'label'               => &$GLOBALS['TL_LANG']['tl_dms_documents']['cut'],
 				'href'                => 'act=paste&amp;mode=cut',
 				'icon'                => 'cut.gif',
 				'attributes'          => 'onclick="Backend.getScrollOffset()"'
@@ -237,6 +238,15 @@ $GLOBALS['TL_DCA']['tl_dms_documents'] = array
 class tl_dms_documents extends Backend
 {
 	/**
+	 * Import the back end user object
+	 */
+	public function __construct()
+	{
+		parent::__construct();
+		$this->import('BackendUser', 'User');
+	}
+	
+	/**
 	 * Add an image to each record
 	 * @param array
 	 * @param string
@@ -286,6 +296,32 @@ class tl_dms_documents extends Backend
 				  . "WHERE doc.id = tsub.ID";
 			$db->prepare($stmt)->execute();
 		}
+	}
+	
+	/**
+	 * Return the paste document button
+	 * @param \DataContainer
+	 * @param array
+	 * @param string
+	 * @param boolean
+	 * @param array
+	 * @return string
+	 */
+	public function pasteDocument(DataContainer $dc, $row, $table, $cr, $arrClipboard=null)
+	{
+		$imagePasteAfter = $this->generateImage('pasteafter.gif', sprintf($GLOBALS['TL_LANG'][$dc->table]['pasteafter'][1], $row['id']), 'class="blink"');
+		$imagePasteInto = $this->generateImage('pasteinto.gif', sprintf($GLOBALS['TL_LANG'][$dc->table]['pasteinto'][1], $row['id']), 'class="blink"');
+
+		if ($table == $GLOBALS['TL_DCA'][$dc->table]['config']['ptable'])
+		{
+			return ($row['type'] == 'root' || (!$this->User->isAdmin && !$this->User->isAllowed(5, $row)) || $cr) ? $this->generateImage('pasteinto_.gif', '', 'class="blink"').' ' : '<a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&amp;mode=2&amp;pid='.$row['id'].(!is_array($arrClipboard['id']) ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.specialchars(sprintf($GLOBALS['TL_LANG'][$dc->table]['pasteinto'][1], $row['id'])).'" onclick="Backend.getScrollOffset()">'.$imagePasteInto.'</a> ';
+		}
+
+		$objPage = $this->Database->prepare("SELECT * FROM tl_page WHERE id=?")
+								  ->limit(1)
+								  ->execute($row['pid']);
+
+		return (($arrClipboard['mode'] == 'cut' && $arrClipboard['id'] == $row['id']) || ($arrClipboard['mode'] == 'cutAll' && in_array($row['id'], $arrClipboard['id'])) || (!$this->User->isAdmin && !$this->User->isAllowed(5, $objPage->row())) || $cr) ? $this->generateImage('pasteafter_.gif', '', 'class="blink"').' ' : ''; //'<a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&amp;mode=1&amp;pid='.$row['id'].(!is_array($arrClipboard['id']) ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.specialchars(sprintf($GLOBALS['TL_LANG'][$dc->table]['pasteafter'][1], $row['id'])).'" onclick="Backend.getScrollOffset()">'.$imagePasteAfter.'</a> '; 	}
 	}
 	
 	/**
