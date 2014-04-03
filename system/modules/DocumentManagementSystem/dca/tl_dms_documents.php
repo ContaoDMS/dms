@@ -133,13 +133,13 @@ $GLOBALS['TL_DCA']['tl_dms_documents'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_documents']['description'],
 			'inputType'               => 'textarea',
-			'eval'                    => array('mandatory'=>true, 'style'=>'height:60px;')
+			'eval'                    => array('style'=>'height:60px;')
 		),
 		'keywords' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_documents']['keywords'],
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'tl_class'=>'long', 'maxlength'=>255)
+			'eval'                    => array('tl_class'=>'long', 'maxlength'=>255)
 		),
 		'data_file_name_org' => array
 		(
@@ -150,7 +150,7 @@ $GLOBALS['TL_DCA']['tl_dms_documents'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_documents']['data_file_name'],
 			'inputType'               => 'fileTree',
-			'eval'                    => array('files'=>true, 'filesOnly'=>true, 'fieldType'=>'radio', 'path'=>DmsConfig::getBaseDirectory(false), 'extensions'=>tl_dms_documents::getValidFileTypesForCategory(), 'tl_class'=>'clr'),
+			'eval'                    => array('mandatory'=>true, 'files'=>true, 'filesOnly'=>true, 'fieldType'=>'radio', 'path'=>DmsConfig::getBaseDirectory(false), 'extensions'=>tl_dms_documents::getValidFileTypesForCategory(), 'tl_class'=>'clr'),
 			'load_callback'           => array
 			(
 				array('tl_dms_documents', 'getFullFilePath')
