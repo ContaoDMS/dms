@@ -491,7 +491,7 @@ class ModuleDmsManagement extends Module
 			$params->loadCategory = false;
 			
 			$arrFileNameParts = Document::splitFileName($strFileName);
-			$proposedDocumentName = $arrFileNameParts['fileName']; // propose original file name (uncleaned but unversioned) as document name
+			$proposedDocumentName = str_replace('_', ' ', $arrFileNameParts['fileName']); // propose original file name (uncleaned, unversioned, underscores to blanks) as document name
 			$proposedDocumentDescription = "";
 			$proposedDocumentKeywords = "";
 			$proposedDocumentVersionMajor = 1;
