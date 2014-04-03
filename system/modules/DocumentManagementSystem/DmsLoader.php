@@ -258,7 +258,7 @@ class DmsLoader extends Controller
 	 */
 	private function getDocuments(Category $category, DmsLoaderParams $params)
 	{
-		$whereClause = "WHERE d.pid = ? AND published = 1 ";
+		$whereClause = "WHERE d.pid = ? ";
 		
 		$whereParams = array();
 		$whereParams[] = $category->id;
