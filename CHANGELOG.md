@@ -21,3 +21,4 @@ Version 2.0.0 (2014-xx-xx)
 - added displaying upload member and date
 - added displaying lastedit member and date
 - added additional check for access rights, before downloading, uploading, managing (avoid 'hack' from other form)
+- removed preview images from document (temporarily, will be added with #12)
