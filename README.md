@@ -3,7 +3,9 @@ Contao Extension: DocumentManagementSystem
 
 <img align="right" width="200" height="200" src="https://raw.githubusercontent.com/ContaoDMS/documentation/master/logo/ContaoDMS_Logo_200x200.png">
 
-Provides a document management system to store versioned files in a category structure with defined access rights.
+Provides a document management system for the (Contao)[http://contao.org] CMS.
+
+It offers the possibility to store versioned files in an unlimited category structure with defined access rights it.
 
 
 Installation
