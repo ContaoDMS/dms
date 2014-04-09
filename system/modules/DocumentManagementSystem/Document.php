@@ -407,6 +407,10 @@ class Document
 	 */
 	public function getUploadDate()
 	{
+		if ($this->intUploadDate <= 0)
+		{
+			return "";
+		}
 		// TODO: get a format from config here
 		return date('d.m.Y H:i:s', $this->intUploadDate);
 	}
@@ -418,8 +422,39 @@ class Document
 	 */
 	public function getLasteditDate()
 	{
+		if ($this->intLasteditDate <= 0)
+		{
+			return "";
+		}
 		// TODO: get a format from config here
 		return date('d.m.Y H:i:s', $this->intLasteditDate);
+	}
+	
+	/**
+	 * Return the last modification timestamp, the last timestamp the document was uploaded or edited.
+	 *
+	 * @return	string	The last modification timestamp.
+	 */
+	public function getLastModificationTimestamp()
+	{
+		// TODO: get a format from config here
+		$intLastModificationDate = $this->intLasteditDate;
+		if ($intLastModificationDate <= 0)
+		{
+			$intLastModificationDate = $this->intUploadDate;
+		}
+		return $intLastModificationDate;
+	}
+	
+	/**
+	 * Return the formatted last modification date, the date the document was uploaded or edited.
+	 *
+	 * @return	string	The formated last modification date.
+	 */
+	public function getLastModificationDate()
+	{
+		// TODO: get a format from config here
+		return date('d.m.Y H:i:s', $this->getLastModificationTimestamp());
 	}
 	
 	/**
