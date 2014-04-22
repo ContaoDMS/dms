@@ -207,7 +207,7 @@ $GLOBALS['TL_DCA']['tl_dms_documents'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_documents']['upload_date'],
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard')
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'datim', 'datepicker'=>$this->getDatePickerString(), 'tl_class'=>'w50 wizard')
 		),
 		'lastedit_member' => array
 		(
@@ -220,7 +220,7 @@ $GLOBALS['TL_DCA']['tl_dms_documents'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_documents']['lastedit_date'],
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard')
+			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>$this->getDatePickerString(), 'tl_class'=>'w50 wizard')
 		),
 		'published' => array
 		(
