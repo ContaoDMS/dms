@@ -37,7 +37,7 @@ class DmsWriter extends Controller
 	 * Current object instance (do not remove)
 	 * @var DmsWriter
 	 */
-	protected static $objInstance; 
+	protected static $objInstance;
 	
 	/**
 	 * Initialize the object.
@@ -61,10 +61,10 @@ class DmsWriter extends Controller
 		}
 
 		return self::$objInstance;
-	} 
+	}
 	
 	/**
-	 * Store the document in the given category.
+	 * Store the new document in the given category.
 	 *
 	 * @param	Document	$document	The document to store.
 	 * @return	document	Returns the document.
@@ -73,9 +73,28 @@ class DmsWriter extends Controller
 	{
 		$arrSet = $this->buildDocumentDataArray($document, false);
 		
-		$objDocument = $this->Database->prepare("INSERT INTO tl_dms_documents %s")->set($arrSet)->execute(); 
+		$objDocument = $this->Database->prepare("INSERT INTO tl_dms_documents %s")->set($arrSet)->execute();
 		
 		$document->id = $objDocument->insertId;
+		return $document;
+	}
+	
+	/**
+	 * Toggle publication of a document.
+	 *
+	 * @param	Document	$document	The document to toggle the publication for.
+	 * @return	document	Returns the document.
+	 */
+	public function toogleDocumentPublication(Document $document)
+	{
+		$arrSet = array();
+		$arrSet['tstamp'] = time();
+		$arrSet['lastedit_member'] = $document->lasteditMemberId;
+		$arrSet['lastedit_date'] = $document->lasteditDate;
+		$arrSet['published'] = $document->published;
+		
+		$this->Database->prepare("UPDATE tl_dms_documents %s WHERE id=?")->set($arrSet)->execute($document->id);
+		
 		return $document;
 	}
 	
@@ -114,14 +133,14 @@ class DmsWriter extends Controller
 		foreach ($arrData as $key => $value)
 		{
 			// remove empty values to use defaults in database
-			if (empty($value))
+			if ($key != 'published' && empty($value))
 			{
 				unset($arrData[$key]);
 			}
 		}
 		
 		return $arrData;
-	} 
+	}
 }
 
 ?>

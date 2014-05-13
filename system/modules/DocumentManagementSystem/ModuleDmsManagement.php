@@ -42,6 +42,7 @@ class ModuleDmsManagement extends Module
 	 * @var string
 	 */
 	protected $strTemplate = 'mod_dms_management';
+	
 
 	/**
 	 * Display a wildcard in the back end
@@ -61,6 +62,8 @@ class ModuleDmsManagement extends Module
 
 			return $objTemplate->parse();
 		}
+		
+		$this->import('FrontendUser', 'Member');
 
 		return parent::generate();
 	}
@@ -145,28 +148,25 @@ class ModuleDmsManagement extends Module
 						if ($editDocument != '' && is_numeric($editDocument))
 						{
 							$arrMessages['errors'][] = "Editing documents is not yet implemented.";
-							$this->manageSelectFile($params, $dmsLoader, $manageCategory, $arrMessages, $blnShowStart);
+							$this->manageSelectDocument($params, $dmsLoader, $manageCategory, $arrMessages, $blnShowStart);
 						}
 						else if ($deleteDocument != '' && is_numeric($deleteDocument))
 						{
 							$arrMessages['errors'][] = "Deleting documents is not yet implemented.";
-							$this->manageSelectFile($params, $dmsLoader, $manageCategory, $arrMessages, $blnShowStart);
+							$this->manageSelectDocument($params, $dmsLoader, $manageCategory, $arrMessages, $blnShowStart);
 						
 						}
 						else if ($unpublishDocument != '' && is_numeric($unpublishDocument))
 						{
-							$arrMessages['errors'][] = "Unpublishing documents is not yet implemented.";
-							$this->manageSelectFile($params, $dmsLoader, $manageCategory, $arrMessages, $blnShowStart);
-						
+							$this->manageUnpublishDocument($params, $dmsLoader, $manageCategory, $arrMessages, $blnShowStart, $unpublishDocument);
 						}
 						else if ($publishDocument != '' && is_numeric($publishDocument))
 						{
-							$arrMessages['errors'][] = "Publishing documents is not yet implemented.";
-							$this->manageSelectFile($params, $dmsLoader, $manageCategory, $arrMessages, $blnShowStart);
+							$this->managePublishDocument($params, $dmsLoader, $manageCategory, $arrMessages, $blnShowStart, $publishDocument);
 						}
 						else
 						{
-							$this->manageSelectFile($params, $dmsLoader, $manageCategory, $arrMessages, $blnShowStart);
+							$this->manageSelectDocument($params, $dmsLoader, $manageCategory, $arrMessages, $blnShowStart);
 						}
 					}
 					else
@@ -473,7 +473,6 @@ class ModuleDmsManagement extends Module
 				// move the temp file to dms dir and append version
 				rename(DmsConfig::getTempDirectory(true) . $tempFileNameCleaned, DmsConfig::getBaseDirectory(true) . $fileFileNameVersioned);
 				
-				$this->import('FrontendUser', 'User');
 				// store document
 				$document = new Document(-1, $documentName);
 				$document->categoryId = $category->id;
@@ -486,7 +485,7 @@ class ModuleDmsManagement extends Module
 				$document->versionMajor = $documentVersionMajor;
 				$document->versionMinor = $documentVersionMinor;
 				$document->versionPatch = $documentVersionPatch;
-				$document->uploadMemberId = $this->User->id;
+				$document->uploadMemberId = $this->Member->id;
 				$document->uploadDate = time();
 				$document->lasteditMemberId = 0;
 				$document->lasteditDate = '';
@@ -519,14 +518,14 @@ class ModuleDmsManagement extends Module
 	}
 	
 	/**
-	 * Display the file select screen for upload
+	 * Display the document select screen for managing
 	 */
-	private function manageSelectFile(&$params, &$dmsLoader, &$uploadCategory, &$arrMessages, &$blnShowStart)
+	private function manageSelectDocument(&$params, &$dmsLoader, &$manageCategory, &$arrMessages, &$blnShowStart)
 	{
 		$params->loadRootCategory = true; // get complete path to root, for checking inherited access rights
 		$params->loadAccessRights = true;
 		$params->loadDocuments = true;
-		$category = $dmsLoader->loadCategory($uploadCategory, $params);
+		$category = $dmsLoader->loadCategory($manageCategory, $params);
 		
 		if (!$category->isManageableForCurrentMember())
 		{
@@ -546,6 +545,94 @@ class ModuleDmsManagement extends Module
 			$this->Template->category = $category;
 			
 			$blnShowStart = false;
+		}
+	}
+
+	/**
+	 * Execute publishing documents
+	 */
+	private function managePublishDocument(&$params, &$dmsLoader, &$manageCategory, &$arrMessages, &$blnShowStart, $documentId)
+	{
+		$params->loadRootCategory = true; // get complete path to root, for checking inherited access rights
+		$params->loadAccessRights = true;
+		$params->loadDocuments = false;
+		$category = $dmsLoader->loadCategory($manageCategory, $params);
+		
+		if (!$category->isManageableForCurrentMember())
+		{
+			$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['manage_document_not_allowed'];
+			$blnShowStart = true;
+		}
+		else
+		{
+			$document = $dmsLoader->loadDocument($documentId, $params);
+			
+			if ($document != null)
+			{
+				if (!$document->isPublished())
+				{
+					$document->lasteditMemberId = $this->Member->id;
+					$document->lasteditDate = time();
+					$document->published = true;
+					
+					$dmsWriter = DmsWriter::getInstance();
+					$document = $dmsWriter->toogleDocumentPublication($document);
+					$arrMessages['successes'][] = $GLOBALS['TL_LANG']['DMS']['SUCCESS']['document_successfully_published'];
+				}
+				else
+				{
+					$arrMessages['infos'][] = $GLOBALS['TL_LANG']['DMS']['INFO']['document_already_published'];
+				}
+			}
+			else
+			{
+				$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['manage_document_not_found'];
+			}
+			$this->manageSelectDocument($params, $dmsLoader, $manageCategory, $arrMessages, $blnShowStart);
+		}
+	}
+
+	/**
+	 * Execute unpublishing documents
+	 */
+	private function manageUnpublishDocument(&$params, &$dmsLoader, &$manageCategory, &$arrMessages, &$blnShowStart, $documentId)
+	{
+		$params->loadRootCategory = true; // get complete path to root, for checking inherited access rights
+		$params->loadAccessRights = true;
+		$params->loadDocuments = false;
+		$category = $dmsLoader->loadCategory($manageCategory, $params);
+		
+		if (!$category->isManageableForCurrentMember())
+		{
+			$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['manage_document_not_allowed'];
+			$blnShowStart = true;
+		}
+		else
+		{
+			$document = $dmsLoader->loadDocument($documentId, $params);
+			
+			if ($document != null)
+			{
+				if ($document->isPublished())
+				{
+					$document->lasteditMemberId = $this->Member->id;
+					$document->lasteditDate = time();
+					$document->published = false;
+					
+					$dmsWriter = DmsWriter::getInstance();
+					$document = $dmsWriter->toogleDocumentPublication($document);
+					$arrMessages['successes'][] = $GLOBALS['TL_LANG']['DMS']['SUCCESS']['document_successfully_unpublished'];
+				}
+				else
+				{
+					$arrMessages['infos'][] = $GLOBALS['TL_LANG']['DMS']['INFO']['document_already_unpublished'];
+				}
+			}
+			else
+			{
+				$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['manage_document_not_found'];
+			}
+			$this->manageSelectDocument($params, $dmsLoader, $manageCategory, $arrMessages, $blnShowStart);
 		}
 	}
 
