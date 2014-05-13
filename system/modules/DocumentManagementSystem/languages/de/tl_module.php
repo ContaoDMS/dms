@@ -30,8 +30,8 @@
 /**
  * Fields
  */
-$GLOBALS['TL_LANG']['tl_module']['dmsHideEmptyCategories']  = array('Leere Kategorien ausblenden', 'Bitte wählen Sie ob leere Kategorien ausgeblendet werden sollen.');
-$GLOBALS['TL_LANG']['tl_module']['dmsHideLockedCategories'] = array('Gespeerte Kategorien ausblenden', 'Bitte wählen Sie ob gespeerte Kategorien ausgeblendet werden sollen.');
+$GLOBALS['TL_LANG']['tl_module']['dmsHideEmptyCategories']  = array('Leere Kategorien ausblenden', 'Bitte wählen Sie ob leere Kategorien ausgeblendet werden sollen. Beachten Sie, dass dadruch hierachisch untergeordnete Kategorien ggf. auch ausgeblendet sind.');
+$GLOBALS['TL_LANG']['tl_module']['dmsHideLockedCategories'] = array('Gespeerte Kategorien ausblenden', 'Bitte wählen Sie ob gespeerte Kategorien ausgeblendet werden sollen. Beachten Sie, dass dadruch hierachisch untergeordnete Kategorien ggf. auch ausgeblendet sind.');
 $GLOBALS['TL_LANG']['tl_module']['dmsTemplate']             = array('DMS Template', 'Bitte wählen eine eigenes Template aus.');
 
 ?>
