@@ -60,15 +60,15 @@
 			<!-- category -->
 			<tr class="category level_<?php echo $category->getLevel(); ?><?php if (!$category->isUploadableForCurrentMember() && !$category->isManageableForCurrentMember()) : ?> locked<?php endif; ?><?php if (!$category->hasDocuments()) : ?> empty<?php endif; ?>">
 				<td class="category_name"><?php echo $category->name; ?></td>
-				<td class="category_edit centered button">
-	<?php if ($category->isUploadableForCurrentMember()) : ?>    
+				<td class="category_upload centered button">
+	<?php if ($category->isUploadableForCurrentMember()) : ?>
 					<button type="submit" name="uploadCategory" value="<?php echo $category->id; ?>"><?php echo $GLOBALS['TL_LANG']['DMS']['management_button_upload']; ?></button>
 	<?php else : ?>
 					&nbsp;
 	<?php endif; ?>
 				</td>
 				<td class="category_manage centered button">
-	<?php if ($category->isManageableForCurrentMember() && $category->hasDocuments()) : ?>    
+	<?php if ($category->isManageableForCurrentMember() && $category->hasDocuments()) : ?>
 					<button type="submit" name="manageCategory" value="<?php echo $category->id; ?>"><?php echo $GLOBALS['TL_LANG']['DMS']['management_button_manage']; ?></button>
 	<?php else : ?>
 					&nbsp;
