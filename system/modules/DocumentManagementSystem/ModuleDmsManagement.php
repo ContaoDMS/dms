@@ -70,213 +70,6 @@ class ModuleDmsManagement extends Module
 	 */
 	protected function compile()
 	{
-		
-		
-		/*
-		 *        submit_upload_eigenschaften     --->  Übernahme der Eigenschaften des Dokumentes für den Upload
-		 *                                              Übernahme des Bildes für das Dokument
-		 *                                              Upload
-		 *
-		 *
-		 *        submit_verwaltung_auswahl       --->  Übernahme der Auswahlen des Verwaltungsmenues
-		 *                                              Übernahme Rechte an der KategorieId
-		 *
-		 */
-
-		/*
-		 *     =============================================================================================================
-		 *     submit_kategorieauswahl gedrückt
-		 *
-		 *     Modulteil : Kategorieauswahl
-		 *                 es wurde eine Kategorie ausgewählt und Upload/Verwaltung entschieden
-		 */
-
-		if ($this->Input->post('submit_kategorieauswahl'))
-		{
-			$arrKategorieAuswahl = $this->Input->post('kategorieauswahl');
-			$strKategorieAuswahl = $arrKategorieAuswahl[0];
-			$mrkPosition = strpos($strKategorieAuswahl, ",");
-			$intKategorieId = substr($strKategorieAuswahl, 0, $mrkPosition);
-			$strAktion = substr($strKategorieAuswahl, $mrkPosition + 1, 1);
-			$strEditieren = substr($strKategorieAuswahl, $mrkPosition + 2, 1);
-			$strLoeschen = substr($strKategorieAuswahl, $mrkPosition + 3, 1);
-			$strVeroeffentlichen = substr($strKategorieAuswahl, $mrkPosition + 4, 1);
-			$strKategorieName = substr($strKategorieAuswahl, $mrkPosition + 5);
-
-			switch ($strAktion)
-			{
-				case u:
-					$this->dokument_upload_auswahl($intKategorieId, $strKategorieName, $strVeroeffentlichen);
-					break;
-				case v:
-					$this->dokument_verwaltung($intKategorieId, $strKategorieName, $strEditieren, $strLoeschen, $strVeroeffentlichen);
-					break;
-				default:
-					$this->reload();
-			}
-		}
-
-
-		/*
-		 *     =============================================================================================================
-		 *     submit_upload_eigenschaften gedrückt
-		 *
-		 *     Modulteil : Dokumentupload
-		 *                 es wurden Eigenschaften fuer eine Datei fuer den Upload eingegeben
-		 */
-
-		if ($this->Input->post('submit_upload_eigenschaften'))
-		{
-			$intKategorieId = $this->Input->post('kategorieid');
-			$strKategorieName = $this->Input->post('kategoriename');
-			$strDateiName = $this->Input->post('datei_name');
-			$strDateiTyp = $this->Input->post('datei_typ');
-			$strDateiGroesse = $this->Input->post('datei_groesse');
-			$strBildName = strtr(basename($_FILES['dok_bild']['name']), array("Ä" => "Ae", "ä" => "ae", "Ö" => "Oe", "ö" => "oe", "Ü" => "Ue", "ü" => "ue", "ß" => "ss", "&" => "_und_", " " => "_"));
-			$strBildGroesse = $_FILES['dok_bild']['size'];
-			$strBildVerzeichnis = $_FILES['dok_bild']['tmp_name'];
-			$strBildFehler = $_FILES['dok_bild']['error'];
-			$strDokName = $this->Input->post('dok_name');
-			$strDokName = trim($strDokName);
-			$strDokName = str_replace(" ", "_", $strDokName);
-			$strDokBeschreibung = $this->Input->post('dok_beschreibung');
-			$strDokBeschreibung = trim($strDokBeschreibung);
-			$arrDokStichworte = $this->Input->post('dok_stichwort');
-			$strDokVersionMajor = $this->Input->post('dok_version_major');
-			$strDokVersionMinir = $this->Input->post('dok_version_minir');
-			$intDokVeroeffentlichen = $this->Input->post('dok_veroeffentlichen');
-			if ($intDokVeroeffentlichen == "")
-			{
-				$intDokVeroeffentlichen = 0;
-			}
-			$arrAltDokVeroeffentlichen = $this->Input->post('altdok_veroeffentlichen'); // ID der DS die veroeffentliche sein sollen
-
-			$strDokStichworte = ""; // alle Stichworte durch Komma getrennt
-			foreach ($arrDokStichworte as $strStichwort)
-			{
-				$strStichwort = trim($strStichwort);
-				if ($strStichwort <> "")
-				{
-					$strStichwort = strtr($strStichwort, array("Ä" => "Ae", "ä" => "ae", "Ö" => "Oe", "ö" => "oe", "Ü" => "Ue", "ü" => "ue", "ß" => "ss", "&" => "_und_", " " => "_"));
-					$strDokStichworte .= "," . $strStichwort;
-				}
-			}
-			$strDokStichworte = substr($strDokStichworte, 1); // schneidet das erste Komma ab
-			$strDokStichworte = htmlentities($strDokStichworte); // wandelt Umlaute um
-			$strDokStichworte = str_replace(" ", "_", $strDokStichworte); // aendert Leerzeichen in Unterstrich (in Stichworte)
-
-			$intAnzahlPunkte = substr_count($strBildName, "."); // Umsetzen der Punkte im Dateinamen in Unterstriche
-			$arrDateiTeile = explode(".", $strBildName);
-			$intZaehler = 1;
-			$strTempBildName = "";
-			foreach ($arrDateiTeile as $strDateiTeile)
-			{
-				if ($intZaehler <= $intAnzahlPunkte)
-				{
-					$strTempBildName = $strTempBildName . "_" . $strDateiTeile;
-					$intZaehler++;
-				}
-				else
-				{
-					$strTempBildName = $strTempBildName . "." . $strDateiTeile;
-				}
-			}
-			$strBildName = substr($strTempBildName, 1);
-
-			$this->dokument_upload_verarbeiten($intKategorieId, $strKategorieName, $strDateiName, $strDateiTyp, $strDateiGroesse, $strBildName, $strBildGroesse, $strBildVerzeichnis, $strBildFehler, $strDokName, $strDokBeschreibung, $strDokStichworte, $strDokVersionMajor, $strDokVersionMinir, $intDokVeroeffentlichen, $arrAltDokVeroeffentlichen);
-
-		}
-
-		/*
-		 *     =============================================================================================================
-		 *     submit_verwaltung_auswahl gedrückt
-		 *
-		 *     Modulteil : DokumentVerwaltung
-		 *                 fuer jedes Dokument der Kategorie koennen 3 Auswahlen getroffen werden:
-		 *									1. Dokument veroeffentlichen / nicht veröffentlichen
-		 *									2. Dokument loeschen
-		 *									3. Dokument editieren
-		 *
-		 *									wenn die Werte aus der Loeschfunktion uebergeben werden,
-		 *									muessen die Werte wieder in ein Array konvertiert werden
-		 */
-
-		if ($this->Input->post('submit_verwaltung_auswahl'))
-		{
-			$intKategorieId = $this->Input->post('kategorieid');
-			$strKategorieName = $this->Input->post('kategoriename');
-			$strKategorieBeschreibung = $this->Input->post('kategoriebeschreibung');
-			$strVeroeffentlichen = $this->Input->post('recht_veroeffentlichen');
-			$strLoeschen = $this->Input->post('recht_loeschen');
-			$strEditieren = $this->Input->post('recht_editieren');
-			$arrVeroeffentlichen = $this->Input->post('veroeffentlichen');
-			$arrLoeschen = $this->Input->post('loeschen');
-			$arrEditieren = $this->Input->post('editieren');
-			$mkLoeschen = $this->Input->post('dokumente_loeschen');
-			$mkLoeschLauf = $this->Input->post('loeschlauf');
-			$mkEditierLauf = $this->Input->post('editierlauf');
-			$mkEditieren = $this->Input->post('dokumente_editieren');
-			$arrDokBeschreibung = $this->Input->post('beschreibung');
-			$arrDokStichworte = $this->Input->post('dok_stichwort');
-
-			if (!is_array($arrVeroeffentlichen) && $arrVeroeffentlichen <> "")
-			{
-				$arrVeroeffentlichen = explode(",", $arrVeroeffentlichen);
-			}
-
-			if (!is_array($arrLoeschen) && $arrLoeschen <> "")
-			{
-				$arrLoeschen = explode(",", $arrLoeschen);
-			}
-
-			if (!is_array($arrEditieren) && $arrEditieren <> "")
-			{
-				$arrEditieren = explode(",", $arrEditieren);
-			}
-
-			$this->import('FrontendUser', 'User');
-			$strUsername = $this->User->username;
-			$intUserId = $this->User->id;
-
-			//	Nachfrage, ob geloescht werden soll
-			if ($strLoeschen == 1 && $arrLoeschen <> "" && $mkLoeschLauf == "")
-			{
-				$this->dokument_loeschen_nachfrage($intKategorieId, $strKategorieName, $strKategorieBeschreibung, $strVeroeffentlichen, $strLoeschen, $strEditieren, $arrVeroeffentlichen, $arrLoeschen, $arrEditieren, $mkLoeschLauf, $mkEditierLauf);
-			}
-
-			//	Loeschen
-			if ($strLoeschen == 1 && $arrLoeschen <> "" && $mkLoeschen == "j")
-			{
-				$this->dokument_loeschen_ausfuehren($intKategorieId, $strKategorieName, $strKategorieBeschreibung, $strVeroeffentlichen, $strLoeschen, $strEditieren, $arrVeroeffentlichen, $arrLoeschen, $arrEditieren, $mkLoeschLauf, $mkEditierLauf);
-			}
-
-			// Editieren eingeben
-			if ($strEditieren == 1 && $arrEditieren <> "" && $mkEditierLauf == "")
-			{
-				$this->dokument_editieren_eingabe($intKategorieId, $strKategorieName, $strKategorieBeschreibung, $strVeroeffentlichen, $strLoeschen, $strEditieren, $arrVeroeffentlichen, $arrLoeschen, $arrEditieren, $mkLoeschLauf, $mkEditierLauf);
-			}
-
-			// Editieren ausfuehren (Update)
-			if ($strEditieren == 1 && $arrEditieren <> "" && $mkEditieren == "j")
-			{
-				$this->dokument_editieren_ausfuehren($intKategorieId, $strKategorieName, $strKategorieBeschreibung, $strVeroeffentlichen, $strLoeschen, $strEditieren, $arrVeroeffentlichen, $arrLoeschen, $arrEditieren, $mkLoeschLauf, $mkEditierLauf, $arrDokBeschreibung, $arrDokStichworte, $intUserId);
-			}
-
-			// Veroeffentlichen
-			if ($strVeroeffentlichen == 1)
-			{
-				$strDateiName = '%';
-				$this->update_veroeffentlichen($intKategorieId, $strDateiName, $arrVeroeffentlichen, $intUserId);
-			}
-
-		}
-
-		/*
-		 * =============================================================================================================
-		 * NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW
-		 */
-		
-		
 		if (!FE_USER_LOGGED_IN)
 		{
 			$this->Template = new FrontendTemplate('mod_dms_mgmt_access_denied');
@@ -344,7 +137,37 @@ class ModuleDmsManagement extends Module
 					/* MANAGE - SELECT */
 					if (is_numeric($manageCategory))
 					{
-					
+						$editDocument = (int) $this->Input->post('editDocument');
+						$deleteDocument = (int) $this->Input->post('deleteDocument');
+						$unpublishDocument = (int) $this->Input->post('unpublishDocument');
+						$publishDocument = (int) $this->Input->post('publishDocument');
+						
+						if ($editDocument != '' && is_numeric($editDocument))
+						{
+							$arrMessages['errors'][] = "Editing documents is not yet implemented.";
+							$this->manageSelectFile($params, $dmsLoader, $manageCategory, $arrMessages, $blnShowStart);
+						}
+						else if ($deleteDocument != '' && is_numeric($deleteDocument))
+						{
+							$arrMessages['errors'][] = "Deleting documents is not yet implemented.";
+							$this->manageSelectFile($params, $dmsLoader, $manageCategory, $arrMessages, $blnShowStart);
+						
+						}
+						else if ($unpublishDocument != '' && is_numeric($unpublishDocument))
+						{
+							$arrMessages['errors'][] = "Unpublishing documents is not yet implemented.";
+							$this->manageSelectFile($params, $dmsLoader, $manageCategory, $arrMessages, $blnShowStart);
+						
+						}
+						else if ($publishDocument != '' && is_numeric($publishDocument))
+						{
+							$arrMessages['errors'][] = "Publishing documents is not yet implemented.";
+							$this->manageSelectFile($params, $dmsLoader, $manageCategory, $arrMessages, $blnShowStart);
+						}
+						else
+						{
+							$this->manageSelectFile($params, $dmsLoader, $manageCategory, $arrMessages, $blnShowStart);
+						}
 					}
 					else
 					{
@@ -695,188 +518,41 @@ class ModuleDmsManagement extends Module
 		}
 	}
 	
-	
+	/**
+	 * Display the file select screen for upload
+	 */
+	private function manageSelectFile(&$params, &$dmsLoader, &$uploadCategory, &$arrMessages, &$blnShowStart)
+	{
+		$params->loadRootCategory = true; // get complete path to root, for checking inherited access rights
+		$params->loadAccessRights = true;
+		$params->loadDocuments = true;
+		$category = $dmsLoader->loadCategory($uploadCategory, $params);
+		
+		if (!$category->isManageableForCurrentMember())
+		{
+			$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['manage_document_not_allowed'];
+			$blnShowStart = true;
+		}
+		else if (!$category->hasDocuments())
+		{
+			$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['manage_document_category_empty'];
+			$blnShowStart = true;
+		}
+		else
+		{
+			$this->Template = new \FrontendTemplate("mod_dms_mgmt_manage_document_select");
+			$this->Template->setData($this->arrData);
+			
+			$this->Template->category = $category;
+			
+			$blnShowStart = false;
+		}
+	}
 
 	/*********************************************************************************************************************
 	 *        Funktionen
 	 **********************************************************************************************************************
 	 */
-	protected function dokument_upload_eigenschaften($intKategorieId, $strKategorieName, $strVeroeffentlichen, $strDateiTypen, $strUploadName, $strUploadTyp, $strUploadGroesse, $strUploadVerzeichnis, $strUploadFehler)
-	{
-		$intKategorieId = $this->Input->post('kategorieid');
-		$strKategorieName = $this->Input->post('kategoriename');
-		$strDateiTypen = $this->Input->post('dateitypen');
-		$strVeroeffentlichen = $this->Input->post('recht_veroeffentlichen');
-		
-		$strOriginalUploadName = basename($_FILES['DateiSource']['name']);
-		$strUploadName = strtr(utf8_romanize(strOriginalUploadName), $GLOBALS['TL_DMS']['SPECIALCHARS']);
-		
-		$strUploadGroesse = $_FILES['DateiSource']['size'];
-		$strUploadVerzeichnis = $_FILES['DateiSource']['tmp_name'];
-		$strUploadFehler = $_FILES['DateiSource']['error'];
-			
-		
-		/*
-		 *     Dokument uploaden (Eigenschaften)
-		 *
-		 *     Eingabe aller Beschreibungsteile für die zu uploadende Datei
-		 *
-		 */
-		$dir = trim($GLOBALS['TL_CONFIG']['dmsBaseDirectory']);
-		$dirTemp = $dir . "/temp";
-
-		$this->Template = new FrontendTemplate('mod_dms_mgmt_upload_enter_properties');
-		$arrDocumentManagementSystemUpEig = array();
-
-		$strDateiName = strtok($strUploadName, ".");
-		$strDateiTyp = strtolower(strtok("."));
-		$strDateiNameUpload = $strDateiName . "." . $strDateiTyp;
-
-		$mkUploadErlaubt = 0;
-		$start = strtok($strDateiTypen, ",");
-		while ($start)
-		{
-			if ($strDateiTyp == trim($start))
-			{
-				$mkUploadErlaubt = 1;
-			}
-			$start = strtok(",");
-		}
-
-		// Upload der Datei als temporäres Dokument
-		if ($mkUploadErlaubt == 1)
-		{
-			$strZielNameDatei = $dirTemp . "/temp." . $strUploadName;
-			move_uploaded_file($strUploadVerzeichnis, $strZielNameDatei);
-		}
-
-		//     Prüfen, ob das Dokument bereits in anderen Versionen existiert
-
-		$strDocumentManagementSystemUpEigPruef = $this->Database->execute("SELECT * FROM tl_dms_document WHERE file_source = '$strDateiNameUpload' GROUP BY version_major, version_minor ASC");
-		if (!$strDocumentManagementSystemUpEigPruef->numRows) // Dokument nicht in DB vorhanden
-		{
-			$mkVersionVorhanden = 0;
-			$intVersionMajor = 1;
-			$intVersionMinir = 0;
-		}
-		else // Dokument in DB vorhanden
-		{
-			$mkVersionVorhanden = 1;
-			$rows = $strDocumentManagementSystemUpEigPruef->fetchAllAssoc();
-			$ind = 1;
-			foreach ($rows as $row)
-			{
-				$arrVersion[$ind] = $row['version_major'] . "." . $row['version_minor'];
-				$strDokName = $row['name'];
-				$strDokBeschreibung = html_entity_decode($row['description']);
-				$intVersionMajor = $row['version_major'];
-				$intVersionMinir = $row['version_minor'] + 1;
-				$arrStichworte = explode(",", html_entity_decode($row['keywords']));
-				$ind++;
-			}
-		}
-
-		// Anzeige der Daten
-		$arrDocumentManagementSystemUpEig[] = array('kategorieid' => $intKategorieId, 'kategoriename' => $strKategorieName, 'dateitypen' => $strDateiTypen, 'datei_name' => $strDateiNameUpload, 'datei_typ' => $strDateiTyp, 'datei_groesse' => $strUploadGroesse, 'upload_verzeichnis' => $strUploadVerzeichnis, 'upload_fehler' => $strUploadFehler, 'upload_erlaubt' => $mkUploadErlaubt, 'version_major' => $intVersionMajor, 'version_minir' => $intVersionMinir, 'recht_veroeffentlichen' => $strVeroeffentlichen, 'versionvorhanden' => $mkVersionVorhanden, 'dokname' => $strDokName,
-				'dokbeschreibung' => $strDokBeschreibung, 'stichworte' => $arrStichworte, 'rows' => $rows,);
-
-		$this->Template->DocumentManagementSystemUpEig = $arrDocumentManagementSystemUpEig;
-		$this->Template->action = ampersand($this->Environment->request);
-	}
-
-	// *********************************************************************************************************************
-
-	protected function dokument_upload_verarbeiten($intKategorieId, $strKategorieName, $strDateiName, $strDateiTyp, $strDateiGroesse, $strBildName, $strBildGroesse, $strBildVerzeichnis, $strBildFehler, $strDokName, $strDokBeschreibung, $strDokStichworte, $strDokVersionMajor, $strDokVersionMinir, $intDokVeroeffentlichen, $arrAltDokVeroeffentlichen)
-	{
-		/*
-		 *     Dokument uploaden (Verarbeiten)
-		 *
-		 *     Eingabe aller Beschreibungsteile für die zu uploadende Datei
-		 *
-		 *     Prüfung, ob Versionnummer zulässig ist. Ja:Verarbeitung / Nein:Abbruch
-		 */
-		$dir = trim($GLOBALS['TL_CONFIG']['dmsBaseDirectory']);
-		$dirTemp = $dir . "/temp";
-		$dirGrafik = $dir . "/preview";
-
-		$this->Template = new FrontendTemplate('mod_dms_mgmt_upload_processing');
-		$arrDocumentManagementSystemUpVerarb = array();
-
-		$this->import('FrontendUser', 'User');
-		$strUsername = $this->User->username;
-		$intUserId = $this->User->id;
-
-		$time = time();
-
-		$strDocumentManagementSystemUpVerarbPruef = $this->Database->execute("SELECT * FROM tl_dms_document WHERE file_source = '$strDateiName' && version_major = '$strDokVersionMajor' && version_minor = '$strDokVersionMinir' ");
-		if ($strDocumentManagementSystemUpVerarbPruef->numRows) // Pruefung, ob Versionnummer zulaessig
-		{
-			$intVersionFehlerMeldung = 1; // unzulaessige Version der Datei
-			$file = $parTempVerzeichnis . "/temp." . $strDateiName;
-			unlink($file);
-		}
-		else
-		{
-			$intVersionFehlerMeldung = 0;
-			If ($strDokStichworte == "")
-			{
-				$strDokStichworte = "keine Stichworte";
-			}
-
-			$strDateiNameVorn = strtok($strDateiName, "."); // Dateiname mit VersionsNr versehen
-			$strDateiTyp = strtolower(strtok("."));
-			$strDateiNameUpload = $strDateiNameVorn . "_" . $strDokVersionMajor . "_" . $strDokVersionMinir . "." . $strDateiTyp;
-
-			copy($dirTemp . "/temp." . $strDateiName, $dir . "/" . $strDateiNameUpload); // Datei ins Echtverzeichnis kopieren
-			unlink($dirTemp . "/temp." . $strDateiName); // tmp-Datei loeschen
-
-			$strBildNameVorn = strtok($strBildName, "."); // Bildname mit VersionNr versehen
-			$strBildTyp = strtolower(strtok("."));
-			$strBildNameUpload = $strBildNameVorn . "_" . $strDokVersionMajor . "_" . $strDokVersionMinir . "." . $strBildTyp;
-
-			if ($strBildTyp == "")
-			{
-				$strBildNameUpload = "";
-				$intBildFehlerMeldung = 0; // kein Bild angegeben
-			}
-			else
-			{
-				if ($strBildTyp == "jpg" || $strBildTyp == "png" || $strBildTyp == "gif")
-				{
-					if ($strBildGroesse < "110000")
-					{
-						$strZielNameBild = $dirGrafik . "/" . $strDokName . "_" . $strBildNameUpload;
-						move_uploaded_file($strBildVerzeichnis, $strZielNameBild);
-						$intBildFehlerMeldung = 0; // Bild OK
-					}
-					else
-					{
-						$strBildNameUpload = "";
-						$intBildFehlerMeldung = 2; // Bild hat unzulaessige Groesse
-					}
-				}
-				else
-				{
-					$strBildNameUpload = "";
-					$intBildFehlerMeldung = 1; // Bild hat unzulaessigen Datentyp
-				}
-			}
-
-			/* Update der Veroeffentlichungen */
-			$this->update_veroeffentlichen($intKategorieId, $strDateiName, $arrAltDokVeroeffentlichen, $intUserId);
-
-			// Insert des neuen Dokument-Datenatzes
-			$set = array('tstamp' => time(), 'name' => $strDokName, 'pid' => $intKategorieId, 'description' => $strDokBeschreibung, 'file_source' => $strDateiName, 'file_sourcetyp' => $strDateiTyp, 'file_sourcegroesse' => $strDateiGroesse, 'version_major' => $strDokVersionMajor, 'version_minor' => $strDokVersionMinir, 'file_preview' => $strBildNameUpload, 'keywords' => $strDokStichworte, 'upload_member' => $intUserId, 'upload_date' => $time, 'published' => $intDokVeroeffentlichen,);
-			$this->Database->prepare("INSERT INTO tl_dms_document %s")->set($set)->execute();
-
-		}
-
-		$arrDocumentManagementSystemUpVerarb[] = array('kategoriename' => $strKategorieName, 'datei_name' => $strDateiName, 'datei_groesse' => $strDateiGroesse, 'datei_typ' => $strDateiTyp, 'dokname' => html_entity_decode($strDokName), 'dokbeschreibung' => html_entity_decode($strDokBeschreibung), 'dokversionmajor' => $strDokVersionMajor, 'dokversionminir' => $strDokVersionMinir, 'dokveroeffentlichen' => $intDokVeroeffentlichen, 'bildname' => $strBildNameUpload, 'bildgroesse' => $strBildGroesse, 'stichworte' => html_entity_decode($strDokStichworte),
-				'bildfehlermeldung' => $intBildFehlerMeldung, 'dateifehlermeldung' => $intVersionFehlerMeldung,);
-
-		$this->Template->DocumentManagementSystemUpVerarb = $arrDocumentManagementSystemUpVerarb;
-		$this->Template->action = ampersand($this->Environment->request);
-	}
 
 	/* **********************************************************************************************************************************************
 	 *  **********************************************************************************************************************************************
@@ -884,30 +560,6 @@ class ModuleDmsManagement extends Module
 	 *  **********************************************************************************************************************************************
 	 *  **********************************************************************************************************************************************
 	 */
-
-	protected function dokument_verwaltung($intKategorieId, $strKategorieName, $strEditieren, $strLoeschen, $strVeroeffentlichen)
-	{
-		/*
-		 *     Dokument verwalten
-		 */
-
-		$this->Template = new FrontendTemplate('mod_dms_mgmt_document_select');
-		$arrDocumentManagementSystemVerw = array();
-
-		$strDocumentManagementSystemVerw1 = $this->Database->execute("SELECT * FROM tl_dms_categories WHERE id = $intKategorieId");
-		$strKategorieBeschreibung = $strDocumentManagementSystemVerw1->description;
-
-		$objDocumentManagementSystemDok = $this->Database->execute("SELECT * FROM tl_dms_document  WHERE pid = $intKategorieId ORDER BY name, version_major, version_minor");
-		$arrDokDetails = $objDocumentManagementSystemDok->fetchAllAssoc();
-		$intDSZaehler = count($arrDokDetails);
-
-		// Anzeige der Daten
-		$arrDocumentManagementSystemVerw[] = array('kategorieid' => $intKategorieId, 'kategoriename' => $strKategorieName, 'kategoriebeschreibung' => $strKategorieBeschreibung, 'recht_editieren' => $strEditieren, 'recht_loeschen' => $strLoeschen, 'recht_veroeffentlichen' => $strVeroeffentlichen, 'dokdetails' => $arrDokDetails, 'zaehlerds' => $intDSZaehler,);
-
-		$this->Template->DocumentManagementSystemVerw = $arrDocumentManagementSystemVerw;
-		$this->Template->action = ampersand($this->Environment->request);
-
-	}
 
 	// *********************************************************************************************************************
 

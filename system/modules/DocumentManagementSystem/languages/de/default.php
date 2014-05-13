@@ -41,6 +41,10 @@ $GLOBALS['TL_LANG']['DMS']['management_button_manage']           = "Verwalten";
 $GLOBALS['TL_LANG']['DMS']['management_button_abort']            = "Abbrechen";
 $GLOBALS['TL_LANG']['DMS']['management_button_back']             = "Zurück zur Übersicht";
 $GLOBALS['TL_LANG']['DMS']['management_button_upload_another']   = "Weiteres Dokument hochladen";
+$GLOBALS['TL_LANG']['DMS']['management_button_edit']             = "Bearbeiten";
+$GLOBALS['TL_LANG']['DMS']['management_button_delete']           = "Löschen";
+$GLOBALS['TL_LANG']['DMS']['management_button_publish']          = "Veröffentlichen";
+$GLOBALS['TL_LANG']['DMS']['management_button_unpublish']        = "Unveröffentlichen";
 $GLOBALS['TL_LANG']['DMS']['management_headline']                = "%s :: %s";
 $GLOBALS['TL_LANG']['DMS']['management_path_separator']          = " &raquo; ";
 $GLOBALS['TL_LANG']['DMS']['management_mandatory']               = "Pflichtfeld: dieses Feld muss ausgefüllt werden.";
@@ -80,12 +84,20 @@ $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_version_explan
 $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_publish']              = "Veröffentlichen";
 $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_publish_explanation']  = "Nur veröffentlichte Dokumente stehen in der Auflistung zur Verfügung.";
 $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_publish_not_allowed']  = "Sie dürfen Dokumente in dieser Kategorie nicht veröffentlichen.";
-
 // upload :: processed
 $GLOBALS['TL_LANG']['DMS']['management_upload_processed_headline']    = "Dokument hochgeladen";
 $GLOBALS['TL_LANG']['DMS']['management_upload_processed_published']   = "Veröffentlicht";
 $GLOBALS['TL_LANG']['DMS']['management_upload_processed_unpublished'] = "Uneröffentlicht";
 
+// manage :: select
+$GLOBALS['TL_LANG']['DMS']['management_manage_headline']                   = "Dokumentenverwaltung";
+$GLOBALS['TL_LANG']['DMS']['management_manage_select_headline']            = "Dokument auswählen";
+$GLOBALS['TL_LANG']['DMS']['management_manage_select_category']            = "Kategorie";
+$GLOBALS['TL_LANG']['DMS']['management_manage_select_document_headline']   = "Es existieren folgende Dokumente in diese Kategorie";
+$GLOBALS['TL_LANG']['DMS']['management_manage_select_document_size']       = "Dateigröße: %s";
+$GLOBALS['TL_LANG']['DMS']['management_manage_select_document_uploaded']   = "Hochgeladen: %s (%s)";
+$GLOBALS['TL_LANG']['DMS']['management_manage_select_document_lastedited'] = "Zuletzt bearbeitet: %s (%s)";
+$GLOBALS['TL_LANG']['DMS']['management_manage_select_document_version']    = "(V. %s)";
 
 /**
  * Translations for listing module
@@ -125,9 +137,8 @@ $GLOBALS['TL_LANG']['DMS']['ERR']['download_document_not_found']         = 'Die 
 $GLOBALS['TL_LANG']['DMS']['ERR']['download_file_not_found']             = 'Die angeforderte Datei konnte nicht heruntergeladen werden, weil sie nicht existiert.';
 $GLOBALS['TL_LANG']['DMS']['ERR']['no_categories_found']                 = 'Es existieren keine Kategorien.';
 $GLOBALS['TL_LANG']['DMS']['ERR']['no_access_rights_found']              = 'Sie haben keine Zugriffsrechte zu den Kategorien.';
-$GLOBALS['TL_LANG']['DMS']['ERR']['upload_document_not_allowed']         = 'Das Hochladen von Dokumenten in die angeforderte Kategorie Ihnen nicht erlaubt.';
+$GLOBALS['TL_LANG']['DMS']['ERR']['upload_document_not_allowed']         = 'Das Hochladen von Dokumenten in die angeforderte Kategorie ist Ihnen nicht erlaubt.';
 $GLOBALS['TL_LANG']['DMS']['ERR']['upload_document_illegal_parameter']   = 'Das Hochladen von Dokumenten in die angeforderte Kategorie ist nicht möglich, weil der Übergabeparameter unzulässig ist.';
-$GLOBALS['TL_LANG']['DMS']['ERR']['manage_document_illegal_parameter']   = 'Das Verwalten von Dokumenten in der angeforderte Kategorie ist nicht möglich, weil der Übergabeparameter unzulässig ist.';
 $GLOBALS['TL_LANG']['DMS']['ERR']['upload_no_file_selected']             = 'Es wurde keine Datei ausgewählt. Bitte selektieren Sie eine Datei von ihrer Festplatte!';
 $GLOBALS['TL_LANG']['DMS']['ERR']['upload_php_error']                    = 'Der Upload wurde abgebrochen, weil ein Systemfehler aufgetreten ist. Bitte wenden sie sich an ihren Systemadministrator. Der Fehlercode lautet: %s';
 $GLOBALS['TL_LANG']['DMS']['ERR']['upload_file_size_exceeded']           = 'Der Upload wurde abgebrochen, weil die hochgeladene Datei die maximal zulässige Upload Dateigröße von <b>%s</b> überschritten hat.';
@@ -136,6 +147,9 @@ $GLOBALS['TL_LANG']['DMS']['ERR']['upload_no_name_set']                  = 'Es w
 $GLOBALS['TL_LANG']['DMS']['ERR']['upload_no_version_set']               = 'Es wurde keine korrekte Version für das Dokument angegeben. Bitte tragen Sie für alle 3 Felder einen numerischen Wert ein!';
 $GLOBALS['TL_LANG']['DMS']['ERR']['upload_version_already_used']         = 'Die gewählte Version ist bereits belegt. Bitte geben Sie eine andere Version an!';
 $GLOBALS['TL_LANG']['DMS']['ERR']['upload_temp_file_not_found']          = 'Die hochgeladene Datei wurde nicht gefunden. Entweder wurde sie bereits erfolgreich als Dokument gespeichert, oder es ein Fehler beim Upload aufgetreten. Bitte prüfen Sie die Dokument oder versuchen Sie es erneut!';
+$GLOBALS['TL_LANG']['DMS']['ERR']['manage_document_illegal_parameter']   = 'Das Verwalten von Dokumenten in der angeforderte Kategorie ist nicht möglich, weil der Übergabeparameter unzulässig ist.';
+$GLOBALS['TL_LANG']['DMS']['ERR']['manage_document_not_allowed']         = 'Das Verwalten von Dokumenten in der angeforderte Kategorie ist Ihnen nicht erlaubt.';
+$GLOBALS['TL_LANG']['DMS']['ERR']['manage_document_category_empty']      = 'Das Verwalten von Dokumenten in der angeforderte Kategorie ist nicht möglich, weil diese Kategorie keine Dokumente enthält.';
 
 /**
  * Warnings
