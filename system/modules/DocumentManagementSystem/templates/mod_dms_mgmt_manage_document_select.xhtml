@@ -66,7 +66,7 @@
 				<td class="label" colspan="4"><?php echo $GLOBALS['TL_LANG']['DMS']['management_manage_select_document_headline']; ?></td>
 			</tr>
 		<?php foreach ($this->category->documents as $document) : ?>
-			<tr>
+			<tr class="manage document">
 				<td>
 					<?php
 						$title = sprintf($GLOBALS['TL_LANG']['DMS']['management_manage_select_document_size'], $document->getFileSize(Document::FILE_SIZE_UNIT_MB, true));
