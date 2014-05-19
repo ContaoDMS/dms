@@ -99,6 +99,19 @@ class DmsWriter extends Controller
 	}
 	
 	/**
+	 * Delete a document.
+	 *
+	 * @param	Document	$document	The document to delete.
+	 * @return	bool	Returns true, if the document was successfully deleted.
+	 */
+	public function deleteDocument(Document $document)
+	{
+		$objStmt = $this->Database->prepare("DELETE FROM tl_dms_documents WHERE id=?")->execute($document->id);
+		
+		return ($objStmt->affectedRows > 0);
+	}
+	
+	/**
 	 * Builds a document from a database result.
 	 *
 	 * @param	Document	$document	The document to get the data from.

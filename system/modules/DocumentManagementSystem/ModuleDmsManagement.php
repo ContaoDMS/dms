@@ -152,9 +152,15 @@ class ModuleDmsManagement extends Module
 						}
 						else if ($deleteDocument != '' && is_numeric($deleteDocument))
 						{
-							$arrMessages['errors'][] = "Deleting documents is not yet implemented.";
-							$this->manageSelectDocument($params, $dmsLoader, $manageCategory, $arrMessages, $blnShowStart);
-						
+							if ((bool) $this->Input->post('deleteDocumentConfirmed'))
+							{
+								$this->manageDeleteDocument($params, $dmsLoader, $manageCategory, $arrMessages, $blnShowStart, $deleteDocument);
+							}
+							else
+							{
+								$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['manage_deleting_not_confirmed'];
+								$this->manageSelectDocument($params, $dmsLoader, $manageCategory, $arrMessages, $blnShowStart);
+							}
 						}
 						else if ($unpublishDocument != '' && is_numeric($unpublishDocument))
 						{
@@ -547,7 +553,7 @@ class ModuleDmsManagement extends Module
 			$blnShowStart = false;
 		}
 	}
-
+	
 	/**
 	 * Execute publishing documents
 	 */
@@ -558,7 +564,7 @@ class ModuleDmsManagement extends Module
 		$params->loadDocuments = false;
 		$category = $dmsLoader->loadCategory($manageCategory, $params);
 		
-		if (!$category->isManageableForCurrentMember())
+		if (!$category->isPublishableForCurrentMember())
 		{
 			$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['manage_document_not_allowed'];
 			$blnShowStart = true;
@@ -591,7 +597,7 @@ class ModuleDmsManagement extends Module
 			$this->manageSelectDocument($params, $dmsLoader, $manageCategory, $arrMessages, $blnShowStart);
 		}
 	}
-
+	
 	/**
 	 * Execute unpublishing documents
 	 */
@@ -602,7 +608,7 @@ class ModuleDmsManagement extends Module
 		$params->loadDocuments = false;
 		$category = $dmsLoader->loadCategory($manageCategory, $params);
 		
-		if (!$category->isManageableForCurrentMember())
+		if (!$category->isPublishableForCurrentMember())
 		{
 			$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['manage_document_not_allowed'];
 			$blnShowStart = true;
@@ -635,134 +641,67 @@ class ModuleDmsManagement extends Module
 			$this->manageSelectDocument($params, $dmsLoader, $manageCategory, $arrMessages, $blnShowStart);
 		}
 	}
+	
+	/**
+	 * Execute unpublishing documents
+	 */
+	private function manageDeleteDocument(&$params, &$dmsLoader, &$manageCategory, &$arrMessages, &$blnShowStart, $documentId)
+	{
+		$params->loadRootCategory = true; // get complete path to root, for checking inherited access rights
+		$params->loadAccessRights = true;
+		$params->loadDocuments = false;
+		$category = $dmsLoader->loadCategory($manageCategory, $params);
+		
+		if (!$category->isDeletableForCurrentMember())
+		{
+			$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['manage_document_not_allowed'];
+			$blnShowStart = true;
+		}
+		else
+		{
+			$document = $dmsLoader->loadDocument($documentId, $params);
+			
+			if ($document != null)
+			{
+				// delete the document in the database
+				$dmsWriter = DmsWriter::getInstance();
+				
+				if ($dmsWriter->deleteDocument($document))
+				{
+					$arrMessages['successes'][] = $GLOBALS['TL_LANG']['DMS']['SUCCESS']['document_successfully_deleted'];
+					
+					// delete the file
+					$filePath = DmsConfig::getDocumentFilePath($document->getFileNameVersioned());
+					if (file_exists(TL_ROOT . '/' . $filePath))
+					{
+						unlink($filePath);
+						$arrMessages['successes'][] = $GLOBALS['TL_LANG']['DMS']['SUCCESS']['document_file_successfully_deleted'];
+					}
+					else
+					{
+						$arrMessages['infos'][] = $GLOBALS['TL_LANG']['DMS']['INFO']['document_file_not_exists'];
+					}
+				}
+				else
+				{
+					$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['delete_document_failed'];
+				}
+			}
+			else
+			{
+				$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['manage_document_not_found'];
+			}
+			$this->manageSelectDocument($params, $dmsLoader, $manageCategory, $arrMessages, $blnShowStart);
+		}
+	}
+	
+
 
 	/*********************************************************************************************************************
 	 *        Funktionen
 	 **********************************************************************************************************************
 	 */
 
-	/* **********************************************************************************************************************************************
-	 *  **********************************************************************************************************************************************
-	 *  						V e r w a l t u n g
-	 *  **********************************************************************************************************************************************
-	 *  **********************************************************************************************************************************************
-	 */
-
-	// *********************************************************************************************************************
-
-	protected function dokument_loeschen_nachfrage($intKategorieId, $strKategorieName, $strKategorieBeschreibung, $strVeroeffentlichen, $strLoeschen, $strEditieren, $arrVeroeffentlichen, $arrLoeschen, $arrEditieren, $mkLoeschLauf, $mkEditierLauf)
-	{
-		/*	Loeschen von ausgewaehlten Dokumenten
-		 *			ausgewaehlte Dokumente im Array $arrLoeschen werden geloescht (hier:Sicherheitsabfrage)
-		 */
-		$this->Template = new FrontendTemplate('mod_dms_mgmt_document_delete');
-
-		$arrConvVeroeffentlichen;
-		if ($arrVeroeffentlichen)
-		{
-			$arrConvVeroeffentlichen = implode(",", $arrVeroeffentlichen);
-		}
-		$arrConvLoeschen;
-		if ($arrLoeschen)
-		{
-			$arrConvLoeschen = implode(",", $arrLoeschen);
-		}
-		$arrConvEditieren;
-		if ($arrEditieren)
-		{
-			$arrConvEditieren = implode(",", $arrEditieren);
-		}
-
-		foreach ($arrLoeschen as $strLoeschenId)
-		{
-			$objDocumentManagementSystemDok1 = $this->Database->execute("SELECT * FROM tl_dms_categories  WHERE id = $intKategorieId");
-			$row = $objDocumentManagementSystemDok1->fetchAssoc();
-			$strKategorieBeschreibung = $row['description'];
-
-			$objDocumentManagementSystemDok = $this->Database->execute("SELECT * FROM tl_dms_document  WHERE id = $strLoeschenId ORDER BY name");
-			$rows = $objDocumentManagementSystemDok->fetchAllAssoc();
-
-			// Anzeige der Daten
-			$arrDocumentManagementSystemVerw[] = array('kategorieid' => $intKategorieId, 'kategoriename' => $strKategorieName, 'kategoriebeschreibung' => $strKategorieBeschreibung, 'recht_veroeffentlichen' => $strVeroeffentlichen, 'recht_loeschen' => $strLoeschen, 'recht_editieren' => $strEditieren, 'arr_veroeffentlichen' => $arrConvVeroeffentlichen, 'arr_loeschen' => $arrConvLoeschen, 'arr_editieren' => $arrConvEditieren, 'dokdetails' => $rows, 'editierlauf' => $mkEditierLauf,);
-		}
-
-		$this->Template->DocumentManagementSystemVerw = $arrDocumentManagementSystemVerw;
-		$this->Template->action = ampersand($this->Environment->request);
-
-	}
-
-	// *********************************************************************************************************************
-
-	protected function dokument_loeschen_ausfuehren($intKategorieId, $strKategorieName, $strKategorieBeschreibung, $strVeroeffentlichen, $strLoeschen, $strEditieren, $arrVeroeffentlichen, $arrLoeschen, $arrEditieren, $mkLoeschLauf, $mkEditierLauf)
-	{
-		/*	Loeschen von ausgewaehlten Dokumenten
-		 *			ausgewaehlte Dokumente im Array $arrLoeschen werden geloescht
-		 *			1. Datei
-		 *			2. Grafik
-		 *			3. Datenbankeintrag
-		 */
-		$this->Template = new FrontendTemplate('mod_dms_mgmt_document_delete_processing');
-
-		$arrConvVeroeffentlichen;
-		if ($arrVeroeffentlichen)
-		{
-			$arrConvVeroeffentlichen = implode(",", $arrVeroeffentlichen);
-		}
-		$arrConvLoeschen;
-		if ($arrLoeschen)
-		{
-			$arrConvLoeschen = implode(",", $arrLoeschen);
-		}
-		$arrConvEditieren;
-		if ($arrEditieren)
-		{
-			$arrConvEditieren = implode(",", $arrEditieren);
-		}
-
-		$objDocumentManagementSystemDok1 = $this->Database->execute("SELECT * FROM tl_dms_categories  WHERE id = $intKategorieId");
-		$row = $objDocumentManagementSystemDok1->fetchAssoc();
-		$strKategorieBeschreibung = $row['description'];
-
-		foreach ($arrLoeschen as $strLoeschenId)
-		{
-			$objDocumentManagementSystemDok = $this->Database->execute("SELECT * FROM tl_dms_document  WHERE id = $strLoeschenId ORDER BY name");
-			while ($objDocumentManagementSystemDok->next())
-			{
-				$row = $objDocumentManagementSystemDok->row();
-				$strDokName = $row['name'];
-				$strDateiName = $row['file_source'];
-				$intVersionMajor = $row['version_major'];
-				$intVersionMinir = $row['version_minor'];
-				$strBildName = $row['file_preview'];
-
-				$dir = trim($GLOBALS['TL_CONFIG']['dmsBaseDirectory']);
-				$dirGrafik = $dir . "/preview";
-
-				$strDateiNameVorn = strtok($strDateiName, ".");
-				$strDateiTyp = strtok(".");
-				$strDateiNameLoeschen = $dir . "/" . $strDateiNameVorn . "_" . $intVersionMajor . "_" . $intVersionMinir . "." . $strDateiTyp;
-				$strBildNameLoeschen = $dirGrafik . "/" . $strDokName . "_" . $strBildName;
-
-				if (file_exists($strDateiNameLoeschen))
-				{
-					unlink($strDateiNameLoeschen);
-				}
-
-				if (file_exists($strBildNameLoeschen))
-				{
-					unlink($strBildNameLoeschen);
-				}
-
-				$this->Database->prepare("DELETE FROM tl_dms_document WHERE id = $strLoeschenId")->execute();
-			}
-			// Anzeige der Daten
-			$arrDocumentManagementSystemVerw[] = array('kategorieid' => $intKategorieId, 'kategoriename' => $strKategorieName, 'kategoriebeschreibung' => $strKategorieBeschreibung, 'recht_veroeffentlichen' => $strVeroeffentlichen, 'recht_loeschen' => $strLoeschen, 'recht_editieren' => $strEditieren, 'arr_veroeffentlichen' => $arrConvVeroeffentlichen, 'arr_loeschen' => $arrConvLoeschen, 'arr_editieren' => $arrConvEditieren, 'dateinamen' => $strDateiNameLoeschen, 'row' => $row, 'editierlauf' => $mkEditierLauf,);
-
-		}
-
-		$this->Template->DocumentManagementSystemVerw = $arrDocumentManagementSystemVerw;
-		$this->Template->action = ampersand($this->Environment->request);
-	}
 
 	// *********************************************************************************************************************
 

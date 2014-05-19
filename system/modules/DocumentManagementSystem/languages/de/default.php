@@ -98,6 +98,7 @@ $GLOBALS['TL_LANG']['DMS']['management_manage_select_document_size']       = "Da
 $GLOBALS['TL_LANG']['DMS']['management_manage_select_document_uploaded']   = "Hochgeladen: %s (%s)";
 $GLOBALS['TL_LANG']['DMS']['management_manage_select_document_lastedited'] = "Zuletzt bearbeitet: %s (%s)";
 $GLOBALS['TL_LANG']['DMS']['management_manage_select_document_version']    = "(V. %s)";
+$GLOBALS['TL_LANG']['DMS']['management_manage_select_confirm_deletion']    = "Sind Sie sicher, dass das gewählte Dokument gelöscht werden soll?";
 
 /**
  * Translations for listing module
@@ -151,6 +152,8 @@ $GLOBALS['TL_LANG']['DMS']['ERR']['manage_document_illegal_parameter']   = 'Das 
 $GLOBALS['TL_LANG']['DMS']['ERR']['manage_document_not_allowed']         = 'Das Verwalten von Dokumenten in der angeforderte Kategorie ist Ihnen nicht erlaubt.';
 $GLOBALS['TL_LANG']['DMS']['ERR']['manage_document_category_empty']      = 'Das Verwalten von Dokumenten in der angeforderte Kategorie ist nicht möglich, weil diese Kategorie keine Dokumente enthält.';
 $GLOBALS['TL_LANG']['DMS']['ERR']['manage_document_not_found']           = 'Die Verwalten des Dokuments ist nicht möglich, weil das angeforderte Dokument nicht existiert.';
+$GLOBALS['TL_LANG']['DMS']['ERR']['manage_deleting_not_confirmed']       = 'Das Dokument wurde nicht gelöscht, da die Löschung nicht korrekt bestätigt wurde.';
+$GLOBALS['TL_LANG']['DMS']['ERR']['delete_document_failed']              = 'Das Dokument konnte nicht gelöscht werden.';
 
 /**
  * Warnings
@@ -160,14 +163,17 @@ $GLOBALS['TL_LANG']['DMS']['WARN']['existing_document_in_another_catagory'] = 'E
 /**
  * Successes
  */
-$GLOBALS['TL_LANG']['DMS']['SUCCESS']['document_successfully_uploaded']    = 'Das Dokument wurde erfolgreich hochgeladen.';
-$GLOBALS['TL_LANG']['DMS']['SUCCESS']['document_successfully_published']   = 'Das gewählte Dokument wurde erfolgreich veröffentlicht.';
-$GLOBALS['TL_LANG']['DMS']['SUCCESS']['document_successfully_unpublished'] = 'Das gewählte Dokument wurde erfolgreich unveröffentlicht.';
+$GLOBALS['TL_LANG']['DMS']['SUCCESS']['document_successfully_uploaded']     = 'Das Dokument wurde erfolgreich hochgeladen.';
+$GLOBALS['TL_LANG']['DMS']['SUCCESS']['document_successfully_published']    = 'Das gewählte Dokument wurde erfolgreich veröffentlicht.';
+$GLOBALS['TL_LANG']['DMS']['SUCCESS']['document_successfully_unpublished']  = 'Das gewählte Dokument wurde erfolgreich unveröffentlicht.';
+$GLOBALS['TL_LANG']['DMS']['SUCCESS']['document_successfully_deleted']      = 'Das gewählte Dokument wurde erfolgreich gelöscht.';
+$GLOBALS['TL_LANG']['DMS']['SUCCESS']['document_file_successfully_deleted'] = 'Die Datei zum gewählten Dokument wurde ebenfalls erfolgreich gelöscht.';
 
 /**
  * Infos
  */
 $GLOBALS['TL_LANG']['DMS']['INFO']['document_already_published']   = 'Das gewählte Dokument ist bereits veröffentlicht.';
 $GLOBALS['TL_LANG']['DMS']['INFO']['document_already_unpublished'] = 'Das gewählte Dokument ist bereits unveröffentlicht.';
+$GLOBALS['TL_LANG']['DMS']['INFO']['document_file_not_exists']     = 'Die Datei zum gelöschten Dokument existierte nicht mehr.';
 
 ?>

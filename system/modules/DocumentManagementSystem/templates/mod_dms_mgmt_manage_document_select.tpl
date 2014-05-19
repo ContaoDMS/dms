@@ -8,6 +8,7 @@
 	<input type="hidden" name="FORM_SUBMIT" value="<?php echo $this->formId; ?>">
 	<input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}">
 	<input type="hidden" name="manageCategory" value="<?php echo $this->category->id; ?>">
+	<input type="hidden" name="deleteDocumentConfirmed" id="deleteDocumentConfirmed" value="">
 	
 	<?php if (count($this->messages['errors']) > 0): ?>
 	<!-- Errors -->
@@ -93,7 +94,7 @@
 				</td>
 				<td class="document_delete centered button">
 			<?php if ($this->category->isDeletableForCurrentMember()) : ?>
-					<button type="submit" name="deleteDocument" value="<?php echo $document->id; ?>"><?php echo $GLOBALS['TL_LANG']['DMS']['management_button_delete']; ?></button>
+					<button type="submit" name="deleteDocument" value="<?php echo $document->id; ?>" onclick="return confirmDeleting();"><?php echo $GLOBALS['TL_LANG']['DMS']['management_button_delete']; ?></button>
 			<?php else : ?>
 					&nbsp;
 			<?php endif; ?>
@@ -121,5 +122,21 @@
 		</tfoot>
 	</table>
 </form>
+
+<script type="text/javascript">
+<!--
+	function confirmDeleting()
+	{
+		document.getElementById("deleteDocumentConfirmed").value = '';
+		
+		if (confirm('<?php echo $GLOBALS['TL_LANG']['DMS']['management_manage_select_confirm_deletion']; ?>'))
+		{
+			document.getElementById("deleteDocumentConfirmed").value = 'true';
+			return true;
+		}
+		return false;
+	}
+-->
+</script>
 
 </div>
