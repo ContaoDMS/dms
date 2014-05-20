@@ -62,7 +62,7 @@
 					<?php echo $this->category->name; ?>
 					<?php $arrPathNames = $this->category->getPathNames(true); ?>
 					<?php if (count($arrPathNames) > 0): ?>
-						(<?php echo implode($GLOBALS['TL_LANG']['DMS']['management_path_separator'], $this->category->getPathNames(true)); ?>)
+						(<?php echo implode($GLOBALS['TL_LANG']['DMS']['management_path_separator'], $arrPathNames); ?>)
 					<?php endif; ?>
 				</td>
 			</tr>
@@ -103,7 +103,7 @@
 						$categoryPath = "";
 						if (count($arrPathNames) > 0)
 						{
-							$categoryPath = "(" . implode($GLOBALS['TL_LANG']['DMS']['management_path_separator'], $this->category->getPathNames(true)) . ")";
+							$categoryPath = "(" . implode($GLOBALS['TL_LANG']['DMS']['management_path_separator'], $arrPathNames) . ")";
 						}
 						$title .= "\n" . sprintf($GLOBALS['TL_LANG']['DMS']['management_upload_properties_existing_category'], $document->category->name, $categoryPath);
 					?> 
@@ -145,10 +145,13 @@
 				<td class="label"><?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_publish']; ?><span class="explanation" title="<?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_publish_explanation']; ?>"><?php echo $GLOBALS['TL_LANG']['DMS']['management_explanation']; ?></span></td>
 			<?php if ($this->category->isPublishableForCurrentMember()) : ?>
 				<td><input type="checkbox" id="documentPublish" name="documentPublish" value="true"<?php if ($this->documentPublish) : ?> checked="checked"<?php endif; ?> /></td>
-			<?php else : ?>
-				<td>
-					<div class="not_allowed"><?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_publish_not_allowed']; ?></div>
-					<input type="hidden" name="documentPublish" value="<?php echo $this->documentPublish; ?>"/>
+			<?php else: ?>
+				<td class="not_allowed">
+				<?php if ($this->documentPublish) : ?>
+					<?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_published']; ?>
+				<?php else: ?>
+					<?php echo $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_unpublished']; ?>
+				<?php endif; ?>
 				</td>
 			<?php endif; ?>
 			</tr>
@@ -157,7 +160,7 @@
 			<tr>
 				<td colspan="2">
 					<button type="submit" name="abort" value="true"><?php echo $GLOBALS['TL_LANG']['DMS']['management_button_abort']; ?></button>
-					<button type="submit" name="storeProperties" value="true"><?php echo $GLOBALS['TL_LANG']['DMS']['management_button_store_properties']; ?></button>
+					<button onClick="return checkMandatoryFields();" type="submit" name="storeProperties" value="true"><?php echo $GLOBALS['TL_LANG']['DMS']['management_button_store_properties']; ?></button>
 				</td>
 			</tr>
 		</tfoot>

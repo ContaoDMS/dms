@@ -58,7 +58,7 @@
 					<?php echo $this->category->name; ?>
 					<?php $arrPathNames = $this->category->getPathNames(true); ?>
 					<?php if (count($arrPathNames) > 0): ?>
-						(<?php echo implode($GLOBALS['TL_LANG']['DMS']['management_path_separator'], $this->category->getPathNames(true)); ?>)
+						(<?php echo implode($GLOBALS['TL_LANG']['DMS']['management_path_separator'], $arrPathNames); ?>)
 					<?php endif; ?>
 				</td>
 			</tr>

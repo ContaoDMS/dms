@@ -57,7 +57,7 @@
 					<?php echo $this->category->name; ?>
 					<?php $arrPathNames = $this->category->getPathNames(true); ?>
 					<?php if (count($arrPathNames) > 0): ?>
-						(<?php echo implode($GLOBALS['TL_LANG']['DMS']['management_path_separator'], $this->category->getPathNames(true)); ?>)
+						(<?php echo implode($GLOBALS['TL_LANG']['DMS']['management_path_separator'], $arrPathNames); ?>)
 					<?php endif; ?>
 				</td>
 			</tr>
@@ -98,7 +98,7 @@
 						$categoryPath = "";
 						if (count($arrPathNames) > 0)
 						{
-							$categoryPath = "(" . implode($GLOBALS['TL_LANG']['DMS']['management_path_separator'], $this->category->getPathNames(true)) . ")";
+							$categoryPath = "(" . implode($GLOBALS['TL_LANG']['DMS']['management_path_separator'], $arrPathNames) . ")";
 						}
 						$title .= "\n" . sprintf($GLOBALS['TL_LANG']['DMS']['management_upload_properties_existing_category'], $document->category->name, $categoryPath);
 					?> 

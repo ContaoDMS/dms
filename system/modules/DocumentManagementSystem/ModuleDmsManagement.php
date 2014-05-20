@@ -147,8 +147,16 @@ class ModuleDmsManagement extends Module
 						
 						if ($editDocument != '' && is_numeric($editDocument))
 						{
-							$arrMessages['errors'][] = "Editing documents is not yet implemented.";
-							$this->manageSelectDocument($params, $dmsLoader, $manageCategory, $arrMessages, $blnShowStart);
+							$storeProperties = (bool) $this->Input->post('storeProperties');
+						
+							if ($storeProperties)
+							{
+								$this->manageEditDocumentStoreProperties($params, $dmsLoader, $manageCategory, $arrMessages, $blnShowStart, $editDocument);
+							}
+							else
+							{
+								$this->manageEditDocumentEnterProperties($params, $dmsLoader, $manageCategory, $arrMessages, $blnShowStart, $editDocument);
+							}
 						}
 						else if ($deleteDocument != '' && is_numeric($deleteDocument))
 						{
@@ -361,7 +369,7 @@ class ModuleDmsManagement extends Module
 			}
 			if ($blnCategoriesDiffer)
 			{
-				$arrMessages['warnings'][] = $GLOBALS['TL_LANG']['DMS']['WARN']['existing_document_in_another_catagory'];
+				$arrMessages['warnings'][] = $GLOBALS['TL_LANG']['DMS']['WARN']['upload_existing_document_in_another_catagory'];
 			}
 			
 			$this->Template = new \FrontendTemplate("mod_dms_mgmt_upload_enter_properties");
@@ -383,7 +391,13 @@ class ModuleDmsManagement extends Module
 			$this->Template->documentVersionMajor = $proposedDocumentVersionMajor;
 			$this->Template->documentVersionMinor = $proposedDocumentVersionMinor;
 			$this->Template->documentVersionPatch = $proposedDocumentVersionPatch;
-			$this->Template->documentPublish = false; // TODO: set default publishing behavoir here (see #7)
+			$this->Template->documentPublish = false; // TODO: set default publishing behavoir here (see #7) ... if true, add an info
+			
+			if (!$category->isPublishableForCurrentMember())
+			{
+				$arrMessages['infos'][] = $GLOBALS['TL_LANG']['DMS']['INFO']['publish_document_not_allowed'];
+				//  ... if true from #7, add an info here
+			}
 			
 			$blnShowStart = false;
 		}
@@ -405,7 +419,7 @@ class ModuleDmsManagement extends Module
 		$documentVersionMajor = $this->Input->post('documentVersionMajor');
 		$documentVersionMinor = $this->Input->post('documentVersionMinor');
 		$documentVersionPatch = $this->Input->post('documentVersionPatch');
-		$documentPublish = (bool) $this->Input->post('documentPublish');
+		$documentPublish = (bool) $this->Input->post('documentPublish'); // TODO: set default publishing behavoir here (see #7) ... if false, check if publishing is allowed, if not, set to value from settings
 		
 		$params->loadRootCategory = true; // get complete path to root, for checking inherited access rights
 		$params->loadAccessRights = true;
@@ -500,7 +514,7 @@ class ModuleDmsManagement extends Module
 				$dmsWriter = DmsWriter::getInstance();
 				$document = $dmsWriter->storeDocument($document);
 				
-				$this->Template = new \FrontendTemplate("mod_dms_mgmt_upload_processing");
+				$this->Template = new \FrontendTemplate("mod_dms_mgmt_upload_processed");
 				$this->Template->setData($this->arrData);
 				
 				$this->Template->document = $document;
@@ -695,7 +709,195 @@ class ModuleDmsManagement extends Module
 		}
 	}
 	
-
+	/**
+	 * Edit a document
+	 */
+	private function manageEditDocumentEnterProperties(&$params, &$dmsLoader, &$manageCategory, &$arrMessages, &$blnShowStart, $documentId)
+	{
+		$params->loadRootCategory = true; // get complete path to root, for checking inherited access rights
+		$params->loadAccessRights = true;
+		$params->loadDocuments = false;
+		$category = $dmsLoader->loadCategory($manageCategory, $params);
+		
+		if (!$category->isEditableForCurrentMember())
+		{
+			$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['manage_document_not_allowed'];
+			$blnShowStart = true;
+		}
+		else
+		{
+			$document = $dmsLoader->loadDocument($documentId, $params);
+			
+			// load possible documents for file name
+			$params->loadCategory = true; // need the category of existing documents
+			$arrDocuments = $dmsLoader->loadDocuments($document->fileName, $document->fileType, $params);
+			$params->loadCategory = false;
+			
+			$existingDocuments = array();
+			$blnCategoriesDiffer = false; // check if an existing document is in another category
+			foreach ($arrDocuments as $existingDocument)
+			{
+				if ($existingDocument->id != $documentId)
+				{
+					$existingDocuments[] = $existingDocument;
+					// will be true, if one is true (keep true status, if once set)
+					$blnCategoriesDiffer = $blnCategoriesDiffer || ($category->id != $existingDocument->categoryId);
+				}
+			}
+			if ($blnCategoriesDiffer)
+			{
+				$arrMessages['warnings'][] = $GLOBALS['TL_LANG']['DMS']['WARN']['edit_existing_document_in_another_catagory'];
+			}
+			
+			$this->Template = new \FrontendTemplate("mod_dms_mgmt_manage_document_edit");
+			$this->Template->setData($this->arrData);
+			
+			$this->Template->category = $category;
+			$this->Template->document = $document;
+			$this->Template->existingDocuments = $existingDocuments;
+			
+			if (!$category->isPublishableForCurrentMember())
+			{
+				$arrMessages['infos'][] = $GLOBALS['TL_LANG']['DMS']['INFO']['publish_document_not_allowed'];
+			}
+			
+			$blnShowStart = false;
+		}
+	}
+		
+	/**
+	 * Store the edited document
+	 */
+	private function manageEditDocumentStoreProperties(&$params, &$dmsLoader, &$manageCategory, &$arrMessages, &$blnShowStart)
+	{
+		$tempFileName = $this->Input->post('tempFileName');
+		$tempFileNameCleaned = strtr(utf8_romanize($tempFileName), $GLOBALS['TL_DMS']['SPECIALCHARS']); // only to ensure that the transmitted value from hidden field is clean
+		$arrTempFileParts = Document::splitFileName($tempFileNameCleaned, false);
+		$intFileSize = (int) $this->Input->post('fileSize');
+		
+		$documentName = $this->Input->post('documentName');
+		$documentDescription = $this->Input->post('documentDescription');
+		$documentKeywords = $this->Input->post('documentKeywords');
+		$documentVersionMajor = $this->Input->post('documentVersionMajor');
+		$documentVersionMinor = $this->Input->post('documentVersionMinor');
+		$documentVersionPatch = $this->Input->post('documentVersionPatch');
+		$documentPublish = (bool) $this->Input->post('documentPublish');
+		
+		$params->loadRootCategory = true; // get complete path to root, for checking inherited access rights
+		$params->loadAccessRights = true;
+		$params->loadDocuments = false;
+		$category = $dmsLoader->loadCategory($manageCategory, $params);
+		
+		if (!$category->isUploadableForCurrentMember())
+		{
+			$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['upload_document_not_allowed'];
+			$blnShowStart = true;
+		}
+		else if (!file_exists(TL_ROOT . '/' . DmsConfig::getTempDirectory(true) . $tempFileNameCleaned))
+		{
+			$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['upload_temp_file_not_found'];
+			$blnShowStart = false;
+			$this->uploadSelectFile($params, $dmsLoader, $manageCategory, $arrMessages, $blnShowStart);
+		}
+		else
+		{
+			// load possible documents for file name
+			$params->loadCategory = true; // need the category of existing documents
+			$arrDocuments = $dmsLoader->loadDocuments($arrTempFileParts['fileName'], $arrTempFileParts['fileType'], $params);
+			$params->loadCategory = false;
+			
+			if (strlen($documentName) == 0)
+			{
+				$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['upload_no_name_set'];
+				if (count($arrDocuments) > 0)
+				{
+				// the list of documents is ordered by version, so the highest should be at end
+					$lastDocument = end($arrDocuments);
+					$documentName = $lastDocument->name;
+				}
+			}
+			if (strlen($documentVersionMajor) == 0 || !is_numeric($documentVersionMajor) ||
+					 strlen($documentVersionMinor) == 0 || !is_numeric($documentVersionMinor) ||
+					 strlen($documentVersionPatch) == 0 || !is_numeric($documentVersionPatch))
+			{
+				$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['upload_no_version_set'];
+			}
+			
+			foreach ($arrDocuments as $existingDocument)
+			{
+				// will be true, if one is true (keep true status, if once set)
+				if ($existingDocument->versionMajor == $documentVersionMajor &&
+					$existingDocument->versionMinor == $documentVersionMinor &&
+					$existingDocument->versionPatch == $documentVersionPatch)
+				{
+					$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['upload_version_already_used'];
+				}
+			}
+			
+			if (count($arrMessages['errors']) > 0)
+			{
+				$this->Template = new \FrontendTemplate("mod_dms_mgmt_manage_document_edit");
+				$this->Template->setData($this->arrData);
+				
+				$this->Template->documentName = $documentName;
+				$this->Template->documentDescription = $documentDescription;
+				$this->Template->documentKeywords = $documentKeywords;
+				$this->Template->documentVersionMajor = $documentVersionMajor;
+				$this->Template->documentVersionMinor = $documentVersionMinor;
+				$this->Template->documentVersionPatch = $documentVersionPatch;
+				$this->Template->documentPublish = $documentPublish;
+			}
+			else
+			{
+				$documentVersion = Document::buildVersionForFileName($documentVersionMajor, $documentVersionMinor, $documentVersionPatch);
+				$fileFileNameVersioned = Document::buildFileNameVersioned($arrTempFileParts['fileName'], $documentVersion, $arrTempFileParts['fileType']);
+				
+				// move the temp file to dms dir and append version
+				rename(DmsConfig::getTempDirectory(true) . $tempFileNameCleaned, DmsConfig::getBaseDirectory(true) . $fileFileNameVersioned);
+				
+				// store document
+				$document = new Document(-1, $documentName);
+				$document->categoryId = $category->id;
+				$document->description = $documentDescription;
+				$document->keywords = $documentKeywords;
+				$document->fileName = $arrTempFileParts['fileName'];
+				$document->fileType = $arrTempFileParts['fileType'];
+				$document->fileSize = $intFileSize;
+				$document->filePreview = null; // TODO: maybe filled in #12
+				$document->versionMajor = $documentVersionMajor;
+				$document->versionMinor = $documentVersionMinor;
+				$document->versionPatch = $documentVersionPatch;
+				$document->uploadMemberId = $this->Member->id;
+				$document->uploadDate = time();
+				$document->lasteditMemberId = 0;
+				$document->lasteditDate = '';
+				$document->published = $documentPublish;
+				
+				$dmsWriter = DmsWriter::getInstance();
+				$document = $dmsWriter->storeDocument($document);
+				
+				$this->Template = new \FrontendTemplate("mod_dms_mgmt_upload_processed");
+				$this->Template->setData($this->arrData);
+				
+				$this->Template->document = $document;
+				
+				$arrMessages['successes'][] = $GLOBALS['TL_LANG']['DMS']['SUCCESS']['document_successfully_uploaded'];
+			}
+			
+			$this->Template->category = $category;
+			$this->Template->tempFileName = $tempFileNameCleaned;
+			$this->Template->fileName = $this->Input->post('fileName');
+			$this->Template->fileType = $this->Input->post('fileType');
+			$this->Template->fileSize = $intFileSize;
+			$this->Template->fileSizeByteFormatted = Document::formatFileSize($intFileSize, Document::FILE_SIZE_UNIT_BYTE);
+			$this->Template->fileSizeKbFormatted = Document::formatFileSize(Document::convertFileSize($intFileSize, Document::FILE_SIZE_UNIT_BYTE, Document::FILE_SIZE_UNIT_KB), Document::FILE_SIZE_UNIT_KB);
+			$this->Template->fileSizeMbFormatted = Document::formatFileSize(Document::convertFileSize($intFileSize, Document::FILE_SIZE_UNIT_BYTE, Document::FILE_SIZE_UNIT_MB), Document::FILE_SIZE_UNIT_MB);
+			$this->Template->fileSizeGbFormatted = Document::formatFileSize(Document::convertFileSize($intFileSize, Document::FILE_SIZE_UNIT_BYTE, Document::FILE_SIZE_UNIT_GB), Document::FILE_SIZE_UNIT_GB);
+			$this->Template->existingDocuments = $arrDocuments;
+			
+			$blnShowStart = false;
+		}
+	}
 
 	/*********************************************************************************************************************
 	 *        Funktionen

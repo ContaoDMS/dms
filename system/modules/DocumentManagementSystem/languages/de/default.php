@@ -75,7 +75,7 @@ $GLOBALS['TL_LANG']['DMS']['management_upload_properties_existing_lastedited']  
 $GLOBALS['TL_LANG']['DMS']['management_upload_properties_existing_category']             = "Kategorie: %s %s";
 $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_headline']             = "Eigenschaften des Dokuments";
 $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_name']                 = "Name";
-$GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_name_explanation']     = "Bitte beachten Sie, dass bei einer Änderung des Namen anderen Versionen des Dokuments nicht mehr korrekt zugeordnet werden können.";
+$GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_name_explanation']     = "Bitte beachten Sie, dass bei einer Änderung des Namen andere Versionen des Dokuments nicht mehr korrekt zugeordnet werden können.";
 $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_description']          = "Beschreibung";
 $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_keywords']             = "Schlüsselworte";
 $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_keywords_explanation'] = "Bitte geben Sie eine Liste von Schlüsselwörtern an.";
@@ -84,6 +84,8 @@ $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_version_explan
 $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_publish']              = "Veröffentlichen";
 $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_publish_explanation']  = "Nur veröffentlichte Dokumente stehen in der Auflistung zur Verfügung.";
 $GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_publish_not_allowed']  = "Sie dürfen Dokumente in dieser Kategorie nicht veröffentlichen.";
+$GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_published']            = "Veröffentlicht";
+$GLOBALS['TL_LANG']['DMS']['management_upload_properties_document_unpublished']          = "Uneröffentlicht";
 // upload :: processed
 $GLOBALS['TL_LANG']['DMS']['management_upload_processed_headline']    = "Dokument hochgeladen";
 $GLOBALS['TL_LANG']['DMS']['management_upload_processed_published']   = "Veröffentlicht";
@@ -99,6 +101,35 @@ $GLOBALS['TL_LANG']['DMS']['management_manage_select_document_uploaded']   = "Ho
 $GLOBALS['TL_LANG']['DMS']['management_manage_select_document_lastedited'] = "Zuletzt bearbeitet: %s (%s)";
 $GLOBALS['TL_LANG']['DMS']['management_manage_select_document_version']    = "(V. %s)";
 $GLOBALS['TL_LANG']['DMS']['management_manage_select_confirm_deletion']    = "Sind Sie sicher, dass das gewählte Dokument gelöscht werden soll?";
+// manage :: edit
+$GLOBALS['TL_LANG']['DMS']['management_manage_edit_headline']                      = "Dokument bearbeiten";
+$GLOBALS['TL_LANG']['DMS']['management_manage_edit_category']                      = "Kategorie";
+$GLOBALS['TL_LANG']['DMS']['management_manage_edit_file_headline']                 = "Eigenschaften der Datei zum Dokument";
+$GLOBALS['TL_LANG']['DMS']['management_manage_edit_file_name']                     = "Dateiname";
+$GLOBALS['TL_LANG']['DMS']['management_manage_edit_file_type']                     = "Dateityp";
+$GLOBALS['TL_LANG']['DMS']['management_manage_edit_file_size']                     = "Dateigröße";
+$GLOBALS['TL_LANG']['DMS']['management_manage_edit_existing_headline']             = "Es existieren folgende andere Versionen dieses Dokuments";
+$GLOBALS['TL_LANG']['DMS']['management_manage_edit_existing_name']                 = "Version";
+$GLOBALS['TL_LANG']['DMS']['management_manage_edit_existing_version']              = "(V. %s)";
+$GLOBALS['TL_LANG']['DMS']['management_manage_edit_existing_published']            = "Veröffentlicht";
+$GLOBALS['TL_LANG']['DMS']['management_manage_edit_existing_unpublished']          = "Unveröffentlicht";
+$GLOBALS['TL_LANG']['DMS']['management_manage_edit_existing_size']                 = "Dateigröße: %s";
+$GLOBALS['TL_LANG']['DMS']['management_manage_edit_existing_uploaded']             = "Hochgeladen: %s (%s)";
+$GLOBALS['TL_LANG']['DMS']['management_manage_edit_existing_lastedited']           = "Zuletzt bearbeitet: %s (%s)";
+$GLOBALS['TL_LANG']['DMS']['management_manage_edit_existing_category']             = "Kategorie: %s %s";
+$GLOBALS['TL_LANG']['DMS']['management_manage_edit_document_headline']             = "Eigenschaften des Dokuments";
+$GLOBALS['TL_LANG']['DMS']['management_manage_edit_document_name']                 = "Name";
+$GLOBALS['TL_LANG']['DMS']['management_manage_edit_document_name_explanation']     = "Bitte beachten Sie, dass bei einer Änderung des Namen andere Versionen des Dokuments nicht mehr korrekt zugeordnet werden können. Die Namen anderer Dokumentversionen werden nicht geändert.";
+$GLOBALS['TL_LANG']['DMS']['management_manage_edit_document_description']          = "Beschreibung";
+$GLOBALS['TL_LANG']['DMS']['management_manage_edit_document_keywords']             = "Schlüsselworte";
+$GLOBALS['TL_LANG']['DMS']['management_manage_edit_document_keywords_explanation'] = "Bitte geben Sie eine Liste von Schlüsselwörtern an.";
+$GLOBALS['TL_LANG']['DMS']['management_manage_edit_document_version']              = "Version";
+$GLOBALS['TL_LANG']['DMS']['management_manage_edit_document_version_explanation']  = "Es handelt sich um die aktuelle Versionsnummer. Diese kann in einen beliebige freie geändert werden.";
+$GLOBALS['TL_LANG']['DMS']['management_manage_edit_document_publish']              = "Veröffentlichen";
+$GLOBALS['TL_LANG']['DMS']['management_manage_edit_document_publish_explanation']  = "Nur veröffentlichte Dokumente stehen in der Auflistung zur Verfügung.";
+$GLOBALS['TL_LANG']['DMS']['management_manage_edit_document_published']            = "Veröffentlicht";
+$GLOBALS['TL_LANG']['DMS']['management_manage_edit_document_unpublished']          = "Uneröffentlicht";
+
 
 /**
  * Translations for listing module
@@ -158,7 +189,8 @@ $GLOBALS['TL_LANG']['DMS']['ERR']['delete_document_failed']              = 'Das 
 /**
  * Warnings
  */
-$GLOBALS['TL_LANG']['DMS']['WARN']['existing_document_in_another_catagory'] = 'Es existiert mindestens eine Dokumentenversionen zu diesem Dateinamen in einer andere Kategorie als der aktuell gewählten. Da der Dateiname als Schlüssel für die Dokumente verwendet wird, sollte er so gewählt sein, dass er systemweit eindeutig ist.';
+$GLOBALS['TL_LANG']['DMS']['WARN']['upload_existing_document_in_another_catagory'] = 'Es existieren Dokumentenversionen zu diesem Dateinamen in anderen Kategorien als der aktuell gewählten.<br/>Da der Dateiname als Schlüssel für die Dokumente verwendet wird, sollte er so gewählt sein, dass er systemweit eindeutig ist.';
+$GLOBALS['TL_LANG']['DMS']['WARN']['edit_existing_document_in_another_catagory']   = 'Es existieren Dokumentenversionen zu diesem Dateinamen in anderen Kategorien als der aktuell gewählten.';
 
 /**
  * Successes
@@ -175,5 +207,6 @@ $GLOBALS['TL_LANG']['DMS']['SUCCESS']['document_file_successfully_deleted'] = 'D
 $GLOBALS['TL_LANG']['DMS']['INFO']['document_already_published']   = 'Das gewählte Dokument ist bereits veröffentlicht.';
 $GLOBALS['TL_LANG']['DMS']['INFO']['document_already_unpublished'] = 'Das gewählte Dokument ist bereits unveröffentlicht.';
 $GLOBALS['TL_LANG']['DMS']['INFO']['document_file_not_exists']     = 'Die Datei zum gelöschten Dokument existierte nicht mehr.';
+$GLOBALS['TL_LANG']['DMS']['INFO']['publish_document_not_allowed'] = 'Sie haben nicht die nötigen Rechte zum Veröffentlichen/Uneröffentlicht von Dokumenten in dieser Kategorie.';
 
 ?>
