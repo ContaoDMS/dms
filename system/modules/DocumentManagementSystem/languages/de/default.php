@@ -45,6 +45,7 @@ $GLOBALS['TL_LANG']['DMS']['management_button_edit']             = "Bearbeiten";
 $GLOBALS['TL_LANG']['DMS']['management_button_delete']           = "Löschen";
 $GLOBALS['TL_LANG']['DMS']['management_button_publish']          = "Veröffentlichen";
 $GLOBALS['TL_LANG']['DMS']['management_button_unpublish']        = "Unveröffentlichen";
+$GLOBALS['TL_LANG']['DMS']['management_button_manage_another']   = "Weitere Dokumente verwalten";
 $GLOBALS['TL_LANG']['DMS']['management_headline']                = "%s :: %s";
 $GLOBALS['TL_LANG']['DMS']['management_path_separator']          = " &raquo; ";
 $GLOBALS['TL_LANG']['DMS']['management_mandatory']               = "Pflichtfeld: dieses Feld muss ausgefüllt werden.";
@@ -129,6 +130,10 @@ $GLOBALS['TL_LANG']['DMS']['management_manage_edit_document_publish']           
 $GLOBALS['TL_LANG']['DMS']['management_manage_edit_document_publish_explanation']  = "Nur veröffentlichte Dokumente stehen in der Auflistung zur Verfügung.";
 $GLOBALS['TL_LANG']['DMS']['management_manage_edit_document_published']            = "Veröffentlicht";
 $GLOBALS['TL_LANG']['DMS']['management_manage_edit_document_unpublished']          = "Uneröffentlicht";
+// manage :: edit .. processed
+$GLOBALS['TL_LANG']['DMS']['management_manage_edit_processed_headline']            = "Dokument bearbeitet";
+
+
 
 
 /**
@@ -185,6 +190,10 @@ $GLOBALS['TL_LANG']['DMS']['ERR']['manage_document_category_empty']      = 'Das 
 $GLOBALS['TL_LANG']['DMS']['ERR']['manage_document_not_found']           = 'Die Verwalten des Dokuments ist nicht möglich, weil das angeforderte Dokument nicht existiert.';
 $GLOBALS['TL_LANG']['DMS']['ERR']['manage_deleting_not_confirmed']       = 'Das Dokument wurde nicht gelöscht, da die Löschung nicht korrekt bestätigt wurde.';
 $GLOBALS['TL_LANG']['DMS']['ERR']['delete_document_failed']              = 'Das Dokument konnte nicht gelöscht werden.';
+$GLOBALS['TL_LANG']['DMS']['ERR']['edit_no_name_set']                    = 'Es wurde kein Name für das Dokument angegeben. Bitte legen Sie einen Name fest!';
+$GLOBALS['TL_LANG']['DMS']['ERR']['edit_no_version_set']                 = 'Es wurde keine korrekte Version für das Dokument angegeben. Bitte tragen Sie für alle 3 Felder einen numerischen Wert ein!';
+$GLOBALS['TL_LANG']['DMS']['ERR']['edit_version_already_used']           = 'Die gewählte Version ist bereits belegt. Bitte geben Sie eine andere Version an!';
+$GLOBALS['TL_LANG']['DMS']['ERR']['edit_file_not_exists']                = 'Die Datei zum gewählten Dokument konnte nicht umbenannt werden, weil sie nicht existiert!';
 
 /**
  * Warnings
@@ -200,13 +209,15 @@ $GLOBALS['TL_LANG']['DMS']['SUCCESS']['document_successfully_published']    = 'D
 $GLOBALS['TL_LANG']['DMS']['SUCCESS']['document_successfully_unpublished']  = 'Das gewählte Dokument wurde erfolgreich unveröffentlicht.';
 $GLOBALS['TL_LANG']['DMS']['SUCCESS']['document_successfully_deleted']      = 'Das gewählte Dokument wurde erfolgreich gelöscht.';
 $GLOBALS['TL_LANG']['DMS']['SUCCESS']['document_file_successfully_deleted'] = 'Die Datei zum gewählten Dokument wurde ebenfalls erfolgreich gelöscht.';
+$GLOBALS['TL_LANG']['DMS']['SUCCESS']['document_file_successfully_renamed'] = 'Die Datei zum gewählten Dokument wurde erfolgreich umbenannt.';
+$GLOBALS['TL_LANG']['DMS']['SUCCESS']['document_successfully_edited']       = 'Das gewählte Dokument wurde erfolgreich bearbeitet.';
 
 /**
  * Infos
  */
 $GLOBALS['TL_LANG']['DMS']['INFO']['document_already_published']   = 'Das gewählte Dokument ist bereits veröffentlicht.';
 $GLOBALS['TL_LANG']['DMS']['INFO']['document_already_unpublished'] = 'Das gewählte Dokument ist bereits unveröffentlicht.';
-$GLOBALS['TL_LANG']['DMS']['INFO']['document_file_not_exists']     = 'Die Datei zum gelöschten Dokument existierte nicht mehr.';
+$GLOBALS['TL_LANG']['DMS']['INFO']['document_delete_file_not_exists']     = 'Die Datei zum gelöschten Dokument existierte nicht mehr.';
 $GLOBALS['TL_LANG']['DMS']['INFO']['publish_document_not_allowed'] = 'Sie haben nicht die nötigen Rechte zum Veröffentlichen/Uneröffentlicht von Dokumenten in dieser Kategorie.';
 
 ?>

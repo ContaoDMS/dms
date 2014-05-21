@@ -455,8 +455,8 @@ class ModuleDmsManagement extends Module
 				}
 			}
 			if (strlen($documentVersionMajor) == 0 || !is_numeric($documentVersionMajor) ||
-					 strlen($documentVersionMinor) == 0 || !is_numeric($documentVersionMinor) ||
-					 strlen($documentVersionPatch) == 0 || !is_numeric($documentVersionPatch))
+				strlen($documentVersionMinor) == 0 || !is_numeric($documentVersionMinor) ||
+				strlen($documentVersionPatch) == 0 || !is_numeric($documentVersionPatch))
 			{
 				$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['upload_no_version_set'];
 			}
@@ -491,7 +491,7 @@ class ModuleDmsManagement extends Module
 				$fileFileNameVersioned = Document::buildFileNameVersioned($arrTempFileParts['fileName'], $documentVersion, $arrTempFileParts['fileType']);
 				
 				// move the temp file to dms dir and append version
-				rename(DmsConfig::getTempDirectory(true) . $tempFileNameCleaned, DmsConfig::getBaseDirectory(true) . $fileFileNameVersioned);
+				rename(DmsConfig::getTempDirectory(true) . $tempFileNameCleaned, DmsConfig::getDocumentFilePath($fileFileNameVersioned));
 				
 				// store document
 				$document = new Document(-1, $documentName);
@@ -596,7 +596,7 @@ class ModuleDmsManagement extends Module
 					$document->published = true;
 					
 					$dmsWriter = DmsWriter::getInstance();
-					$document = $dmsWriter->toogleDocumentPublication($document);
+					$document = $dmsWriter->updateDocument($document);
 					$arrMessages['successes'][] = $GLOBALS['TL_LANG']['DMS']['SUCCESS']['document_successfully_published'];
 				}
 				else
@@ -640,7 +640,7 @@ class ModuleDmsManagement extends Module
 					$document->published = false;
 					
 					$dmsWriter = DmsWriter::getInstance();
-					$document = $dmsWriter->toogleDocumentPublication($document);
+					$document = $dmsWriter->updateDocument($document);
 					$arrMessages['successes'][] = $GLOBALS['TL_LANG']['DMS']['SUCCESS']['document_successfully_unpublished'];
 				}
 				else
@@ -693,7 +693,7 @@ class ModuleDmsManagement extends Module
 					}
 					else
 					{
-						$arrMessages['infos'][] = $GLOBALS['TL_LANG']['DMS']['INFO']['document_file_not_exists'];
+						$arrMessages['infos'][] = $GLOBALS['TL_LANG']['DMS']['INFO']['document_delete_file_not_exists'];
 					}
 				}
 				else
@@ -728,7 +728,7 @@ class ModuleDmsManagement extends Module
 		{
 			$document = $dmsLoader->loadDocument($documentId, $params);
 			
-			// load possible documents for file name
+			// load existing documents for file name
 			$params->loadCategory = true; // need the category of existing documents
 			$arrDocuments = $dmsLoader->loadDocuments($document->fileName, $document->fileType, $params);
 			$params->loadCategory = false;
@@ -768,69 +768,91 @@ class ModuleDmsManagement extends Module
 	/**
 	 * Store the edited document
 	 */
-	private function manageEditDocumentStoreProperties(&$params, &$dmsLoader, &$manageCategory, &$arrMessages, &$blnShowStart)
+	private function manageEditDocumentStoreProperties(&$params, &$dmsLoader, &$manageCategory, &$arrMessages, &$blnShowStart, $documentId)
 	{
-		$tempFileName = $this->Input->post('tempFileName');
-		$tempFileNameCleaned = strtr(utf8_romanize($tempFileName), $GLOBALS['TL_DMS']['SPECIALCHARS']); // only to ensure that the transmitted value from hidden field is clean
-		$arrTempFileParts = Document::splitFileName($tempFileNameCleaned, false);
-		$intFileSize = (int) $this->Input->post('fileSize');
-		
-		$documentName = $this->Input->post('documentName');
-		$documentDescription = $this->Input->post('documentDescription');
-		$documentKeywords = $this->Input->post('documentKeywords');
-		$documentVersionMajor = $this->Input->post('documentVersionMajor');
-		$documentVersionMinor = $this->Input->post('documentVersionMinor');
-		$documentVersionPatch = $this->Input->post('documentVersionPatch');
-		$documentPublish = (bool) $this->Input->post('documentPublish');
-		
 		$params->loadRootCategory = true; // get complete path to root, for checking inherited access rights
 		$params->loadAccessRights = true;
 		$params->loadDocuments = false;
 		$category = $dmsLoader->loadCategory($manageCategory, $params);
 		
-		if (!$category->isUploadableForCurrentMember())
+		if (!$category->isEditableForCurrentMember())
 		{
-			$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['upload_document_not_allowed'];
+			$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['manage_document_not_allowed'];
 			$blnShowStart = true;
-		}
-		else if (!file_exists(TL_ROOT . '/' . DmsConfig::getTempDirectory(true) . $tempFileNameCleaned))
-		{
-			$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['upload_temp_file_not_found'];
-			$blnShowStart = false;
-			$this->uploadSelectFile($params, $dmsLoader, $manageCategory, $arrMessages, $blnShowStart);
 		}
 		else
 		{
-			// load possible documents for file name
+			$document = $dmsLoader->loadDocument($documentId, $params);
+			$documentOriginal = clone $document;
+			
+			// load existing documents for file name
 			$params->loadCategory = true; // need the category of existing documents
-			$arrDocuments = $dmsLoader->loadDocuments($arrTempFileParts['fileName'], $arrTempFileParts['fileType'], $params);
+			$arrDocuments = $dmsLoader->loadDocuments($document->fileName, $document->fileType, $params);
 			$params->loadCategory = false;
 			
-			if (strlen($documentName) == 0)
-			{
-				$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['upload_no_name_set'];
-				if (count($arrDocuments) > 0)
-				{
-				// the list of documents is ordered by version, so the highest should be at end
-					$lastDocument = end($arrDocuments);
-					$documentName = $lastDocument->name;
-				}
-			}
-			if (strlen($documentVersionMajor) == 0 || !is_numeric($documentVersionMajor) ||
-					 strlen($documentVersionMinor) == 0 || !is_numeric($documentVersionMinor) ||
-					 strlen($documentVersionPatch) == 0 || !is_numeric($documentVersionPatch))
-			{
-				$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['upload_no_version_set'];
-			}
-			
+			$existingDocuments = array();
 			foreach ($arrDocuments as $existingDocument)
 			{
-				// will be true, if one is true (keep true status, if once set)
-				if ($existingDocument->versionMajor == $documentVersionMajor &&
-					$existingDocument->versionMinor == $documentVersionMinor &&
-					$existingDocument->versionPatch == $documentVersionPatch)
+				if ($existingDocument->id != $documentId)
 				{
-					$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['upload_version_already_used'];
+					$existingDocuments[] = $existingDocument;
+				}
+			}
+			
+			$documentVersionMajor = $this->Input->post('documentVersionMajor');
+			$documentVersionMinor = $this->Input->post('documentVersionMinor');
+			$documentVersionPatch = $this->Input->post('documentVersionPatch');
+			
+			$document->name = $this->Input->post('documentName');
+			$document->description = $this->Input->post('documentDescription');
+			$document->keywords = $this->Input->post('documentKeywords');
+			$document->versionMajor = $documentVersionMajor;
+			$document->versionMinor = $documentVersionMinor;
+			$document->versionPatch = $documentVersionPatch;
+			$document->lasteditMemberId = $this->Member->id;
+			$document->lasteditDate = time();
+			if ($category->isPublishableForCurrentMember())
+			{
+				$document->published = (bool) $this->Input->post('documentPublish');
+			}
+			
+			$versionChanged = false;
+			if ($documentVersionMajor != $documentOriginal->versionMajor ||
+				$documentVersionMinor != $documentOriginal->versionMinor ||
+				$documentVersionPatch != $documentOriginal->versionPatch)
+			{
+				$versionChanged = true;
+			}
+			
+			if (strlen($document->name) == 0)
+			{
+				$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['edit_no_name_set'];
+				$document->name = $documentOriginal->name;
+			}
+			if ($versionChanged)
+			{
+				if (strlen($documentVersionMajor) == 0 || !is_numeric($documentVersionMajor) ||
+					strlen($documentVersionMinor) == 0 || !is_numeric($documentVersionMinor) ||
+					strlen($documentVersionPatch) == 0 || !is_numeric($documentVersionPatch))
+				{
+					$document->versionMajor = $documentOriginal->versionMajor;
+					$document->versionMinor = $documentOriginal->versionMinor;
+					$document->versionPatch = $documentOriginal->versionPatch;
+					$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['edit_no_version_set'];
+				}
+				
+				foreach ($existingDocuments as $existingDocument)
+				{
+					// will be true, if one is true (keep true status, if once set)
+					if ($existingDocument->versionMajor == $documentVersionMajor &&
+						$existingDocument->versionMinor == $documentVersionMinor &&
+						$existingDocument->versionPatch == $documentVersionPatch)
+					{
+						$document->versionMajor = $documentOriginal->versionMajor;
+						$document->versionMinor = $documentOriginal->versionMinor;
+						$document->versionPatch = $documentOriginal->versionPatch;
+						$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['edit_version_already_used'];
+					}
 				}
 			}
 			
@@ -838,62 +860,37 @@ class ModuleDmsManagement extends Module
 			{
 				$this->Template = new \FrontendTemplate("mod_dms_mgmt_manage_document_edit");
 				$this->Template->setData($this->arrData);
-				
-				$this->Template->documentName = $documentName;
-				$this->Template->documentDescription = $documentDescription;
-				$this->Template->documentKeywords = $documentKeywords;
-				$this->Template->documentVersionMajor = $documentVersionMajor;
-				$this->Template->documentVersionMinor = $documentVersionMinor;
-				$this->Template->documentVersionPatch = $documentVersionPatch;
-				$this->Template->documentPublish = $documentPublish;
 			}
 			else
 			{
-				$documentVersion = Document::buildVersionForFileName($documentVersionMajor, $documentVersionMinor, $documentVersionPatch);
-				$fileFileNameVersioned = Document::buildFileNameVersioned($arrTempFileParts['fileName'], $documentVersion, $arrTempFileParts['fileType']);
-				
-				// move the temp file to dms dir and append version
-				rename(DmsConfig::getTempDirectory(true) . $tempFileNameCleaned, DmsConfig::getBaseDirectory(true) . $fileFileNameVersioned);
-				
-				// store document
-				$document = new Document(-1, $documentName);
-				$document->categoryId = $category->id;
-				$document->description = $documentDescription;
-				$document->keywords = $documentKeywords;
-				$document->fileName = $arrTempFileParts['fileName'];
-				$document->fileType = $arrTempFileParts['fileType'];
-				$document->fileSize = $intFileSize;
-				$document->filePreview = null; // TODO: maybe filled in #12
-				$document->versionMajor = $documentVersionMajor;
-				$document->versionMinor = $documentVersionMinor;
-				$document->versionPatch = $documentVersionPatch;
-				$document->uploadMemberId = $this->Member->id;
-				$document->uploadDate = time();
-				$document->lasteditMemberId = 0;
-				$document->lasteditDate = '';
-				$document->published = $documentPublish;
-				
+				// update document
 				$dmsWriter = DmsWriter::getInstance();
-				$document = $dmsWriter->storeDocument($document);
+				$document = $dmsWriter->updateDocument($document);
 				
-				$this->Template = new \FrontendTemplate("mod_dms_mgmt_upload_processed");
+				$arrMessages['successes'][] = $GLOBALS['TL_LANG']['DMS']['SUCCESS']['document_successfully_edited'];
+				
+				// rename the file if the version changed
+				if ($versionChanged)
+				{
+					$filePath = DmsConfig::getDocumentFilePath($documentOriginal->getFileNameVersioned());
+					if (file_exists(TL_ROOT . '/' . $filePath))
+					{
+						rename($filePath, DmsConfig::getDocumentFilePath($document->getFileNameVersioned()));
+						$arrMessages['successes'][] = $GLOBALS['TL_LANG']['DMS']['SUCCESS']['document_file_successfully_renamed'];
+					}
+					else
+					{
+						$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['edit_file_not_exists'];
+					}
+				}
+				
+				$this->Template = new \FrontendTemplate("mod_dms_mgmt_manage_document_edit_processed");
 				$this->Template->setData($this->arrData);
-				
-				$this->Template->document = $document;
-				
-				$arrMessages['successes'][] = $GLOBALS['TL_LANG']['DMS']['SUCCESS']['document_successfully_uploaded'];
 			}
 			
 			$this->Template->category = $category;
-			$this->Template->tempFileName = $tempFileNameCleaned;
-			$this->Template->fileName = $this->Input->post('fileName');
-			$this->Template->fileType = $this->Input->post('fileType');
-			$this->Template->fileSize = $intFileSize;
-			$this->Template->fileSizeByteFormatted = Document::formatFileSize($intFileSize, Document::FILE_SIZE_UNIT_BYTE);
-			$this->Template->fileSizeKbFormatted = Document::formatFileSize(Document::convertFileSize($intFileSize, Document::FILE_SIZE_UNIT_BYTE, Document::FILE_SIZE_UNIT_KB), Document::FILE_SIZE_UNIT_KB);
-			$this->Template->fileSizeMbFormatted = Document::formatFileSize(Document::convertFileSize($intFileSize, Document::FILE_SIZE_UNIT_BYTE, Document::FILE_SIZE_UNIT_MB), Document::FILE_SIZE_UNIT_MB);
-			$this->Template->fileSizeGbFormatted = Document::formatFileSize(Document::convertFileSize($intFileSize, Document::FILE_SIZE_UNIT_BYTE, Document::FILE_SIZE_UNIT_GB), Document::FILE_SIZE_UNIT_GB);
-			$this->Template->existingDocuments = $arrDocuments;
+			$this->Template->document = $document;
+			$this->Template->existingDocuments = $existingDocuments;
 			
 			$blnShowStart = false;
 		}

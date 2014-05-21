@@ -80,18 +80,14 @@ class DmsWriter extends Controller
 	}
 	
 	/**
-	 * Toggle publication of a document.
+	 * Update the document.
 	 *
-	 * @param	Document	$document	The document to toggle the publication for.
+	 * @param	Document	$document	The document to update.
 	 * @return	document	Returns the document.
 	 */
-	public function toogleDocumentPublication(Document $document)
+	public function updateDocument(Document $document)
 	{
-		$arrSet = array();
-		$arrSet['tstamp'] = time();
-		$arrSet['lastedit_member'] = $document->lasteditMemberId;
-		$arrSet['lastedit_date'] = $document->lasteditDate;
-		$arrSet['published'] = $document->published;
+		$arrSet = $this->buildDocumentDataArray($document, false);
 		
 		$this->Database->prepare("UPDATE tl_dms_documents %s WHERE id=?")->set($arrSet)->execute($document->id);
 		
@@ -146,7 +142,7 @@ class DmsWriter extends Controller
 		foreach ($arrData as $key => $value)
 		{
 			// remove empty values to use defaults in database
-			if ($key != 'published' && empty($value))
+			if ($key != 'published' && strlen($value) == 0)
 			{
 				unset($arrData[$key]);
 			}
