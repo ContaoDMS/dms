@@ -2,10 +2,10 @@
 Contao Extension "DocumentManagementSystem"
 ===========================================
 
-Version 2.0.0 (2014-xx-xx)
+Version 2.0.0 (2014-05-31)
 --------------------------
-- rewrote of category view in backend (show as tree, icon displays publishing state, simple add a new category to a parent, ordering via tree sorting, unlimited level depth)
-- rewrote of access rights view in backend (show as tree, icons display rights)
+- rewrote category view in backend (show as tree, icon displays publishing state, simple add a new category to a parent, ordering via tree sorting, unlimited level depth)
+- rewrote access rights view in backend (show as tree, icons display rights)
 - added document view to backend (for administrations purposes, currently unfinished)
 - reworked frontend screens (renamed templates, removed static CSS, added classes and IDs, extracted texts)
 - added recursively getting the category structure in frontend (unlimited level depth)
