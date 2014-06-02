@@ -28,7 +28,7 @@
 		"contao":{
 			"sources":{
 				"system/modules/DocumentManagementSystem":"system/modules/DocumentManagementSystem",
-				"tl_files/dms": "tl_files/dms",
+				"tl_files/dms": "tl_files/dms"
 			}
 		},
 		"branch-alias": {
