@@ -1,0 +1,38 @@
+{
+	"name":"cliffparnitzky/document-management-system",
+	"description":"Provides a document management system for the Contao CMS. It offers the possibility to store versioned files in an unlimited category structure.",
+	"keywords":["contao", "dms", "document", "management", "files"],
+	"type":"contao-module",
+	"license":"LGPL-3.0+",
+	"authors":[
+		{
+			"name":"Cliff Parnitzky",
+			"email":"contao@cliff-parnitzky.de",
+			"role":"Developer"
+		}
+	],
+	"support":{
+		"email":"contao@cliff-parnitzky.de",
+		"issues":"https://github.com/ContaoDMS/dms/issues",
+		"source":"https://github.com/ContaoDMS/dms"
+	},
+	"require":{
+		"php":">=5.3",
+		"contao/core":">=2.9.5,<3.0.0-dev",
+		"contao-community-alliance/composer-installer":"*"
+	},
+	"replace": {
+		"contao-legacy/dokmansystem": "*"
+	},
+	"extra":{
+		"contao":{
+			"sources":{
+				"system/modules/DocumentManagementSystem":"system/modules/DocumentManagementSystem",
+				"tl_files/dms": "tl_files/dms",
+			}
+		},
+		"branch-alias": {
+			"dev-master": "2.0.x-dev"
+		}
+	}
+}
