@@ -125,7 +125,7 @@ $GLOBALS['TL_DCA']['tl_dms_access_rights'] = array
 			'exclude'                 => true,
 			'inputType'               => 'radio',
 			'foreignKey'              => 'tl_member_group.name',
-			'eval'                    => array('multiple'=>false, 'mandatory'=>true)
+			'eval'                    => array('multiple'=>false, 'mandatory'=>true, 'doNotCopy'=>true)
 		),
 		'right_read' => array
 		(
