@@ -552,7 +552,7 @@ class Category extends System
 	}
 	
 	/**
-	 * Returns the given file type is allowed to be uploaded into this category.
+	 * Returns if the given file type is allowed to be uploaded into this category.
 	 *
 	 * @param	string	$strFileType	The file type to be checked.
 	 * @param	bool	$blnCaseSensitive	True if checking should be done case sensitive.
@@ -561,7 +561,7 @@ class Category extends System
 	public function isFileTypeAllowed($strFileType, $blnCaseSensitive = false)
 	{
 		$arrAllowedFileTypes = $this->getAllowedFileTypes();
-		if ($blnCaseSensitive)
+		if (!$blnCaseSensitive)
 		{
 			$arrAllowedFileTypes = array_map('strtoupper', $arrAllowedFileTypes);
 			$strFileType = strtoupper($strFileType);
