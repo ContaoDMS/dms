@@ -27,7 +27,7 @@
  * @license    LGPL
  * @filesource [dokmansystem] by Thomas Krueger
  */
- 
+
 /**
  * Table tl_dms_categories
  */
@@ -112,7 +112,7 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 				'icon'                => 'visible.gif',
 				'attributes'          => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
 				'button_callback'     => array('tl_dms_categories', 'toggleIcon')
-			), 
+			),
 			'show' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_dms_categories']['show'],
@@ -125,7 +125,7 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{category_legend},name,description;{file_legend},file_types;{rights_legend},general_read_permission,general_manage_permission;{publish_legend},published'
+		'default'                     => '{category_legend},name,description;{file_legend},file_types;{rights_legend},general_read_permission,general_manage_permission;{expert_legend:hide},cssID;{publish_legend},published'
 	),
 	
 	// Fields
@@ -190,6 +190,13 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 										 ),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_dms_categories']['general_manage_permission_option'],
 			'eval'                    => array('mandatory'=>true, 'helpwizard'=>true, 'tl_class'=>'w50')
+		),
+		'cssID' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_categories']['cssID'],
+			'exclude'                 => true,
+			'inputType'               => 'text',
+			'eval'                    => array('multiple'=>true, 'size'=>2, 'tl_class'=>'w50')
 		),
 		'published' => array
 		(
@@ -289,7 +296,7 @@ class tl_dms_categories extends Backend
 			$icon = 'invisible.gif';
 		}
 
-		return '<a href="'.$this->addToUrl($href).'" title="'.specialchars($title).'"'.$attributes.'>'.$this->generateImage($icon, $label).'</a> '; 
+		return '<a href="'.$this->addToUrl($href).'" title="'.specialchars($title).'"'.$attributes.'>'.$this->generateImage($icon, $label).'</a> ';
 	}
 
 	/**

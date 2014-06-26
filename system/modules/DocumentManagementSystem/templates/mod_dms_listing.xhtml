@@ -75,7 +75,7 @@
 <?php $fileCount = 0; ?>
 <?php foreach ($this->categories as $category): ?>
 			<!-- category -->
-			<tr class="category level_<?php echo $category->getLevel(); ?><?php if (!$category->isReadableForCurrentMember()) : ?> locked<?php endif; ?><?php if (!$category->hasPublishedDocuments()) : ?> empty<?php endif; ?>">
+			<tr id="<?php echo $category->getCssId(); ?>" class="category level_<?php echo $category->getLevel(); ?><?php if (!$category->isReadableForCurrentMember()) : ?> locked<?php endif; ?><?php if (!$category->hasPublishedDocuments()) : ?> empty<?php endif; ?><?php if (strlen($category->getCssClasses()) > 0) : ?> <?php echo $category->getCssClasses(); ?><?php endif; ?>">
 				<td class="category_name"><?php echo $category->name; ?></td>
 				<td class="category_filecount centered">
 	<?php if ($category->isReadableForCurrentMember()) : ?>
@@ -95,7 +95,7 @@
 			</tr>
 	<?php if ($category->hasDescription()) : ?>
 			<!-- category description -->
-			<tr class="description category_description level_<?php echo $category->getLevel(); ?><?php if (!$category->isReadableForCurrentMember()) : ?> locked<?php endif; ?><?php if (!$category->hasPublishedDocuments()) : ?> empty<?php endif; ?>">
+			<tr class="description category_description level_<?php echo $category->getLevel(); ?><?php if (!$category->isReadableForCurrentMember()) : ?> locked<?php endif; ?><?php if (!$category->hasPublishedDocuments()) : ?> empty<?php endif; ?><?php if (strlen($category->getCssClasses()) > 0) : ?> <?php echo $category->getCssClasses(); ?><?php endif; ?>">
 				<td colspan="3" class="category_description"><?php echo $category->description; ?></td>
 			</tr>
 	<?php endif; ?>
@@ -103,7 +103,7 @@
 			<!-- documents -->
 		<?php foreach ($category->documents as $document) : ?>
 			<?php if ($document->isPublished()) : ?>
-			<tr class="document level_<?php echo $category->getLevel(); ?>">
+			<tr class="document level_<?php echo $category->getLevel(); ?><?php if (strlen($category->getCssClasses()) > 0) : ?> <?php echo $category->getCssClasses(); ?><?php endif; ?>">
 				<td colspan="3" class="document_link">
 					<?php
 						$title = sprintf($GLOBALS['TL_LANG']['DMS']['listing_size'], $document->getFileSize(Document::FILE_SIZE_UNIT_MB, true));
@@ -129,7 +129,7 @@
 			<?php } */?>
 			</tr>
 				<?php if ($document->hasDescription()) : ?>
-			<tr class="description document_description level_<?php echo $category->getLevel(); ?>">
+			<tr class="description document_description level_<?php echo $category->getLevel(); ?><?php if (strlen($category->getCssClasses()) > 0) : ?> <?php echo $category->getCssClasses(); ?><?php endif; ?>">
 				<td colspan="3" class="document_description">
 					<?php echo $document->description; ?>
 				</td>

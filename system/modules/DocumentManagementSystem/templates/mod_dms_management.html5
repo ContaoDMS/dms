@@ -58,7 +58,7 @@
 <?php $fileCount = 0; ?>
 <?php foreach ($this->categories as $category): ?>
 			<!-- category -->
-			<tr class="category level_<?php echo $category->getLevel(); ?><?php if (!$category->isUploadableForCurrentMember() && !$category->isManageableForCurrentMember()) : ?> locked<?php endif; ?><?php if (!$category->hasDocuments()) : ?> empty<?php endif; ?>">
+			<tr id="<?php echo $category->getCssId(); ?>" class="category level_<?php echo $category->getLevel(); ?><?php if (!$category->isUploadableForCurrentMember() && !$category->isManageableForCurrentMember()) : ?> locked<?php endif; ?><?php if (!$category->hasDocuments()) : ?> empty<?php endif; ?><?php if (strlen($category->getCssClasses()) > 0) : ?> <?php echo $category->getCssClasses(); ?><?php endif; ?>">
 				<td class="category_name"><?php echo $category->name; ?></td>
 				<td class="category_upload centered button">
 	<?php if ($category->isUploadableForCurrentMember()) : ?>
@@ -77,7 +77,7 @@
 			</tr>
 	<?php if ($category->hasDescription()) : ?>
 			<!-- category description -->
-			<tr class="description category_description level_<?php echo $category->getLevel(); ?><?php if (!$category->isUploadableForCurrentMember() && !$category->isManageableForCurrentMember()) : ?> locked<?php endif; ?><?php if (!$category->hasDocuments()) : ?> empty<?php endif; ?>">
+			<tr class="description category_description level_<?php echo $category->getLevel(); ?><?php if (!$category->isUploadableForCurrentMember() && !$category->isManageableForCurrentMember()) : ?> locked<?php endif; ?><?php if (!$category->hasDocuments()) : ?> empty<?php endif; ?><?php if (strlen($category->getCssClasses()) > 0) : ?> <?php echo $category->getCssClasses(); ?><?php endif; ?>">
 				<td colspan="3" class="category_description"><?php echo $category->description; ?></td>
 			</tr>
 	<?php endif; ?>

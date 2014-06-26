@@ -53,6 +53,7 @@ class Category extends System
 	private $strFileTypes = "";
 	private $strGeneralReadPermission = "";
 	private $strGeneralManagePermission = "";
+	private $arrCssId = "";
 	private $blnPublished = false;
 	private $arrSubCategories = array();
 	private $arrAccessRights = array();
@@ -112,6 +113,9 @@ class Category extends System
 			case 'generalManagePermission':
 				$this->strGeneralManagePermission = $varValue;
 				break;
+			case 'cssId':
+				$this->arrCssId = deserialize($varValue, true);
+				break;
 			case 'published':
 				$this->blnPublished = (bool) $varValue;
 				break;
@@ -163,6 +167,9 @@ class Category extends System
 				break;
 			case 'generalManagePermission':
 				return $this->strGeneralManagePermission;
+				break;
+			case 'cssId':
+				return $this->arrCssId;
 				break;
 			case 'published':
 				return $this->blnPublished;
@@ -568,6 +575,30 @@ class Category extends System
 		}
 		
 		return in_array($strFileType, $arrAllowedFileTypes);
+	}
+	
+	/**
+	 * Returns the css id (if none is set, will generate one).
+	 *
+	 * @return	string	The css id for this category.
+	 */
+	public function getCssId()
+	{
+		if ($this->arrCssId[0] == '')
+		{
+			return "category_" . $this->id;
+		}
+		return $this->arrCssId[0];
+	}
+	
+	/**
+	 * Returns the css classes.
+	 *
+	 * @return	string	The css classes for this category.
+	 */
+	public function getCssClasses()
+	{
+		return $this->arrCssId[1];
 	}
 }
 

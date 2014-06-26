@@ -10,9 +10,9 @@
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Table `tl_dms_categories`
--- 
+--
 
 CREATE TABLE `tl_dms_categories` (
   `id` int(10) unsigned NOT NULL auto_increment,
@@ -24,6 +24,7 @@ CREATE TABLE `tl_dms_categories` (
   `file_types` varchar(255) NOT NULL default '',
   `general_read_permission` varchar(64) NOT NULL default '',
   `general_manage_permission` varchar(64) NOT NULL default '',
+  `cssID` varchar(255) NOT NULL default '',
   `published` char(1) NOT NULL default '',
   PRIMARY KEY  (`id`),
   KEY `pid` (`pid`)
@@ -31,9 +32,9 @@ CREATE TABLE `tl_dms_categories` (
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Table `tl_dms_access_rights`
--- 
+--
 
 CREATE TABLE `tl_dms_access_rights` (
   `id` int(10) unsigned NOT NULL auto_increment,
@@ -52,9 +53,9 @@ CREATE TABLE `tl_dms_access_rights` (
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Table `tl_dms_document`
--- 
+--
 
 CREATE TABLE `tl_dms_documents` (
   `id` int(10) unsigned NOT NULL auto_increment,
@@ -82,9 +83,9 @@ CREATE TABLE `tl_dms_documents` (
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Table `tl_modules`
--- 
+--
 
 CREATE TABLE `tl_module` (
   `dmsHideEmptyCategories` char(1) NOT NULL default '',

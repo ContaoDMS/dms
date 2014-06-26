@@ -314,6 +314,7 @@ class DmsLoader extends Controller
 		$category->fileTypes = $objCategory->file_types;
 		$category->generalReadPermission = $objCategory->general_read_permission;
 		$category->generalManagePermission = $objCategory->general_manage_permission;
+		$category->cssId = $objCategory->cssID;
 		$category->published = $objCategory->published;
 		return $category;
 	}

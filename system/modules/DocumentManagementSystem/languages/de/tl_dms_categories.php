@@ -36,6 +36,7 @@ $GLOBALS['TL_LANG']['tl_dms_categories']['description']               = array('B
 $GLOBALS['TL_LANG']['tl_dms_categories']['file_types']                = array('Erlaubte Dateitypen', 'Geben Sie durch Komma getrennt die Dateitypen an, für die ein Upload gestattet ist.');
 $GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission']   = array('Grundsätzliches Leserecht', 'Geben Sie das grundsätzliche Leserecht für Dokumente dieser Kategorie an.');
 $GLOBALS['TL_LANG']['tl_dms_categories']['general_manage_permission'] = array('Grundsätzliche Verwaltungsrechte', 'Geben Sie die grundsätzlichen Verwaltungsrechte für Dokumente dieser Kategorie an.');
+$GLOBALS['TL_LANG']['tl_dms_categories']['cssID']                     = array('CSS-ID/Klasse', 'Geben Sie eine ID und beliebig viele Klassen ein.');
 $GLOBALS['TL_LANG']['tl_dms_categories']['published']                 = array('Kategorie veröffentlichen', 'Geben Sie an ob die Kategorie veröffentlicht sein soll.');
 
 /**
@@ -44,6 +45,7 @@ $GLOBALS['TL_LANG']['tl_dms_categories']['published']                 = array('K
 $GLOBALS['TL_LANG']['tl_dms_categories']['category_legend'] = 'Kategorie';
 $GLOBALS['TL_LANG']['tl_dms_categories']['file_legend']     = 'Datei';
 $GLOBALS['TL_LANG']['tl_dms_categories']['rights_legend']   = 'Rechte';
+$GLOBALS['TL_LANG']['tl_dms_categories']['expert_legend']   = 'Experten-Einstellungen';
 $GLOBALS['TL_LANG']['tl_dms_categories']['publish_legend']  = 'Veröffentlichung';
 
 /**
