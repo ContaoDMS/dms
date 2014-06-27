@@ -86,14 +86,13 @@ class ModuleDmsListing extends Module
 		$params->loadRootCategory = true; // get complete path to root, for checking inherited access rights;
 		$params->loadAccessRights = true;
 		$params->loadDocuments = true;
-		// TODO: (#9) get the search type from form here (via Drop Down)
-		$params->documentSearchType = DmsLoaderParams::DOCUMENT_SEARCH_LIKE;
 		
 		$formId = "dms_listing_" . $this->id;
 		 
 		$arrMessages = array('errors' => array(), 'warnings' => array(), 'successes' => array(), 'infos' => array());
 		$arrExpandedCategories = array();
 		$strSearchText = "";
+		$strSearchType = $this->dmsDefaultSearchType;
 		
 		if ($this->Input->post('FORM_SUBMIT') == $formId)
 		{
@@ -104,6 +103,7 @@ class ModuleDmsListing extends Module
 			}
 			
 			$strSearchText = $this->Input->post('searchText');
+			$strSearchType = $this->Input->post('searchType');
 			
 			/* handle download */
 			$docId = $this->Input->post('docId');
@@ -152,6 +152,7 @@ class ModuleDmsListing extends Module
 		}
 		
 		$params->documentSearchText = $strSearchText;
+		$params->documentSearchType = $strSearchType;
 		
 		$arrCategories = $dmsLoader->loadCategories($params);
 		// apply the read permissions, to only show valid categories
@@ -170,6 +171,7 @@ class ModuleDmsListing extends Module
 		// add collected post data
 		$this->Template->expandedCategories = $arrExpandedCategories;
 		$this->Template->searchText = $strSearchText;
+		$this->Template->searchType = $strSearchType;
 	}
 	
 	/**

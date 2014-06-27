@@ -86,7 +86,7 @@ class DmsLoaderParams
 				$this->strDocumentSearchText = $varValue;
 				break;
 			case 'documentSearchType':
-				if ($value == self::DOCUMENT_SEARCH_LIKE)
+				if ($varValue == self::DOCUMENT_SEARCH_LIKE)
 				{
 					$this->strDocumentSearchType = self::DOCUMENT_SEARCH_LIKE;
 				}

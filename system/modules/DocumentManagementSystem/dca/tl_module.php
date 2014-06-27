@@ -31,7 +31,7 @@
 /**
  * Add palettes to tl_module
  */
-$GLOBALS['TL_DCA']['tl_module']['palettes']['dms_listing']    = '{title_legend},name,headline,type;{config_legend},dmsHideEmptyCategories,dmsHideLockedCategories;{template_legend:hide},dmsTemplate;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['dms_listing']    = '{title_legend},name,headline,type;{config_legend},dmsHideEmptyCategories,dmsHideLockedCategories,dmsDefaultSearchType;{template_legend:hide},dmsTemplate;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';
 $GLOBALS['TL_DCA']['tl_module']['palettes']['dms_management'] = '{title_legend},name,headline,type;{config_legend},dmsHideLockedCategories;{template_legend:hide},dmsTemplate;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';
 
 /**
@@ -46,6 +46,13 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['dmsHideLockedCategories'] = array(
 	'label'            => &$GLOBALS['TL_LANG']['tl_module']['dmsHideLockedCategories'],
 	'inputType'        => 'checkbox',
 	'eval'             => array('tl_class'=>'w50')
+);
+$GLOBALS['TL_DCA']['tl_module']['fields']['dmsDefaultSearchType'] = array(
+	'label'            => &$GLOBALS['TL_LANG']['tl_module']['dmsDefaultSearchType'],
+	'inputType'        => 'select',
+	'options'          => array(DmsLoaderParams::DOCUMENT_SEARCH_EXACT, DmsLoaderParams::DOCUMENT_SEARCH_LIKE),
+	'reference'        => &$GLOBALS['TL_LANG']['tl_module']['dmsDefaultSearchTypeOptions'],
+	'eval'             => array('tl_class'=>'clr w50')
 );
 $GLOBALS['TL_DCA']['tl_module']['fields']['dmsTemplate'] = array(
 	'label'            => &$GLOBALS['TL_LANG']['tl_module']['dmsTemplate'],

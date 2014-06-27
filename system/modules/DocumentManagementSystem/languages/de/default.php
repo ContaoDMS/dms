@@ -133,9 +133,6 @@ $GLOBALS['TL_LANG']['DMS']['management_manage_edit_document_unpublished']       
 // manage :: edit .. processed
 $GLOBALS['TL_LANG']['DMS']['management_manage_edit_processed_headline']            = "Dokument bearbeitet";
 
-
-
-
 /**
  * Translations for listing module
  */
@@ -146,6 +143,8 @@ $GLOBALS['TL_LANG']['DMS']['listing_tfoot_document_count']      = "Anzahl gefund
 $GLOBALS['TL_LANG']['DMS']['listing_reset_button']              = "Zurücksetzen";
 $GLOBALS['TL_LANG']['DMS']['listing_search_button']             = "Suchen";
 $GLOBALS['TL_LANG']['DMS']['listing_search_placeholder']        = "Suchbegriff";
+$GLOBALS['TL_LANG']['DMS']['listing_search_type_exact']         = "Exakte Suche";
+$GLOBALS['TL_LANG']['DMS']['listing_search_type_like']          = "Ähnlichkeitssuche";
 $GLOBALS['TL_LANG']['DMS']['listing_button_show_all_documents'] = "Alle Dokumente anzeigen";
 $GLOBALS['TL_LANG']['DMS']['listing_button_hide_all_documents'] = "Alle Dokumente ausblenden";
 $GLOBALS['TL_LANG']['DMS']['listing_version']                   = "(V. %s)";

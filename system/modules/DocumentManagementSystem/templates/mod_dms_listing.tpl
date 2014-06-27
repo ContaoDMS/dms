@@ -48,10 +48,9 @@
 	<!-- Search -->
 	<div id="list_search">
 		<div id="list_search_params">
-			<?php // TODO: (#9) set the search type here (via Drop Down) ?>
-			<select name="searchType" id="searchType" style="visibility: hidden;">
-				<option value="<?php echo DmsLoaderParams::DOCUMENT_SEARCH_EXACT; ?>"><?php echo DmsLoaderParams::DOCUMENT_SEARCH_EXACT; ?></option>
-				<option value="<?php echo DmsLoaderParams::DOCUMENT_SEARCH_EXACT; ?>"><?php echo DmsLoaderParams::DOCUMENT_SEARCH_EXACT; ?></option>
+			<select name="searchType" id="searchType">
+				<option value="<?php echo DmsLoaderParams::DOCUMENT_SEARCH_EXACT; ?>"<?php if ($this->searchType == DmsLoaderParams::DOCUMENT_SEARCH_EXACT): ?> selected="selected"<?php endif; ?>><?php echo $GLOBALS['TL_LANG']['DMS']['listing_search_type_exact']; ?></option>
+				<option value="<?php echo DmsLoaderParams::DOCUMENT_SEARCH_LIKE; ?>"<?php if ($this->searchType == DmsLoaderParams::DOCUMENT_SEARCH_LIKE): ?> selected="selected"<?php endif; ?>><?php echo $GLOBALS['TL_LANG']['DMS']['listing_search_type_like']; ?></option>
 			</select>
 			<input type="text" name="searchText" id="searchText" placeholder="<?php echo $GLOBALS['TL_LANG']['DMS']['listing_search_placeholder']; ?>" value="<?php if ($this->searchText != "") : ?><?php echo $this->searchText; ?><?php endif; ?>" />
 		</div>

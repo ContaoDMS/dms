@@ -267,13 +267,13 @@ class DmsLoader extends Controller
 		{
 			if ($params->documentSearchType == DmsLoaderParams::DOCUMENT_SEARCH_LIKE)
 			{
-				$whereClause .= "AND (d.name = ? OR d.description = ? OR d.keywords = ?) ";
-				$seachText = $params->documentSearchText;
+				$whereClause .= "AND (UPPER(d.name) LIKE ? OR UPPER(d.description) LIKE ? OR UPPER(d.keywords) LIKE ?) ";
+				$seachText = "%" . $params->documentSearchText . "%";
 			}
 			else
 			{
-				$whereClause .= "AND (UPPER(d.name) LIKE ? OR UPPER(d.description) LIKE ? OR UPPER(d.keywords) LIKE ?) ";
-				$seachText = "%" . $params->documentSearchText . "%";
+				$whereClause .= "AND (d.name = ? OR d.description = ? OR d.keywords = ?) ";
+				$seachText = $params->documentSearchText;
 			}
 			
 			// add the search text 3 times
