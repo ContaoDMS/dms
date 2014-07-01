@@ -81,8 +81,8 @@ class ModuleDmsListing extends Module
 		$dmsLoader = DmsLoader::getInstance();
 		$params = new DmsLoaderParams();
 		// Prepare paramters for loader
-		// TODO: (#9) set a custom ROOT node id here --> module config (set an info text, if ROOT not is 0)
-		$params->rootCategoryId = 0;
+		$params->rootCategoryId = $this->dmsStartCategory;
+		$params->includeRootCategory = $this->dmsStartCategoryIncluded;
 		$params->loadRootCategory = true; // get complete path to root, for checking inherited access rights;
 		$params->loadAccessRights = true;
 		$params->loadDocuments = true;

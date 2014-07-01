@@ -76,8 +76,19 @@ class DmsLoader extends Controller
 		if ($params->loadRootCategory && $params->rootCategoryId > 0)
 		{
 			$rootCategory = $this->loadCategory($params->rootCategoryId, $params);
+			
+			$arrCategories = $this->getCategoryLevel($params->rootCategoryId, $rootCategory, $params);
+			
+			if ($params->includeRootCategory)
+			{
+				$rootCategory->subCategories = $arrCategories;
+				$arrCategories = array();
+				$arrCategories[] = $rootCategory;
+			}
+			
+			return $arrCategories;
 		}
-		return $this->getCategoryLevel($params->rootCategoryId, $rootCategory, $params);
+		return $this->getCategoryLevel($params->rootCategoryId, null, $params);
 	}
 	
 	/**

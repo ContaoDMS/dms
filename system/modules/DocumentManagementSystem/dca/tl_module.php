@@ -31,33 +31,47 @@
 /**
  * Add palettes to tl_module
  */
-$GLOBALS['TL_DCA']['tl_module']['palettes']['dms_listing']    = '{title_legend},name,headline,type;{config_legend},dmsHideEmptyCategories,dmsHideLockedCategories,dmsDefaultSearchType;{template_legend:hide},dmsTemplate;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';
-$GLOBALS['TL_DCA']['tl_module']['palettes']['dms_management'] = '{title_legend},name,headline,type;{config_legend},dmsHideLockedCategories;{template_legend:hide},dmsTemplate;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['dms_listing']    = '{title_legend},name,headline,type;{config_legend},dmsStartCategory,dmsStartCategoryPath,dmsStartCategoryIncluded,dmsHideLockedCategories,dmsHideEmptyCategories,dmsDefaultSearchType;{template_legend:hide},dmsTemplate;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['dms_management'] = '{title_legend},name,headline,type;{config_legend},dmsStartCategory,dmsStartCategoryPath,dmsStartCategoryIncluded,dmsHideLockedCategories;{template_legend:hide},dmsTemplate;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';
 
 /**
  * Fields
  */
-$GLOBALS['TL_DCA']['tl_module']['fields']['dmsHideEmptyCategories'] = array(
-	'label'            => &$GLOBALS['TL_LANG']['tl_module']['dmsHideEmptyCategories'],
-	'inputType'        => 'checkbox',
-	'eval'             => array('tl_class'=>'w50')
+$GLOBALS['TL_DCA']['tl_module']['fields']['dmsStartCategory'] = array(
+	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['dmsStartCategory'],
+	'inputType'               => 'select',
+	'options_callback'        => array('tl_module_dms','getStartCategoryOptions'),
+	'eval'                    => array('tl_class'=>'clr w50', 'includeBlankOption'=>true, 'submitOnChange'=>true)
+);
+$GLOBALS['TL_DCA']['tl_module']['fields']['dmsStartCategoryPath'] = array(
+	'input_field_callback'    => array('tl_module_dms','getStartCategoryPath')
+);
+$GLOBALS['TL_DCA']['tl_module']['fields']['dmsStartCategoryIncluded'] = array(
+	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['dmsStartCategoryIncluded'],
+	'inputType'               => 'checkbox',
+	'eval'                    => array('tl_class'=>'clr w50 ')
 );
 $GLOBALS['TL_DCA']['tl_module']['fields']['dmsHideLockedCategories'] = array(
-	'label'            => &$GLOBALS['TL_LANG']['tl_module']['dmsHideLockedCategories'],
-	'inputType'        => 'checkbox',
-	'eval'             => array('tl_class'=>'w50')
+	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['dmsHideLockedCategories'],
+	'inputType'               => 'checkbox',
+	'eval'                    => array('tl_class'=>'clr w50')
+);
+$GLOBALS['TL_DCA']['tl_module']['fields']['dmsHideEmptyCategories'] = array(
+	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['dmsHideEmptyCategories'],
+	'inputType'               => 'checkbox',
+	'eval'                    => array('tl_class'=>'w50')
 );
 $GLOBALS['TL_DCA']['tl_module']['fields']['dmsDefaultSearchType'] = array(
-	'label'            => &$GLOBALS['TL_LANG']['tl_module']['dmsDefaultSearchType'],
-	'inputType'        => 'select',
-	'options'          => array(DmsLoaderParams::DOCUMENT_SEARCH_EXACT, DmsLoaderParams::DOCUMENT_SEARCH_LIKE),
-	'reference'        => &$GLOBALS['TL_LANG']['tl_module']['dmsDefaultSearchTypeOptions'],
-	'eval'             => array('tl_class'=>'clr w50')
+	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['dmsDefaultSearchType'],
+	'inputType'               => 'select',
+	'options'                 => array(DmsLoaderParams::DOCUMENT_SEARCH_EXACT, DmsLoaderParams::DOCUMENT_SEARCH_LIKE),
+	'reference'               => &$GLOBALS['TL_LANG']['tl_module']['dmsDefaultSearchTypeOptions'],
+	'eval'                    => array('tl_class'=>'clr w50')
 );
 $GLOBALS['TL_DCA']['tl_module']['fields']['dmsTemplate'] = array(
-	'label'            => &$GLOBALS['TL_LANG']['tl_module']['dmsTemplate'],
-	'inputType'        => 'select',
-	'options_callback' => array('tl_module_dms', 'getDmsTemplates')
+	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['dmsTemplate'],
+	'inputType'               => 'select',
+	'options_callback'        => array('tl_module_dms', 'getDmsTemplates')
 );
 
 /**
@@ -94,6 +108,58 @@ class tl_module_dms extends Backend
 		}
 		
 		return $this->getTemplateGroup('mod_' . $dc->activeRecord->type, $intPid);
+	}
+	
+	/**
+	 * Get all articles and return them as array
+	 * @param DataContainer
+	 * @return array
+	 */
+	public function getStartCategoryOptions(DataContainer $dc)
+	{
+		$dmsLoader = DmsLoader::getInstance();
+		$params = new DmsLoaderParams();
+		$params->rootCategoryId = 0;
+		$arrCategories = $dmsLoader->loadCategories($params);
+		$arrCategories = DmsLoader::flattenCategories($arrCategories);
+		
+		$arrOptions = array();
+		foreach ($arrCategories as $category)
+		{
+			$indent = "";
+			for ($i = 0; $i < $category->getLevel(); $i++)
+			{
+				$indent .= "&nbsp;&nbsp;&nbsp;&nbsp;";
+			}
+			$arrOptions[$category->id] = $indent . $category->name;
+		}
+		
+		return $arrOptions;
+	}
+	
+	/**
+	 * Return all dms templates as array
+	 * @param DataContainer
+	 * @param string the label
+	 * @return string
+	 */
+	public function getStartCategoryPath(DataContainer $dc)
+	{
+		$dmsLoader = DmsLoader::getInstance();
+		$params = new DmsLoaderParams();
+		$params->loadRootCategory = true;
+		$category = $dmsLoader->loadCategory($dc->activeRecord->dmsStartCategory, $params);
+		$path = '';
+		if ($category != null)
+		{
+			$path .= implode($GLOBALS['TL_LANG']['DMS']['management_path_separator'], $category->getPathNames(false));
+		}
+
+		return '<div class="w50">
+  <h3><label for="ctrl_dmsStartCategory">' . $GLOBALS['TL_LANG']['tl_module']['dmsStartCategoryPath'][0] . '</label></h3>
+  <p class="tl_text dms_disabled_text tl_tip">' . $path . '</p>
+  <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_module']['dmsStartCategoryPath'][1] . '</p>
+</div>';
 	}
 }
 

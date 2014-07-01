@@ -44,6 +44,7 @@ class DmsLoaderParams
 	 */
 	private $intRootCategoryId = 0;
 	private $blnLoadRootCategory = false;
+	private $blnIncludeRootCategory = false;
 	private $blnLoadCategory = false;
 	private $blnLoadAccessRights = false;
 	private $blnLoadDocuments = false;
@@ -72,6 +73,9 @@ class DmsLoaderParams
 				break;
 			case 'loadRootCategory':
 				$this->blnLoadRootCategory = (bool) $varValue;
+				break;
+			case 'includeRootCategory':
+				$this->blnIncludeRootCategory = (bool) $varValue;
 				break;
 			case 'loadCategory':
 				$this->blnLoadCategory = (bool) $varValue;
@@ -116,6 +120,9 @@ class DmsLoaderParams
 				break;
 			case 'loadRootCategory':
 				return $this->blnLoadRootCategory;
+				break;
+			case 'includeRootCategory':
+				return $this->blnIncludeRootCategory;
 				break;
 			case 'loadCategory':
 				return $this->blnLoadCategory;

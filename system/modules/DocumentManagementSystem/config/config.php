@@ -49,8 +49,7 @@ array_insert($GLOBALS['BE_MOD'], 1, array
 		'dms_documents' => array
 		(
 			'tables'     => array('tl_dms_documents'),
-			'icon'       => 'system/modules/DocumentManagementSystem/html/documents.png',
-			'stylesheet' => 'system/modules/DocumentManagementSystem/html/style.css'
+			'icon'       => 'system/modules/DocumentManagementSystem/html/documents.png'
 		)
 	)
 ));
@@ -81,6 +80,13 @@ $GLOBALS['TL_DMS']['SPECIALCHARS'] = array
 	"<" => "-",
 	">" => "-"
 );
- 
+
+/**
+ * adding custom css to backend
+ */
+if (TL_MODE == 'BE')
+{
+	$GLOBALS['TL_CSS'][] = 'system/modules/DocumentManagementSystem/html/dms_backend.css';
+}
  
 ?>

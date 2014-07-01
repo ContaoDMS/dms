@@ -343,7 +343,7 @@ class tl_dms_documents extends Backend
 		return '
 <div class="w50">
   <h3><label for="ctrl_purge">'.$GLOBALS['TL_LANG']['tl_dms_documents']['data_file_name_org'][0].'</label></h3>
-  <div id="data_file_name_org" class="tl_text">' . $doc->data_file_name . '</div>
+  <p class="tl_text dms_disabled_text tl_tip">' . $doc->data_file_name . '</p>
   <p class="tl_help tl_tip">'.$GLOBALS['TL_LANG']['tl_dms_documents']['data_file_name_org'][1].'</p>
 </div>';
 	}

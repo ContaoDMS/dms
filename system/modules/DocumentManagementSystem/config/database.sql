@@ -88,8 +88,10 @@ CREATE TABLE `tl_dms_documents` (
 --
 
 CREATE TABLE `tl_module` (
-  `dmsHideEmptyCategories` char(1) NOT NULL default '',
+  `dmsStartCategory` int(10) unsigned NOT NULL default '0',
+  `dmsStartCategoryIncluded` char(1) NOT NULL default '',
   `dmsHideLockedCategories` char(1) NOT NULL default '',
+  `dmsHideEmptyCategories` char(1) NOT NULL default '',
   `dmsDefaultSearchType` varchar(5) NOT NULL default '',
   `dmsTemplate` varchar(128) NOT NULL default '',
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
