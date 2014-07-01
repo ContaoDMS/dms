@@ -91,6 +91,8 @@ class ModuleDmsListing extends Module
 		 
 		$arrMessages = array('errors' => array(), 'warnings' => array(), 'successes' => array(), 'infos' => array());
 		$arrExpandedCategories = array();
+		$strLastExpandedCollapsedCategory = "";
+		$strLastExpandedCollapsedCategoryPosition = "";
 		$strSearchText = "";
 		$strSearchType = $this->dmsDefaultSearchType;
 		
@@ -101,6 +103,8 @@ class ModuleDmsListing extends Module
 			{
 				$arrExpandedCategories = $this->Input->post('expandedCatagories');
 			}
+			$strLastExpandedCollapsedCategory = $this->Input->post('lastExpandedCollapsedCategory');
+			$strLastExpandedCollapsedCategoryPosition = $this->Input->post('lastExpandedCollapsedCategoryPosition');
 			
 			$strSearchText = $this->Input->post('searchText');
 			$strSearchType = $this->Input->post('searchType');
@@ -170,6 +174,8 @@ class ModuleDmsListing extends Module
 		
 		// add collected post data
 		$this->Template->expandedCategories = $arrExpandedCategories;
+		$this->Template->lastExpandedCollapsedCategory = $strLastExpandedCollapsedCategory;
+		$this->Template->lastExpandedCollapsedCategoryPosition = $strLastExpandedCollapsedCategoryPosition;
 		$this->Template->searchText = $strSearchText;
 		$this->Template->searchType = $strSearchType;
 	}

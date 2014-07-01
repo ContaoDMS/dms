@@ -8,6 +8,8 @@
 	<input type="hidden" name="FORM_SUBMIT" value="<?php echo $this->formId; ?>">
 	<input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}">
 	<input type="hidden" name="docId" id="docId" value="">
+	<input type="hidden" name="lastExpandedCollapsedCategory" id="lastExpandedCollapsedCategory" value="<?php echo $this->lastExpandedCollapsedCategory; ?>">
+	<input type="hidden" name="lastExpandedCollapsedCategoryPosition" id="lastExpandedCollapsedCategoryPosition" value="<?php echo $this->lastExpandedCollapsedCategoryPosition; ?>">
 	
 	<?php if (count($this->messages['errors']) > 0): ?>
 	<!-- Errors -->
@@ -86,7 +88,7 @@
 				</td>
 				<td class="category_select centered">
 	<?php if ($category->isReadableForCurrentMember() && $category->hasPublishedDocuments()) : ?>    
-					<input onchange="expandCollapseCategory();" type="checkbox" name="expandedCatagories[]" value="<?php echo $category->id; ?>" <?php if (in_array($category->id, $this->expandedCategories)) : ?> checked="checked" <?php endif; ?> />
+					<input onchange="expandCollapseCategory(this);" type="checkbox" name="expandedCatagories[]" value="<?php echo $category->id; ?>" <?php if (in_array($category->id, $this->expandedCategories)) : ?> checked="checked" <?php endif; ?> data-css-id="<?php echo $category->getCssId(); ?>" />
 	<?php else : ?>
 					&nbsp;
 	<?php endif; ?>
@@ -119,13 +121,6 @@
 						<?php echo $document->name; ?> <?php echo sprintf($GLOBALS['TL_LANG']['DMS']['listing_version'], $document->getVersion()); ?>
 					</a>
 				</td>
-    
-  <!-- Spalte 7 (Grafik) -->  
-			<?php /*if ($dokdetail['file_preview'] == "") { ?>
-			<td>&nbsp;</td>
-			<?php } else { ?>
-			<td><a href="{{link_url::anzeige}}?file=<?php echo $DocumentManagementSystemKat['dokdir'].'/preview/'.$dokdetail['name'].'_'.$dokdetail['file_preview'] ?>" target="_new"> <img src="<?php echo $DocumentManagementSystemKat['dokdir'].'/preview/'.$dokdetail['name'].'_'.$dokdetail['file_preview'] ?>" width="20" height="20" border="0"  /> </a></td>
-			<?php } */?>
 			</tr>
 				<?php if ($document->hasDescription()) : ?>
 			<tr class="description document_description level_<?php echo $category->getLevel(); ?><?php if (strlen($category->getCssClasses()) > 0) : ?> <?php echo $category->getCssClasses(); ?><?php endif; ?>">
@@ -160,9 +155,11 @@
 
 <script type="text/javascript">
 <!--
-	function expandCollapseCategory ()
+	function expandCollapseCategory (checkbox)
 	{
 		document.getElementById('docId').value = "";
+		document.getElementById('lastExpandedCollapsedCategory').value = checkbox.getAttribute("data-css-id");
+		document.getElementById('lastExpandedCollapsedCategoryPosition').value = getScrollX();
 		document.getElementById('listing').submit();
 	}
 	
@@ -173,6 +170,8 @@
 			document.getElementsByName("expandedCatagories[]")[i].checked = check;
 		}
 		document.getElementById('docId').value = "";
+		document.getElementById('lastExpandedCollapsedCategory').value = "";
+		document.getElementById('lastExpandedCollapsedCategoryPosition').value = "";
 		document.getElementById('listing').submit();
 	}
 	
@@ -194,6 +193,32 @@
 		document.getElementById('docId').value = docId;
 		document.getElementById('listing').submit();
 	}
+	
+	function getScrollX()
+	{
+		if (typeof(window.pageYOffset) == 'number')
+		{
+			//Netscape compliant
+			return window.pageYOffset;
+		}
+		else if (document.body && (document.body.scrollLeft || document.body.scrollTop))
+		{
+			//DOM compliant
+			return document.body.scrollTop;
+		}
+		else if (document.documentElement && (document.documentElement.scrollLeft || document.documentElement.scrollTop))
+		{
+			//IE6 standards compliant mode
+			return document.documentElement.scrollTop;
+		}
+		return 0;
+	}
+	
+	window.addEvent('domready', function()
+	{
+		window.scrollTo(0, document.getElementById('lastExpandedCollapsedCategoryPosition').value);
+	});
+
 -->
 </script>
 
