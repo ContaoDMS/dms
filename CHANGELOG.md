@@ -2,6 +2,14 @@
 Contao Extension "DocumentManagementSystem"
 ===========================================
 
+Version 2.1.0 (2014-07-xx)
+--------------------------
+- fixed case sensitive file type checking (se #18)
+- improved copying access rights (see #15)
+- added CSS id and classes to category (see #14)
+- added selecting a custom start category in frontend modules (see #8, #9)
+- added a search type to listing module (see #9)
+
 Version 2.0.0 (2014-05-31)
 --------------------------
 - rewrote category view in backend (show as tree, icon displays publishing state, simple add a new category to a parent, ordering via tree sorting, unlimited level depth)
