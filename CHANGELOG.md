@@ -9,6 +9,7 @@ Version 2.1.0 (2014-07-xx)
 - added CSS id and classes to category (see #14)
 - added selecting a custom start category in frontend modules (see #8, #9)
 - added a search type to listing module (see #9)
+- added jumping back to the starting point of the action in listing module (see #17)
 
 Version 2.0.0 (2014-05-31)
 --------------------------
