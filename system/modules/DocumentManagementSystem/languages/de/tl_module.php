@@ -30,13 +30,14 @@
 /**
  * Fields
  */
-$GLOBALS['TL_LANG']['tl_module']['dmsStartCategory']         = array('Startkategorie', 'Bitte wählen Sie eine Kategorie, von der gestartet werden soll, aus. Ist keine Startkategorie gewählt, wird mit allen Kategorien auf dem 1. Level (also direkt unter dem Wurzelknoten) begonnen.');
-$GLOBALS['TL_LANG']['tl_module']['dmsStartCategoryPath']     = array('Pfad zur Startkategorie', 'Zeigt den Pfad zur gewählten Startkategorie.');
-$GLOBALS['TL_LANG']['tl_module']['dmsStartCategoryIncluded'] = array('Startkategorie mit ausgeben', 'Wenn diese Option aktiv ist, wird die gewählte Startkategorie mit ausgegeben.');
-$GLOBALS['TL_LANG']['tl_module']['dmsHideLockedCategories']  = array('Gespeerte Kategorien ausblenden', 'Bitte wählen Sie ob gespeerte Kategorien ausgeblendet werden sollen. Beachten Sie, dass dadruch hierachisch untergeordnete Kategorien ggf. auch ausgeblendet sind.');
-$GLOBALS['TL_LANG']['tl_module']['dmsHideEmptyCategories']   = array('Leere Kategorien ausblenden', 'Bitte wählen Sie ob leere Kategorien ausgeblendet werden sollen. Beachten Sie, dass dadruch hierachisch untergeordnete Kategorien ggf. auch ausgeblendet sind.');
-$GLOBALS['TL_LANG']['tl_module']['dmsDefaultSearchType']     = array('Standard Suchtyp', 'Bitte wählen Sie den Standard Suchtyp aus.');
-$GLOBALS['TL_LANG']['tl_module']['dmsTemplate']              = array('DMS Template', 'Bitte wählen eine eigenes Template aus.');
+$GLOBALS['TL_LANG']['tl_module']['dmsStartCategory']              = array('Startkategorie', 'Bitte wählen Sie eine Kategorie, von der gestartet werden soll, aus. Ist keine Startkategorie gewählt, wird mit allen Kategorien auf dem 1. Level (also direkt unter dem Wurzelknoten) begonnen.');
+$GLOBALS['TL_LANG']['tl_module']['dmsStartCategoryPath']          = array('Pfad zur Startkategorie', 'Zeigt den Pfad zur gewählten Startkategorie.');
+$GLOBALS['TL_LANG']['tl_module']['dmsStartCategoryIncluded']      = array('Startkategorie mit ausgeben', 'Wenn diese Option aktiv ist, wird die gewählte Startkategorie mit ausgegeben.');
+$GLOBALS['TL_LANG']['tl_module']['dmsHideLockedCategories']       = array('Gespeerte Kategorien ausblenden', 'Bitte wählen Sie ob gespeerte Kategorien ausgeblendet werden sollen. Beachten Sie, dass dadruch hierachisch untergeordnete Kategorien ggf. auch ausgeblendet sind.');
+$GLOBALS['TL_LANG']['tl_module']['dmsHideEmptyCategories']        = array('Leere Kategorien ausblenden', 'Bitte wählen Sie ob leere Kategorien ausgeblendet werden sollen. Beachten Sie, dass dadruch hierachisch untergeordnete Kategorien ggf. auch ausgeblendet sind.');
+$GLOBALS['TL_LANG']['tl_module']['dmsDefaultSearchType']          = array('Standard Suchtyp', 'Bitte wählen Sie den Standard Suchtyp aus.');
+$GLOBALS['TL_LANG']['tl_module']['dmsPublishDocumentsPerDefault'] = array('Dokumente standardmäßig veröffentlichen', 'Geben Sie an, ob die innerhalb dieses Moduls hochgeladene Dokumente standardmäßig veröffentlicht werden sollen. Ist diese Option aktiv wird die Checkbox zum Veröffenltichen im Frontend standardmäßig auch aktiviert.');
+$GLOBALS['TL_LANG']['tl_module']['dmsTemplate']                   = array('DMS Template', 'Bitte wählen eine eigenes Template aus.');
 
 /**
  * Options

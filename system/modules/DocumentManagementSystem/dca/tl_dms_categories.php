@@ -125,7 +125,7 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{category_legend},name,description;{file_legend},file_types;{rights_legend},general_read_permission,general_manage_permission;{expert_legend:hide},cssID;{publish_legend},published'
+		'default'                     => '{category_legend},name,description;{documents_legend},file_types,publish_documents_per_default;{rights_legend},general_read_permission,general_manage_permission;{expert_legend:hide},cssID;{publish_legend},published'
 	),
 	
 	// Fields
@@ -158,7 +158,14 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_categories']['file_types'],
 			'exclude'                 => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255)
+			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50')
+		),
+		'publish_documents_per_default' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_categories']['publish_documents_per_default'],
+			'exclude'                 => true,
+			'inputType'               => 'checkbox',
+			'eval'                    => array('tl_class'=>'clr w50')
 		),
 		'general_read_permission' => array
 		(

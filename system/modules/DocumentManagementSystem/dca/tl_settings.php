@@ -31,7 +31,7 @@
 /**
  * Add to palette
  */
-$GLOBALS['TL_DCA']['tl_settings']['palettes']['default'] .= ';{dms_legend},dmsBaseDirectory,dmsMaxUploadFileSize';
+$GLOBALS['TL_DCA']['tl_settings']['palettes']['default'] .= ';{dms_legend},dmsBaseDirectory,dmsMaxUploadFileSize,dmsPublishDocumentsPerDefault';
 
 /**
  * Add fields
@@ -47,11 +47,17 @@ $GLOBALS['TL_DCA']['tl_settings']['fields']['dmsMaxUploadFileSize'] = array(
 	'inputType' => 'inputUnit',
 	'options'   => array(Document::FILE_SIZE_UNIT_BYTE, Document::FILE_SIZE_UNIT_KB, Document::FILE_SIZE_UNIT_MB, Document::FILE_SIZE_UNIT_GB),
 	'reference' => &$GLOBALS['TL_LANG']['DMS']['file_size_unit'],
-	'eval'      => array('tl_class'=>'clr', 'mandatory'=>true, 'rgxp'=>'digit'),
+	'eval'      => array('tl_class'=>'clr w50', 'mandatory'=>true, 'rgxp'=>'digit'),
 	'save_callback' => array
 	(
 		array('tl_settings_dms', 'validateMaxUploadFileSize')
 	)
+);
+
+$GLOBALS['TL_DCA']['tl_settings']['fields']['dmsPublishDocumentsPerDefault'] = array(
+	'label'     => &$GLOBALS['TL_LANG']['tl_settings']['dmsPublishDocumentsPerDefault'],
+	'inputType' => 'checkbox',
+	'eval'      => array('tl_class'=>'clr w50'),
 );
 
 /**

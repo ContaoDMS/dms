@@ -22,6 +22,7 @@ CREATE TABLE `tl_dms_categories` (
   `name` varchar(255) NOT NULL default '',
   `description` text NULL,
   `file_types` varchar(255) NOT NULL default '',
+  `publish_documents_per_default` char(1) NOT NULL default '',
   `general_read_permission` varchar(64) NOT NULL default '',
   `general_manage_permission` varchar(64) NOT NULL default '',
   `cssID` varchar(255) NOT NULL default '',
@@ -93,5 +94,16 @@ CREATE TABLE `tl_module` (
   `dmsHideLockedCategories` char(1) NOT NULL default '',
   `dmsHideEmptyCategories` char(1) NOT NULL default '',
   `dmsDefaultSearchType` varchar(5) NOT NULL default '',
+  `dmsPublishDocumentsPerDefault` char(1) NOT NULL default '',
   `dmsTemplate` varchar(128) NOT NULL default '',
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table `tl_member_group`
+--
+
+CREATE TABLE `tl_member_group` (
+  `dmsPublishDocumentsPerDefault` char(1) NOT NULL default '',
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
