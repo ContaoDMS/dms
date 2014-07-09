@@ -55,7 +55,7 @@ class DmsUtils
 				
 				if (!$blnPublish)
 				{
-					$blnPublish = $category->publishDocumentsPerDefault;
+					$blnPublish = $category->shouldPublishDocumentsPerDefault();
 				}
 			}
 		}

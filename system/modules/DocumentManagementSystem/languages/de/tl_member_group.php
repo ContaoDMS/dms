@@ -31,6 +31,6 @@
  * Fields
  */
 $GLOBALS['TL_LANG']['tl_member_group']['dms_legend']                    = "Dokumenten Management System";
-$GLOBALS['TL_LANG']['tl_member_group']['dmsPublishDocumentsPerDefault'] = array('Dokumente standardmäßig veröffentlichen', 'Geben Sie an, ob die von Mitgliedern dieser Gruppe hochgeladenen Dokumente standardmäßig veröffentlicht werden sollen. Ist diese Option aktiv wird die Checkbox zum Veröffenltichen im Verwaltungsmodul (Frontend) standardmäßig auch aktiviert.');
+$GLOBALS['TL_LANG']['tl_member_group']['dmsPublishDocumentsPerDefault'] = array('Dokumente standardmäßig veröffentlichen', 'Geben Sie an, ob die von Mitgliedern dieser Gruppe hochgeladenen Dokumente standardmäßig veröffentlicht werden sollen. Ist diese Option aktiviert wird die Checkbox zum Veröffentlichen im Verwaltungsmodul (Frontend) immer angekreuzt.');
 
 ?>

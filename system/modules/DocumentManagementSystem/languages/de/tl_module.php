@@ -36,7 +36,7 @@ $GLOBALS['TL_LANG']['tl_module']['dmsStartCategoryIncluded']      = array('Start
 $GLOBALS['TL_LANG']['tl_module']['dmsHideLockedCategories']       = array('Gespeerte Kategorien ausblenden', 'Bitte wählen Sie ob gespeerte Kategorien ausgeblendet werden sollen. Beachten Sie, dass dadruch hierachisch untergeordnete Kategorien ggf. auch ausgeblendet sind.');
 $GLOBALS['TL_LANG']['tl_module']['dmsHideEmptyCategories']        = array('Leere Kategorien ausblenden', 'Bitte wählen Sie ob leere Kategorien ausgeblendet werden sollen. Beachten Sie, dass dadruch hierachisch untergeordnete Kategorien ggf. auch ausgeblendet sind.');
 $GLOBALS['TL_LANG']['tl_module']['dmsDefaultSearchType']          = array('Standard Suchtyp', 'Bitte wählen Sie den Standard Suchtyp aus.');
-$GLOBALS['TL_LANG']['tl_module']['dmsPublishDocumentsPerDefault'] = array('Dokumente standardmäßig veröffentlichen', 'Geben Sie an, ob die innerhalb dieses Moduls hochgeladene Dokumente standardmäßig veröffentlicht werden sollen. Ist diese Option aktiv wird die Checkbox zum Veröffenltichen im Frontend standardmäßig auch aktiviert.');
+$GLOBALS['TL_LANG']['tl_module']['dmsPublishDocumentsPerDefault'] = array('Dokumente standardmäßig veröffentlichen', 'Geben Sie an, ob die innerhalb dieses Moduls hochgeladene Dokumente standardmäßig veröffentlicht werden sollen. Ist diese Option aktiviert wird die Checkbox zum Veröffentlichen im Frontend immer angekreuzt.');
 $GLOBALS['TL_LANG']['tl_module']['dmsTemplate']                   = array('DMS Template', 'Bitte wählen eine eigenes Template aus.');
 
 /**

@@ -43,6 +43,9 @@ class Category extends System
 	const GENERAL_MANAGE_PERMISSION_LOGGED_USER = "LOGGED_USER";
 	const GENERAL_MANAGE_PERMISSION_CUSTOM      = "CUSTOM";
 	const GENERAL_MANAGE_PERMISSION_INHERIT     = "INHERIT";
+	const PUBLISH_DOCUMENTS_PER_DEFAULT_DISABLE = "DISABLE";
+	const PUBLISH_DOCUMENTS_PER_DEFAULT_ENABLE  = "ENABLE";
+	const PUBLISH_DOCUMENTS_PER_DEFAULT_INHERIT = "INHERIT";
 	
 	/**
 	 * Define object parameters.
@@ -51,7 +54,7 @@ class Category extends System
 	private $strName = "";
 	private $strDescription = "";
 	private $strFileTypes = "";
-	private $blnPublishDocumentsPerDefault = false;
+	private $strPublishDocumentsPerDefault = "";
 	private $strGeneralReadPermission = "";
 	private $strGeneralManagePermission = "";
 	private $arrCssId = "";
@@ -109,7 +112,7 @@ class Category extends System
 				$this->strFileTypes = $varValue;
 				break;
 			case 'publishDocumentsPerDefault':
-				$this->blnPublishDocumentsPerDefault = (bool) $varValue;
+				$this->strPublishDocumentsPerDefault = $varValue;
 				break;
 			case 'generalReadPermission':
 				$this->strGeneralReadPermission = $varValue;
@@ -167,7 +170,7 @@ class Category extends System
 				return $this->strFileTypes;
 				break;
 			case 'publishDocumentsPerDefault':
-				return $this->blnPublishDocumentsPerDefault;
+				return $this->strPublishDocumentsPerDefault;
 				break;
 			case 'generalReadPermission':
 				return $this->strGeneralReadPermission;
@@ -217,9 +220,17 @@ class Category extends System
 	 *
 	 * @return	bool	If documents uploaded to this category should be published per default or not.
 	 */
-	public function publishDocumentsPerDefault()
+	public function shouldPublishDocumentsPerDefault()
 	{
-		return $this->blnPublishDocumentsPerDefault;
+		if ($this->strPublishDocumentsPerDefault == self::PUBLISH_DOCUMENTS_PER_DEFAULT_ENABLE)
+		{
+			return true;
+		}
+		else if ($this->strPublishDocumentsPerDefault == self::PUBLISH_DOCUMENTS_PER_DEFAULT_INHERIT && $this->hasParentCategory())
+		{
+			return $this->parentCategory->shouldPublishDocumentsPerDefault();
+		}
+		return false;
 	}
 	
 	/**
