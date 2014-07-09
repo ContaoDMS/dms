@@ -214,9 +214,10 @@ $GLOBALS['TL_LANG']['DMS']['SUCCESS']['document_successfully_edited']       = 'D
 /**
  * Infos
  */
-$GLOBALS['TL_LANG']['DMS']['INFO']['document_already_published']   = 'Das gewählte Dokument ist bereits veröffentlicht.';
-$GLOBALS['TL_LANG']['DMS']['INFO']['document_already_unpublished'] = 'Das gewählte Dokument ist bereits unveröffentlicht.';
-$GLOBALS['TL_LANG']['DMS']['INFO']['document_delete_file_not_exists']     = 'Die Datei zum gelöschten Dokument existierte nicht mehr.';
-$GLOBALS['TL_LANG']['DMS']['INFO']['publish_document_not_allowed'] = 'Sie haben nicht die nötigen Rechte zum Veröffentlichen/Uneröffentlicht von Dokumenten in dieser Kategorie.';
+$GLOBALS['TL_LANG']['DMS']['INFO']['document_already_published']      = 'Das gewählte Dokument ist bereits veröffentlicht.';
+$GLOBALS['TL_LANG']['DMS']['INFO']['document_already_unpublished']    = 'Das gewählte Dokument ist bereits unveröffentlicht.';
+$GLOBALS['TL_LANG']['DMS']['INFO']['document_delete_file_not_exists'] = 'Die Datei zum gelöschten Dokument existierte nicht mehr.';
+$GLOBALS['TL_LANG']['DMS']['INFO']['publish_document_not_allowed']    = 'Sie haben nicht die nötigen Rechte zum Veröffentlichen/Uneröffentlicht von Dokumenten in dieser Kategorie.';
+$GLOBALS['TL_LANG']['DMS']['INFO']['publish_document_per_default']    = 'Das hochgeladene Dokument wird beim Speichern automatisch veröffentlicht.';
 
 ?>

@@ -34,31 +34,68 @@
 class DmsUtils
 {
 	/**
-	 * Store the new document in the given category.
+	 * Return if documents should be published per default.
 	 *
-	 * @param	Document	$document	The document to store.
-	 * @return	document	Returns the document.
+	 * @param	Module	$module	The current module.
+	 * @param	FrontendUser	$member	The current logged member.
+	 * @param	Category	$category	The current category.
+	 * @return	bool	Returns true if documents should be published per default, otherwise false.
 	 */
-	public static function publishDocumentsPerDefault(Module $module, Category $category)
+	public static function publishDocumentsPerDefault(Module $module, FrontendUser $member, Category $category)
 	{
-		$blnPublishDocumentsPerDefault = DmsConfig::publishDocumentsPerDefault();
+		$blnPublish = DmsConfig::publishDocumentsPerDefault();
 		
-		if (!$blnPublishDocumentsPerDefault)
+		if (!$blnPublish)
 		{
-			$blnPublishDocumentsPerDefault = $module->dmsPublishDocumentsPerDefault;
+			$blnPublish = $module->dmsPublishDocumentsPerDefault;
 			
-			if (!$blnPublishDocumentsPerDefault)
+			if (!$blnPublish)
 			{
-				// check member group
+				$blnPublish = self::publishDocumentsPerDefaultForCurrentMembersGroups($member);
 				
-				if (!$blnPublishDocumentsPerDefault)
+				if (!$blnPublish)
 				{
-					$blnPublishDocumentsPerDefault = $category->publishDocumentsPerDefault;
+					$blnPublish = $category->publishDocumentsPerDefault;
 				}
 			}
 		}
 		
-		return $blnPublishDocumentsPerDefault;
+		return $blnPublish;
+	}
+	
+	/**
+	 * Return if documents should be published per default for the current members groups.
+	 *
+	 * @param	FrontendUser	$member	The current logged member.
+	 * @return	bool	Returns true if documents should be published per default for the current members groups, otherwise false.
+	 */
+	public static function publishDocumentsPerDefaultForCurrentMembersGroups(FrontendUser $member)
+	{
+		$blnPublish = false;
+		
+		if ($member != null)
+		{
+			$arrMemberGroups = deserialize($member->groups);
+			
+			if (is_array($arrMemberGroups) && count($arrMemberGroups) > 0)
+			{
+				$db = Database::getInstance();
+				$objMemberGroups = $db->prepare('SELECT * FROM tl_member_group WHERE dmsPublishDocumentsPerDefault = ? AND id IN (' . implode(',', $arrMemberGroups) . ')')->execute('1');
+				return $objMemberGroups->numRows;
+			}
+		}
+		
+		return $blnPublish;
+	}
+	
+	/**
+	 * Return the numeric datim format string
+	 * @return string
+	 */
+	public static function getNumericDatimFormat()
+	{
+		$date = new Date();
+		return $date->getNumericDatimFormat();
 	}
 }
 

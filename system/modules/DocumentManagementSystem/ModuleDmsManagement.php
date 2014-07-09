@@ -391,12 +391,18 @@ class ModuleDmsManagement extends Module
 			$this->Template->documentVersionMajor = $proposedDocumentVersionMajor;
 			$this->Template->documentVersionMinor = $proposedDocumentVersionMinor;
 			$this->Template->documentVersionPatch = $proposedDocumentVersionPatch;
-			$this->Template->documentPublish = DmsUtils::publishDocumentsPerDefault($this, $category);
+			
+			$documentPublish = DmsUtils::publishDocumentsPerDefault($this, $this->Member, $category);
+			$this->Template->documentPublish = $documentPublish;
 			
 			if (!$category->isPublishableForCurrentMember())
 			{
 				$arrMessages['infos'][] = $GLOBALS['TL_LANG']['DMS']['INFO']['publish_document_not_allowed'];
-				//  ... if true from #7, add an info here
+				
+				if ($documentPublish)
+				{
+					$arrMessages['infos'][] = $GLOBALS['TL_LANG']['DMS']['INFO']['publish_document_per_default'];
+				}
 			}
 			
 			$blnShowStart = false;
@@ -419,13 +425,24 @@ class ModuleDmsManagement extends Module
 		$documentVersionMajor = $this->Input->post('documentVersionMajor');
 		$documentVersionMinor = $this->Input->post('documentVersionMinor');
 		$documentVersionPatch = $this->Input->post('documentVersionPatch');
-		$documentPublish = (bool) $this->Input->post('documentPublish'); // TODO: set default publishing behavoir here (see #7) ... if false, check if publishing is allowed, if not, set to value from settings
+		$documentPublish = (bool) $this->Input->post('documentPublish');
 		
 		$params->loadRootCategory = true; // get complete path to root, for checking inherited access rights
 		$params->loadAccessRights = true;
 		$params->loadDocuments = false;
 		$category = $dmsLoader->loadCategory($uploadCategory, $params);
 		
+		if (!$category->isPublishableForCurrentMember())
+		{
+			// if current member is not allowed to publish, set the default behavior from the settings (in case the field was modified manually via dom manipulation)
+			if ($documentPublish)
+			{
+				$arrMessages['infos'][] = $GLOBALS['TL_LANG']['DMS']['INFO']['publish_document_not_allowed'];
+			}
+			$documentPublish = DmsUtils::publishDocumentsPerDefault($this, $this->Member, $category);
+			
+		}
+
 		if (!$category->isUploadableForCurrentMember())
 		{
 			$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['upload_document_not_allowed'];
@@ -894,181 +911,6 @@ class ModuleDmsManagement extends Module
 			
 			$blnShowStart = false;
 		}
-	}
-
-	/*********************************************************************************************************************
-	 *        Funktionen
-	 **********************************************************************************************************************
-	 */
-
-
-	// *********************************************************************************************************************
-
-	protected function dokument_editieren_eingabe($intKategorieId, $strKategorieName, $strKategorieBeschreibung, $strVeroeffentlichen, $strLoeschen, $strEditieren, $arrVeroeffentlichen, $arrLoeschen, $arrEditieren, $mkLoeschLauf, $mkEditierLauf)
-	{
-		/*	Editieren von ausgewaehlten Dokumenten
-		 *			ausgewaehlte Dokumente im Array $arrEditieren werden editiert (hier:Sicherheitsabfrage)
-		 */
-		$this->Template = new FrontendTemplate('mod_dms_mgmt_document_edit');
-
-		$arrConvVeroeffentlichen;
-		if ($arrVeroeffentlichen)
-		{
-			$arrConvVeroeffentlichen = implode(",", $arrVeroeffentlichen);
-		}
-		$arrConvLoeschen;
-		if ($arrLoeschen)
-		{
-			$arrConvLoeschen = implode(",", $arrLoeschen);
-		}
-		$arrConvEditieren;
-		if ($arrEditieren)
-		{
-			$arrConvEditieren = implode(",", $arrEditieren);
-		}
-
-		foreach ($arrEditieren as $strEditierenId)
-		{
-			$objDocumentManagementSystemDok1 = $this->Database->execute("SELECT * FROM tl_dms_categories  WHERE id = $intKategorieId");
-			$row = $objDocumentManagementSystemDok1->fetchAssoc();
-			$strKategorieBeschreibung = $row['description'];
-
-			$objDocumentManagementSystemDok = $this->Database->execute("SELECT * FROM tl_dms_document  WHERE id = $strEditierenId ORDER BY name");
-			$rows = $objDocumentManagementSystemDok->fetchAllAssoc();
-
-			// Anzeige der Daten
-			$arrDocumentManagementSystemVerw[] = array('kategorieid' => $intKategorieId, 'kategoriename' => $strKategorieName, 'kategoriebeschreibung' => $strKategorieBeschreibung, 'recht_veroeffentlichen' => $strVeroeffentlichen, 'recht_loeschen' => $strLoeschen, 'recht_editieren' => $strEditieren, 'arr_veroeffentlichen' => $arrConvVeroeffentlichen, 'arr_loeschen' => $arrConvLoeschen, 'arr_editieren' => $arrConvEditieren, 'dokdetails' => $rows, 'editierlauf' => $mkEditierLauf, 'loeschlauf' => $mkLoeschLauf,);
-		}
-
-		$this->Template->DocumentManagementSystemVerw = $arrDocumentManagementSystemVerw;
-		$this->Template->action = ampersand($this->Environment->request);
-	}
-
-	// *********************************************************************************************************************
-
-	protected function dokument_editieren_ausfuehren($intKategorieId, $strKategorieName, $strKategorieBeschreibung, $strVeroeffentlichen, $strLoeschen, $strEditieren, $arrVeroeffentlichen, $arrLoeschen, $arrEditieren, $mkLoeschLauf, $mkEditierLauf, $arrDokBeschreibung, $arrDokStichworte, $intUserId)
-	{
-		/*	Editieren von ausgewaehlten Dokumenten
-		 *			ausgewaehlte Dokumente im Array $arrEditieren werden editiert (hier:Sicherheitsabfrage)
-		 */
-		$this->Template = new FrontendTemplate('mod_dms_mgmt_document_edit_processing');
-
-		$arrConvVeroeffentlichen;
-		if ($arrVeroeffentlichen)
-		{
-			$arrConvVeroeffentlichen = implode(",", $arrVeroeffentlichen);
-		}
-		$arrConvLoeschen;
-		if ($arrLoeschen)
-		{
-			$arrConvLoeschen = implode(",", $arrLoeschen);
-		}
-		$arrConvEditieren;
-		if ($arrEditieren)
-		{
-			$arrConvEditieren = implode(",", $arrEditieren);
-		}
-
-		$ind = -1;
-		foreach ($arrEditieren as $strEditierenId)
-		{
-			$objDocumentManagementSystemDok1 = $this->Database->execute("SELECT * FROM tl_dms_categories  WHERE id = $intKategorieId");
-			$row = $objDocumentManagementSystemDok1->fetchAssoc();
-			$strKategorieBeschreibung = $row['description'];
-
-			$ind++;
-			$strDokBeschreibung = $arrDokBeschreibung[$ind]; // Beschreibung pro DS
-
-			$strDokStichworte = "";
-			for ($i = 0; $i <= 4; $i++) // Stichworte pro DS
-			{
-				$tmpDokStichwort = $arrDokStichworte[$ind][$i];
-				$tmpDokStichwort = trim($tmpDokStichwort);
-				if ($tmpDokStichwort <> "")
-				{
-					$tmpDokStichwort = strtr($tmpDokStichwort, array("Ä" => "Ae", "ä" => "ae", "Ö" => "Oe", "ö" => "oe", "Ü" => "Ue", "ü" => "ue", "ß" => "ss", "&" => "_und_", " " => "_"));
-					$strDokStichworte .= "," . $tmpDokStichwort;
-				}
-			}
-
-			if ($strDokStichworte == "")
-			{
-				$strDokStichworte = "keine Stichworte";
-			}
-			else
-			{
-				$strDokStichworte = substr($strDokStichworte, 1);
-			}
-
-			// Update der Datenbank
-			$DsSet = array('description' => $strDokBeschreibung, 'keywords' => $strDokStichworte, 'lastedit_member' => $intUserId, 'lastedit_date' => time());
-
-			$this->Database->prepare("UPDATE `tl_dms_document` %s WHERE id=?")->set($DsSet)->execute($strEditierenId);
-
-			// Neueinlesen der DS-Informationen fuer die Anzeige
-			$objDocumentManagementSystemDok = $this->Database->execute("SELECT * FROM tl_dms_document  WHERE id = $strEditierenId ORDER BY name");
-			$rows = $objDocumentManagementSystemDok->fetchAllAssoc();
-
-			// Anzeige der Daten
-			$arrDocumentManagementSystemVerw[] = array('kategorieid' => $intKategorieId, 'kategoriename' => $strKategorieName, 'kategoriebeschreibung' => $strKategorieBeschreibung, 'recht_veroeffentlichen' => $strVeroeffentlichen, 'recht_loeschen' => $strLoeschen, 'recht_editieren' => $strEditieren, 'arr_veroeffentlichen' => $arrConvVeroeffentlichen, 'arr_loeschen' => $arrConvLoeschen, 'arr_editieren' => $arrConvEditieren, 'dokdetails' => $rows, 'editierlauf' => $mkEditierLauf, 'loeschlauf' => $mkLoeschLauf,);
-		}
-
-		$this->Template->DocumentManagementSystemVerw = $arrDocumentManagementSystemVerw;
-		$this->Template->action = ampersand($this->Environment->request);
-	}
-
-	/* **********************************************************************************************************************************************
-	 *  **********************************************************************************************************************************************
-	 *  						mehrfach verwendbare Funktionen
-	 *  **********************************************************************************************************************************************
-	 *  **********************************************************************************************************************************************
-	 */
-
-	protected function update_veroeffentlichen($intKategorieId, $strDateiName, $arrAltDokVeroeffentlichen, $intUserId)
-	{
-		/* Update der Veroeffentlichungen
-		 *    Es wird geprüft, ob eine der älteren Versionen nun veröffentlicht bleiben soll oder nicht
-		 *    Findet eine Veränderung an dem Veröffentlichungs-Status statt,
-		 *    wird das Datum und die UserId des Users gespeichert
-		 */
-		$time = time();
-		$strDocumentManagementSystemUpDSPruef = $this->Database->execute("SELECT * FROM tl_dms_document WHERE file_source like '$strDateiName' && pid = $intKategorieId ");
-		$rows = $strDocumentManagementSystemUpDSPruef->fetchAllAssoc();
-		foreach ($rows as $row)
-		{
-			$intId = $row['id'];
-
-			if (in_array($intId, $arrAltDokVeroeffentlichen))
-			{
-				if ($row['published'] == 0)
-				{
-					$mkLasteditUserid = $intUserId;
-					$mkDatum = $time;
-				}
-				else
-				{
-					$mkLasteditUserid = $row['lastedit_member'];
-					$mkDatum = $row['lastedit_date'];
-				}
-				$DsSet = array('published' => 1, 'lastedit_member' => $mkLasteditUserid, 'lastedit_date' => $mkDatum,);
-			}
-			else
-			{
-				if ($row['published'] == 1)
-				{
-					$mkLasteditUserid = $intUserId;
-					$mkDatum = $time;
-				}
-				else
-				{
-					$mkLasteditUserid = $row['lastedit_member'];
-					$mkDatum = $row['lastedit_date'];
-				}
-				$DsSet = array('published' => 0, 'lastedit_member' => $mkLasteditUserid, 'lastedit_date' => $mkDatum,);
-			}
-			$this->Database->prepare("UPDATE `tl_dms_document` %s WHERE id=?")->set($DsSet)->execute($intId);
-		}
-		return;
 	}
 	
 	/**
