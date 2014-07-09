@@ -2,7 +2,7 @@
 Contao Extension "DocumentManagementSystem"
 ===========================================
 
-Version 2.1.0 (2014-07-xx)
+Version 2.1.0 (2014-07-15)
 --------------------------
 - fixed case sensitive file type checking (se #18)
 - improved copying access rights (see #15)
@@ -10,6 +10,7 @@ Version 2.1.0 (2014-07-xx)
 - added selecting a custom start category in frontend modules (see #8, #9)
 - added a search type to listing module (see #9)
 - added jumping back to the starting point of the action in listing module (see #17)
+- improved date formatting (getting date from system settings / page definition)
 
 Version 2.0.0 (2014-05-31)
 --------------------------

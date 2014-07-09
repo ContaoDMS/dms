@@ -411,8 +411,7 @@ class Document
 		{
 			return "";
 		}
-		// TODO: get a format from config here
-		return date('d.m.Y H:i:s', $this->intUploadDate);
+		return date(DmsUtils::getNumericDatimFormat(), $this->intUploadDate);
 	}
 	
 	/**
@@ -426,8 +425,7 @@ class Document
 		{
 			return "";
 		}
-		// TODO: get a format from config here
-		return date('d.m.Y H:i:s', $this->intLasteditDate);
+		return date(DmsUtils::getNumericDatimFormat(), $this->intLasteditDate);
 	}
 	
 	/**
@@ -437,7 +435,6 @@ class Document
 	 */
 	public function getLastModificationTimestamp()
 	{
-		// TODO: get a format from config here
 		$intLastModificationDate = $this->intLasteditDate;
 		if ($intLastModificationDate <= 0)
 		{
@@ -453,8 +450,7 @@ class Document
 	 */
 	public function getLastModificationDate()
 	{
-		// TODO: get a format from config here
-		return date('d.m.Y H:i:s', $this->getLastModificationTimestamp());
+		return date(DmsUtils::getNumericDatimFormat(), $this->getLastModificationTimestamp());
 	}
 	
 	/**
