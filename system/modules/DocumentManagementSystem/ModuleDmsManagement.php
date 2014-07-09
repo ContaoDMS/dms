@@ -391,7 +391,7 @@ class ModuleDmsManagement extends Module
 			$this->Template->documentVersionMajor = $proposedDocumentVersionMajor;
 			$this->Template->documentVersionMinor = $proposedDocumentVersionMinor;
 			$this->Template->documentVersionPatch = $proposedDocumentVersionPatch;
-			$this->Template->documentPublish = false; // TODO: set default publishing behavoir here (see #7) ... if true, add an info
+			$this->Template->documentPublish = DmsUtils::publishDocumentsPerDefault($this, $category);
 			
 			if (!$category->isPublishableForCurrentMember())
 			{

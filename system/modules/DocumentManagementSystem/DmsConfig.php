@@ -122,6 +122,16 @@ class DmsConfig
 		
 		return $dmsVal;
 	}
+	
+	/**
+	 * Returns if documents should be published per default.
+	 *
+	 * @return	bool	If documents should be published per default or not.
+	 */
+	public static function publishDocumentsPerDefault()
+	{
+		return (bool) $GLOBALS['TL_CONFIG']['dmsPublishDocumentsPerDefault'];
+	}
 }
 
 ?>

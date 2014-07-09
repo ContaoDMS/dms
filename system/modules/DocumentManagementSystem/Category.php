@@ -51,6 +51,7 @@ class Category extends System
 	private $strName = "";
 	private $strDescription = "";
 	private $strFileTypes = "";
+	private $blnPublishDocumentsPerDefault = false;
 	private $strGeneralReadPermission = "";
 	private $strGeneralManagePermission = "";
 	private $arrCssId = "";
@@ -107,6 +108,9 @@ class Category extends System
 			case 'fileTypes':
 				$this->strFileTypes = $varValue;
 				break;
+			case 'publishDocumentsPerDefault':
+				$this->blnPublishDocumentsPerDefault = (bool) $varValue;
+				break;
 			case 'generalReadPermission':
 				$this->strGeneralReadPermission = $varValue;
 				break;
@@ -162,6 +166,9 @@ class Category extends System
 			case 'fileTypes':
 				return $this->strFileTypes;
 				break;
+			case 'publishDocumentsPerDefault':
+				return $this->blnPublishDocumentsPerDefault;
+				break;
 			case 'generalReadPermission':
 				return $this->strGeneralReadPermission;
 				break;
@@ -204,7 +211,17 @@ class Category extends System
 	{
 		return $this->blnPublished;
 	}
-		
+	
+	/**
+	 * Return if documents uploaded to this category should be published per default.
+	 *
+	 * @return	bool	If documents uploaded to this category should be published per default or not.
+	 */
+	public function publishDocumentsPerDefault()
+	{
+		return $this->blnPublishDocumentsPerDefault;
+	}
+	
 	/**
 	 * Return if this category has subcategories.
 	 *
