@@ -11,6 +11,7 @@ Version 2.1.0 (2014-07-15)
 - added a search type to listing module (see #9)
 - added jumping back to the starting point of the action in listing module (see #17)
 - improved date formatting (getting date from system settings / page definition)
+- added option to define if documents should be published per default to system settings, management module, member group and category (see #7)
 
 Version 2.0.0 (2014-05-31)
 --------------------------
