@@ -25,28 +25,27 @@
  * @author     Cliff Parnitzky
  * @package    DocumentManagementSystem
  * @license    LGPL
- * @filesource [dokmansystem] by Thomas Krueger
  */
 
 /**
  * Define name and tooltip for preferences (inactive modules)
  */
-$GLOBALS['TL_LANG']['MOD']['DocumentManagementSystem'] = array('Dokumenten Management System', 'Stellt ein Dokumenten Management System zur Verfügung.');
+$GLOBALS['TL_LANG']['MOD']['DocumentManagementSystem'] = array('Document management system', 'Provides a document management system.');
 
 /**
  * Back end modules
  */
-$GLOBALS['TL_LANG']['MOD']['dms']               = array('DMS', 'Dokumenten Management System');
-$GLOBALS['TL_LANG']['MOD']['dms_categories']    = array('Kategorien', 'Erstellen und Verwalten Sie die Kategorien.');
-$GLOBALS['TL_LANG']['MOD']['dms_access_rights'] = array('Zugriffsrechte', 'Erstellen und Verwalten Sie die Zugriffsrechte.');
-$GLOBALS['TL_LANG']['MOD']['dms_documents']     = array('Dokumente', 'Administrative Verwaltung der Dokumente.');
+$GLOBALS['TL_LANG']['MOD']['dms']               = array('DMS', 'Document management system');
+$GLOBALS['TL_LANG']['MOD']['dms_categories']    = array('Categories', 'Create and manage the categories.');
+$GLOBALS['TL_LANG']['MOD']['dms_access_rights'] = array('Access rights', 'Create and manage the access rights.');
+$GLOBALS['TL_LANG']['MOD']['dms_documents']     = array('Documents', 'Administrative management of documents.');
 
 
 /**
  * Front end modules
  */
-$GLOBALS['TL_LANG']['FMD']['dms']            = 'Dokumenten Management System';
-$GLOBALS['TL_LANG']['FMD']['dms_listing']    = array('DMS Auflistung', 'Stellt ein Modul zur Auflistung der Dokumente zur Verfügung.');
-$GLOBALS['TL_LANG']['FMD']['dms_management'] = array('DMS Verwaltung', 'Stellt ein Modul zur Verwaltung der Dokumente zur Verfügung.');
+$GLOBALS['TL_LANG']['FMD']['dms']            = 'Document management system';
+$GLOBALS['TL_LANG']['FMD']['dms_listing']    = array('DMS Listing', 'Provides a module for listing the documents.');
+$GLOBALS['TL_LANG']['FMD']['dms_management'] = array('DMS Management', 'Provides a module for managing the documents.');
 
 ?>
