@@ -31,12 +31,12 @@
 /**
  * Fields
  */
-$GLOBALS['TL_LANG']['tl_dms_access_rights']['member_group']  = array('Mitgliedergruppe mit Rechten für diese Kategorie', 'Wählen Sie die Mitgliedergruppe deren Rechte Sie für diese Kategorie festlegen wollen.');
-$GLOBALS['TL_LANG']['tl_dms_access_rights']['right_read']    = array('Dokumente lesen', 'Wählen Sie ob die Mitgliedergruppe Dokumente dieser Kategorie lesen darf.');
-$GLOBALS['TL_LANG']['tl_dms_access_rights']['right_upload']  = array('Dokumente uploaden', 'Wählen Sie ob die Mitgliedergruppe Dokumente in diese Kategorie hochladen darf.');
-$GLOBALS['TL_LANG']['tl_dms_access_rights']['right_delete']  = array('Dokumente löschen', 'Wählen Sie ob die Mitgliedergruppe Dokumente dieser Kategorie löschen darf.');
-$GLOBALS['TL_LANG']['tl_dms_access_rights']['right_edit']    = array('Dokumente bearbeiten', 'Wählen Sie ob die Mitgliedergruppe Dokumente dieser Kategorie bearbeiten darf.');
-$GLOBALS['TL_LANG']['tl_dms_access_rights']['right_publish'] = array('Dokumente veröffentlichen', 'Wählen Sie ob die Mitgliedergruppe Dokumente dieser Kategorie veröffentlichen darf.');
+$GLOBALS['TL_LANG']['tl_dms_access_rights']['member_group']  = array('Mitgliedergruppe mit Rechten für diese Kategorie', 'Wählen Sie die Mitgliedergruppe deren Rechte für diese Kategorie festlegt werden sollen.');
+$GLOBALS['TL_LANG']['tl_dms_access_rights']['right_read']    = array('Dokumente lesen', 'Geben Sie an ob die Mitglieder der Mitgliedergruppe Dokumente in dieser Kategorie lesen dürfen.');
+$GLOBALS['TL_LANG']['tl_dms_access_rights']['right_upload']  = array('Dokumente uploaden', 'Geben Sie an ob die Mitglieder der Mitgliedergruppe Dokumente in diese Kategorie hochladen dürfen.');
+$GLOBALS['TL_LANG']['tl_dms_access_rights']['right_delete']  = array('Dokumente löschen', 'Geben Sie an ob die Mitglieder der Mitgliedergruppe Dokumente in dieser Kategorie löschen dürfen.');
+$GLOBALS['TL_LANG']['tl_dms_access_rights']['right_edit']    = array('Dokumente bearbeiten', 'Geben Sie an ob die Mitglieder der Mitgliedergruppe Dokumente in dieser Kategorie bearbeiten dürfen.');
+$GLOBALS['TL_LANG']['tl_dms_access_rights']['right_publish'] = array('Dokumente veröffentlichen', 'Geben Sie an ob die Mitglieder der Mitgliedergruppe Dokumente in dieser Kategorie veröffentlichen dürfen.');
 
 /**
  * Legends
