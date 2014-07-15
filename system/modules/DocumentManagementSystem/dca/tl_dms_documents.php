@@ -143,7 +143,6 @@ $GLOBALS['TL_DCA']['tl_dms_documents'] = array
 		),
 		'data_file_name_org' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_documents']['data_file_name_org'],
 			'input_field_callback'    => array('tl_dms_documents', 'getOriginalFileNameWidget')
 		),
 		'data_file_name' => array
@@ -162,15 +161,11 @@ $GLOBALS['TL_DCA']['tl_dms_documents'] = array
 		),
 		'data_file_type' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_documents']['data_file_type'],
-			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'alnum', 'tl_class'=>'w50 clr', 'maxlength'=>5)
+			'input_field_callback'    => array('tl_dms_documents', 'getFileTypeWidget')
 		),
 		'data_file_size' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_documents']['data_file_size'],
-			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'digit', 'tl_class'=>'w50', 'maxlength'=>10)
+			'input_field_callback'    => array('tl_dms_documents', 'getFileSizeWidget')
 		),
 		/*'data_file_preview' => array
 		(
@@ -329,8 +324,6 @@ class tl_dms_documents extends Backend
 		return (($arrClipboard['mode'] == 'cut' && $arrClipboard['id'] == $row['id']) || ($arrClipboard['mode'] == 'cutAll' && in_array($row['id'], $arrClipboard['id'])) || (!$this->User->isAdmin && !$this->User->isAllowed(5, $objPage->row())) || $cr) ? $this->generateImage('pasteafter_.gif', '', 'class="blink"').' ' : ''; //'<a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&amp;mode=1&amp;pid='.$row['id'].(!is_array($arrClipboard['id']) ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.specialchars(sprintf($GLOBALS['TL_LANG'][$dc->table]['pasteafter'][1], $row['id'])).'" onclick="Backend.getScrollOffset()">'.$imagePasteAfter.'</a> '; 	}
 	}
 	
-	
-	
 	/**
 	 * Return the complete file path
 	 * @param DataContainer
@@ -348,6 +341,39 @@ class tl_dms_documents extends Backend
 </div>';
 	}
 	
+	/**
+	 * Return the complete file path
+	 * @param DataContainer
+	 * @return string
+	 */
+	public function getFileTypeWidget(DataContainer $dc)
+	{
+		$doc = $dc->activeRecord;
+		
+		return '
+<div class="w50">
+  <h3><label for="ctrl_purge">'.$GLOBALS['TL_LANG']['tl_dms_documents']['data_file_type'][0].'</label></h3>
+  <p class="tl_text dms_disabled_text tl_tip">' . $doc->data_file_type . '</p>
+  <p class="tl_help tl_tip">'.$GLOBALS['TL_LANG']['tl_dms_documents']['data_file_type'][1].'</p>
+</div>';
+	}
+	
+	/**
+	 * Return the complete file path
+	 * @param DataContainer
+	 * @return string
+	 */
+	public function getFileSizeWidget(DataContainer $dc)
+	{
+		$doc = $dc->activeRecord;
+		
+		return '
+<div class="w50">
+  <h3><label for="ctrl_purge">'.$GLOBALS['TL_LANG']['tl_dms_documents']['data_file_size'][0].'</label></h3>
+  <p class="tl_text dms_disabled_text tl_tip">' . $doc->data_file_size . '</p>
+  <p class="tl_help tl_tip">'.$GLOBALS['TL_LANG']['tl_dms_documents']['data_file_size'][1].'</p>
+</div>';
+	}
 	
 	/**
 	 * Return the complete file path
@@ -379,6 +405,7 @@ class tl_dms_documents extends Backend
 		
 		$arrFileNameParts = Document::splitFileName(substr($varValue, strlen(DmsConfig::getBaseDirectory(true))));
 		// TODO: reset the new fileType
+		// TODO: reset the new fileSize
 		// TODO: get version parts from POST ... maybe changed ... or reduce fileName via finding and counting underscores and removing them
 		
 		return $arrFileNameParts['fileName'];
