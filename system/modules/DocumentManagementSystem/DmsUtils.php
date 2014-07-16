@@ -94,6 +94,9 @@ class DmsUtils
 	 */
 	public static function getNumericDatimFormat()
 	{
+		if (version_compare(VERSION, '2.11', '<')) {
+			return $GLOBALS['TL_CONFIG']['datimFormat'];
+		}
 		$date = new Date();
 		return $date->getNumericDatimFormat();
 	}
