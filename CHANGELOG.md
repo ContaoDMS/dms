@@ -4,14 +4,14 @@ Contao Extension "DocumentManagementSystem"
 
 Version 2.1.0 (2014-07-16)
 --------------------------
-- fixed case sensitive file type checking (se #18)
+- fixed case sensitive file type checking (see #18)
 - improved copying access rights (see #15)
 - added CSS id and classes to category (see #14)
 - added selecting a custom start category in frontend modules (see #8, #9)
 - added a search type to listing module (see #9)
 - added jumping back to the starting point of the action in listing module (see #17)
-- improved date formatting (getting date from system settings / page definition)
-- added option to define if documents should be published per default to system settings, management module, member group and category (see #7)
+- improved date formatting (getting date format from system settings / page definition)
+- added option to define if documents should be published per default to system settings, management module, member groups and categories (see #7)
 - improve documents backend view (file type and file size are no readonly, the values will be determined in upload)
 - added english translation (see #11)
 
