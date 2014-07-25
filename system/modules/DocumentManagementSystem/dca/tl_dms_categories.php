@@ -37,6 +37,7 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 	'config' => array
 	(
 		'label'                       => $GLOBALS['TL_LANG']['MOD']['dms'][1],
+		'ctable'                      => array('tl_dms_access_rights'),
 		'dataContainer'               => 'Table',
 		'enableVersioning'            => true,
 		'onload_callback' => array
