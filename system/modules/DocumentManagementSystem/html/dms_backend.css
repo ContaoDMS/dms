@@ -1,2 +1,2 @@
 /* Contao Open Source CMS :: Copyright (C) 2005-2013 Leo Feyer :: LGPL license */
-.w30 { float: left; height: auto; min-height: 72px; width: 33%; } .w30 .tl_text { width: 210px; } .dms_disabled_text {background-color: #F9F9F9; color: #808080; padding: 2px 3px; height: 18px; line-height: 18px; overflow: hidden; white-space: nowrap; margin-bottom: 1px; }
+.w30 { float: left; height: auto; min-height: 72px; width: 33%; } .w30 .tl_text { width: 210px; } .dms_disabled_text {background-color: #F9F9F9; color: #808080; padding: 2px 3px; height: 18px; line-height: 18px; overflow: hidden; white-space: nowrap; margin-bottom: 1px; } #tl_breadcrumb { padding-top: 5px; } #tl_breadcrumb li img { position: relative; top: -1px; }

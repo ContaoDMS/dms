@@ -29,6 +29,11 @@
  */
 
 /**
+ * Load class tl_dms_categories
+ */
+$this->loadDataContainer('tl_dms_categories');
+
+/**
  * Table tl_dms_documents 
  */
 $GLOBALS['TL_DCA']['tl_dms_documents'] = array
@@ -41,7 +46,8 @@ $GLOBALS['TL_DCA']['tl_dms_documents'] = array
 		'closed'                      => true,
 		'onload_callback'             => array
 		(
-			array('tl_dms_documents', 'resortDocuments')
+			array('tl_dms_documents', 'resortDocuments'),
+			array('tl_dms_categories', 'addBreadcrumb')
 		)
 	),
 	

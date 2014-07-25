@@ -29,17 +29,25 @@
  */
 
 /**
+ * Load class tl_dms_categories
+ */
+$this->loadDataContainer('tl_dms_categories');
+
+/**
  * Table tl_dms_access_rights 
  */
 $GLOBALS['TL_DCA']['tl_dms_access_rights'] = array
 (
-
 	// Config
 	'config' => array
 	(
 		'dataContainer'               => 'Table',
 		'enableVersioning'            => true,
-		'ptable'                      => 'tl_dms_categories'
+		'ptable'                      => 'tl_dms_categories',
+		'onload_callback' => array
+		(
+			array('tl_dms_categories', 'addBreadcrumb')
+		)
 	),
 
 	// List

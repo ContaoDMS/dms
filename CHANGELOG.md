@@ -2,6 +2,10 @@
 Contao Extension "DocumentManagementSystem"
 ===========================================
 
+Version 2.2.0 (2014-xx-xx)
+--------------------------
+- added breadcrumb to backend tree views (see #2)
+
 Version 2.1.0 (2014-07-16)
 --------------------------
 - fixed case sensitive file type checking (see #18)

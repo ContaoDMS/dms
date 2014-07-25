@@ -38,7 +38,11 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 	(
 		'label'                       => $GLOBALS['TL_LANG']['MOD']['dms'][1],
 		'dataContainer'               => 'Table',
-		'enableVersioning'            => true
+		'enableVersioning'            => true,
+		'onload_callback' => array
+		(
+			array('tl_dms_categories', 'addBreadcrumb')
+		)
 	),
 	
 	// List
@@ -250,10 +254,8 @@ class tl_dms_categories extends Backend
 	 */
 	public function addIcon($row, $label, DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false)
 	{
-		// Mark root categories
-		if ($row['pid'] == '0') {
-			$label = '<strong>' . $label . '</strong>';
-		}
+		// Add the breadcrumb link
+		$label = '<a href="' . $this->addToUrl('cat='.$row['id']) . '">' . $label . '</a>';
 		
 		$image = 'category.png';
 		if (!$row['published'])
@@ -350,6 +352,80 @@ class tl_dms_categories extends Backend
 					   ->execute($intId);
 
 		$this->createNewVersion('tl_dms_categories', $intId);
+	}
+	
+	/**
+	 * Add the breadcrumb menu
+	 */
+	public function addBreadcrumb(DataContainer $dc)
+	{
+		// Set a new cat
+		if (isset($_GET['cat']))
+		{
+			$this->Session->set('tl_category_id', $this->Input->get('cat'));
+			$this->redirect(preg_replace('/&cat=[^&]*/', '', $this->Environment->request));
+		}
+
+		$intCat = $this->Session->get('tl_category_id');
+
+		if ($intCat < 1)
+		{
+			return;
+		}
+		
+		$arrIds = array();
+		$arrLinks = array();
+
+		// Generate breadcrumb trail
+		if ($intCat)
+		{
+			$intId = $intCat;
+
+			$params = new DmsLoaderParams();
+			$params->loadRootCategory = true;
+			
+			$dmsLoader = DmsLoader::getInstance();
+			$category = $dmsLoader->loadCategory($intId, $params);
+			
+			if ($category == null)
+			{
+				// Currently selected category does not exits
+				if ($intId == $intCat)
+				{
+					$this->Session->set('tl_category_id', 0);
+					return;
+				}
+			}
+			
+			// Add root link
+			$arrLinks[] = '<img src="system/modules/DocumentManagementSystem/html/docmansystem.png" width="16" height="16" alt=""> <a href="' . $this->addToUrl('cat=0') . '">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
+			foreach ($category->getPath(false) as $eachCategory)
+			{
+				$image = 'category.png';
+				if (!$eachCategory->isPublished())
+				{
+					$image = 'category_1.png';
+				}
+				if ($eachCategory->id == $intCat)
+				{
+					$arrLinks[] = $this->generateImage('system/modules/DocumentManagementSystem/html/' . $image, '', "") . ' ' . $eachCategory->name;
+				}
+				else
+				{
+					$arrLinks[] = $this->generateImage('system/modules/DocumentManagementSystem/html/' . $image, '', "") . ' <a href="' . $this->addToUrl('cat='.$eachCategory->id) . '">' . $eachCategory->name . '</a>';
+				}
+			}
+		}
+
+		// Limit tree
+		$GLOBALS['TL_DCA']['tl_dms_categories']['list']['sorting']['root'] = array($intCat);
+
+		// Insert breadcrumb menu
+		$GLOBALS['TL_DCA']['tl_dms_categories']['list']['sorting']['breadcrumb'] .= '
+
+<ul id="tl_breadcrumb">
+  <li>' . implode(' &gt; </li><li>', $arrLinks) . '</li>
+</ul>';
 	}
 }
 ?>
