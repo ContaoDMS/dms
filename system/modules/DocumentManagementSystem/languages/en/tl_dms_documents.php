@@ -65,4 +65,9 @@ $GLOBALS['TL_LANG']['tl_dms_documents']['cut']        = array('Move document', '
 $GLOBALS['TL_LANG']['tl_dms_documents']['delete']     = array('Delete document', 'Delete document ID %s');
 $GLOBALS['TL_LANG']['tl_dms_documents']['pasteinto']  = array('Paste into', 'Paste into category ID %s');
 
+/**
+ * Messages
+ */
+$GLOBALS['TL_LANG']['tl_dms_documents']['deleteConfirm'] = "Do you really want to delete the document ID %s?\\n\\nThe associated file will also be deleted.\\n\\nAttention, this can not be undone!";
+
 ?>

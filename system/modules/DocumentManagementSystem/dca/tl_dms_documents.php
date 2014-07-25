@@ -48,6 +48,10 @@ $GLOBALS['TL_DCA']['tl_dms_documents'] = array
 		(
 			array('tl_dms_documents', 'resortDocuments'),
 			array('tl_dms_categories', 'addBreadcrumb')
+		),
+		'ondelete_callback' => array
+		(
+			array('tl_dms_documents', 'deleteFile')
 		)
 	),
 	
@@ -101,7 +105,7 @@ $GLOBALS['TL_DCA']['tl_dms_documents'] = array
 				'label'               => &$GLOBALS['TL_LANG']['tl_dms_documents']['delete'],
 				'href'                => 'act=delete',
 				'icon'                => 'delete.gif',
-				'attributes'          => 'onclick="if (!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\')) return false; Backend.getScrollOffset();"'
+				'attributes'          => 'onclick="if (!confirm(\'' . $GLOBALS['TL_LANG']['tl_dms_documents']['deleteConfirm'] . '\')) return false; Backend.getScrollOffset();"'
 			),
 			'show' => array
 			(
@@ -415,6 +419,19 @@ class tl_dms_documents extends Backend
 		// TODO: get version parts from POST ... maybe changed ... or reduce fileName via finding and counting underscores and removing them
 		
 		return $arrFileNameParts['fileName'];
+	}
+	
+	/**
+	 * Delete the file, if the document will be deleted.
+	 * @param DataContainer
+	 */
+	public function deleteFile(DataContainer $dc)
+	{
+		$filePath = TL_ROOT . '/' . $this->getFullFilePath($dc->activeRecord->data_file_name, $dc);
+		if (file_exists($filePath))
+		{
+			unlink($filePath);
+		}
 	}
 }
 

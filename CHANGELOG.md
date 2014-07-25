@@ -5,6 +5,7 @@ Contao Extension "DocumentManagementSystem"
 Version 2.2.0 (2014-xx-xx)
 --------------------------
 - added breadcrumb to backend tree views (see #2)
+- added deleting associated file, when deleting a document (see #3)
 
 Version 2.1.0 (2014-07-16)
 --------------------------

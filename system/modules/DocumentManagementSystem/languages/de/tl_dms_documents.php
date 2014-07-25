@@ -66,4 +66,9 @@ $GLOBALS['TL_LANG']['tl_dms_documents']['cut']        = array('Dokument verschie
 $GLOBALS['TL_LANG']['tl_dms_documents']['delete']     = array('Dokument löschen', 'Dokument ID %s löschen');
 $GLOBALS['TL_LANG']['tl_dms_documents']['pasteinto']  = array('Einfügen in', 'In die Kategorie ID %s einfügen');
 
+/**
+ * Messages
+ */
+$GLOBALS['TL_LANG']['tl_dms_documents']['deleteConfirm'] = "Soll das Dokument ID %s wirklich gelöscht werden?\\n\\nDie zugehörige Datei wird ebenfalls gelöscht.\\n\\nAchtung, dies kann nicht rückgängig gemacht werden!";
+
 ?>
