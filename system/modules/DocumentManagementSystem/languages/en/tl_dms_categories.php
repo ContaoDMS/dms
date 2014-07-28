@@ -38,6 +38,8 @@ $GLOBALS['TL_LANG']['tl_dms_categories']['file_types']                    = arra
 $GLOBALS['TL_LANG']['tl_dms_categories']['publish_documents_per_default'] = array('Publish per default', 'Specify whether the uploaded documents in this category should be be published by default. If this option is enabled the checkbox for publishing in the management module (frontend) is always checked.');
 $GLOBALS['TL_LANG']['tl_dms_categories']['cssID']                         = array('CSS ID/class', 'Specify an ID and one or more classes.');
 $GLOBALS['TL_LANG']['tl_dms_categories']['published']                     = array('Publish category', 'Specify whether the category should be publicly visible.');
+$GLOBALS['TL_LANG']['tl_dms_categories']['start']                         = array('Show from', 'Specify the day from which the category should be publicly visible.');
+$GLOBALS['TL_LANG']['tl_dms_categories']['stop']                          = array('Show until', 'Specify the day until which the category should be publicly visible.'); 
 
 /**
  * Legends

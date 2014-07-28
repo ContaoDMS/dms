@@ -52,6 +52,10 @@ class AccessRight
 	private $blnDelete = false;
 	private $blnEdit = false;
 	private $blnPublish = false;
+	private $blnActive = false;
+	private $strActivationStart = "";
+	private $strActivationStop = "";
+
 	
 	/**
 	 * reference to category
@@ -102,6 +106,15 @@ class AccessRight
 			case self::PUBLISH:
 				$this->blnPublish = (bool) $varValue;
 				break;
+			case 'active':
+				$this->blnActive = (bool) $varValue;
+				break;
+			case 'activationStart':
+				$this->strActivationStart = $varValue;
+				break;
+			case 'activationStop':
+				$this->strActivationStop = $varValue;
+				break;
 			case 'categoryId':
 				$this->intCategoryId = (int) $varValue;
 				break;
@@ -144,6 +157,15 @@ class AccessRight
 				break;
 			case self::PUBLISH:
 				return $this->blnPublish;
+				break;
+			case 'active':
+				return $this->blnActive;
+				break;
+			case 'activationStart':
+				return $this->strActivationStart;
+				break;
+			case 'activationStop':
+				return $this->strActivationStop;
 				break;
 			case 'categoryId':
 				return $this->intCategoryId;
@@ -205,6 +227,18 @@ class AccessRight
 	public function isPublishingAllowed()
 	{
 		return $this->blnPublish;
+	}
+	
+	/**
+	 * Return if this access right is active.
+	 *
+	 * @return	bool	True if this access right is active.
+	 */
+	public function isActive()
+	{
+		$time = time();
+		$active = ($this->active && ($this->activationStart == '' || $this->activationStart < $time) && ($this->activationStop == '' || $this->activationStop > $time));
+		return $active;
 	}
 }
 

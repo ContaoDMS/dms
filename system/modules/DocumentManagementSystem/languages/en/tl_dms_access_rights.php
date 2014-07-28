@@ -36,12 +36,16 @@ $GLOBALS['TL_LANG']['tl_dms_access_rights']['right_upload']  = array('Upload doc
 $GLOBALS['TL_LANG']['tl_dms_access_rights']['right_delete']  = array('Delete documents', 'Specify whether the members of the member group are allowed to delete documents in this category.');
 $GLOBALS['TL_LANG']['tl_dms_access_rights']['right_edit']    = array('Edit documents', 'Specify whether the members of the member group are allowed to edit documents in this category.');
 $GLOBALS['TL_LANG']['tl_dms_access_rights']['right_publish'] = array('Publish documents', 'Specify whether the members of the member group are allowed to publish documents in this category.');
+$GLOBALS['TL_LANG']['tl_dms_access_rights']['published']     = array('Activate access right', 'Specify whether the access right should be active or not.');
+$GLOBALS['TL_LANG']['tl_dms_access_rights']['start']         = array('Activate from', 'Specify the day from which the access right should be active.');
+$GLOBALS['TL_LANG']['tl_dms_access_rights']['stop']          = array('Activate until', 'Specify the day until which the access right should be active.');
 
 /**
  * Legends
  */
 $GLOBALS['TL_LANG']['tl_dms_access_rights']['member_group_legend'] = 'Member groups';
 $GLOBALS['TL_LANG']['tl_dms_access_rights']['rights_legend']       = 'Rights';
+$GLOBALS['TL_LANG']['tl_dms_access_rights']['publish_legend']      = 'Activation';
 
 /**
  * Buttons
@@ -52,6 +56,7 @@ $GLOBALS['TL_LANG']['tl_dms_access_rights']['edit']       = array('Edit access r
 $GLOBALS['TL_LANG']['tl_dms_access_rights']['copy']       = array('Duplicate access right', 'Duplicate access right ID %s');
 $GLOBALS['TL_LANG']['tl_dms_access_rights']['delete']     = array('Delete access right', 'Delete access right ID %s');
 $GLOBALS['TL_LANG']['tl_dms_access_rights']['pasteafter'] = array('Paste after', 'Paste after access right ID %s');
-$GLOBALS['TL_LANG']['tl_dms_access_rights']['pasteinto']  = array('Paste into', 'Paste into category ID %s'); 
+$GLOBALS['TL_LANG']['tl_dms_access_rights']['pasteinto']  = array('Paste into', 'Paste into category ID %s');
+$GLOBALS['TL_LANG']['tl_dms_access_rights']['toggle']     = array('Activate/deactivate access right', 'Activate/deactivate access right ID %s');
 
 ?>

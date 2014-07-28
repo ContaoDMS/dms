@@ -328,6 +328,8 @@ class DmsLoader extends Controller
 		$category->generalManagePermission = $objCategory->general_manage_permission;
 		$category->cssId = $objCategory->cssID;
 		$category->published = $objCategory->published;
+		$category->publicationStart = $objCategory->start;
+		$category->publicationStop = $objCategory->stop;
 		return $category;
 	}
 	
@@ -351,6 +353,9 @@ class DmsLoader extends Controller
 		$accessRight->$strRight = $objAccessRight->right_edit;
 		$strRight = accessRight::PUBLISH;
 		$accessRight->$strRight = $objAccessRight->right_publish;
+		$accessRight->active = $objAccessRight->published;
+		$accessRight->activationStart = $objAccessRight->start;
+		$accessRight->activationStop = $objAccessRight->stop;
 		return $accessRight;
 	}
 	

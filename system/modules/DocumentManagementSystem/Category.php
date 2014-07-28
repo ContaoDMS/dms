@@ -59,6 +59,8 @@ class Category extends System
 	private $strGeneralManagePermission = "";
 	private $arrCssId = "";
 	private $blnPublished = false;
+	private $strPublicationStart = "";
+	private $strPublicationStop = "";
 	private $arrSubCategories = array();
 	private $arrAccessRights = array();
 	private $arrDocuments = array();
@@ -126,6 +128,12 @@ class Category extends System
 			case 'published':
 				$this->blnPublished = (bool) $varValue;
 				break;
+			case 'publicationStart':
+				$this->strPublicationStart = $varValue;
+				break;
+			case 'publicationStop':
+				$this->strPublicationStop = $varValue;
+				break;
 			case 'subCategories':
 				$this->arrSubCategories = $varValue;
 				break;
@@ -184,6 +192,12 @@ class Category extends System
 			case 'published':
 				return $this->blnPublished;
 				break;
+			case 'publicationStart':
+				return $this->strPublicationStart;
+				break;
+			case 'publicationStop':
+				return $this->strPublicationStop;
+				break;
 			case 'subCategories':
 				return $this->arrSubCategories;
 				break;
@@ -212,7 +226,9 @@ class Category extends System
 	 */
 	public function isPublished()
 	{
-		return $this->blnPublished;
+		$time = time();
+		$published = ($this->published && ($this->publicationStart == '' || $this->publicationStart < $time) && ($this->publicationStop == '' || $this->publicationStop > $time));
+		return $published;
 	}
 	
 	/**
@@ -251,6 +267,23 @@ class Category extends System
 	public function hasAccessRights()
 	{
 		return !empty($this->arrAccessRights);
+	}
+	
+	/**
+	 * Return if this category has active access rights.
+	 *
+	 * @return	bool	True if there are active access rights.
+	 */
+	public function hasActiveAccessRights()
+	{
+		foreach ($this->arrAccessRights as $accessRight)
+		{
+			if ($accessRight->isActive())
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**
@@ -472,7 +505,7 @@ class Category extends System
 			$arrMemberGroups = deserialize($this->User->groups);
 			foreach($this->arrAccessRights as $accessRight)
 			{
-				if (in_array($accessRight->memberGroup, $arrMemberGroups))
+				if ($accessRight->isActive() && in_array($accessRight->memberGroup, $arrMemberGroups))
 				{
 					$blnIsAccessible = $blnIsAccessible || $accessRight->$strAccessRight;
 				}

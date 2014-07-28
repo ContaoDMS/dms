@@ -101,6 +101,13 @@ $GLOBALS['TL_DCA']['tl_dms_access_rights'] = array
 				'icon'                => 'delete.gif',
 				'attributes'          => 'onclick="if (!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\')) return false; Backend.getScrollOffset();"'
 			),
+			'toggle' => array
+			(
+				'label'               => &$GLOBALS['TL_LANG']['tl_dms_access_rights']['toggle'],
+				'icon'                => 'visible.gif',
+				'attributes'          => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
+				'button_callback'     => array('tl_dms_access_rights', 'toggleIcon')
+			),
 			'show' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_dms_access_rights']['show'],
@@ -113,7 +120,7 @@ $GLOBALS['TL_DCA']['tl_dms_access_rights'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{member_group_legend},member_group;{rights_legend},right_read,right_upload,right_delete,right_edit,right_publish'
+		'default'                     => '{member_group_legend},member_group;{rights_legend},right_read,right_upload,right_delete,right_edit,right_publish;{publish_legend},published,start,stop'
 	),
 
 	// Fields
@@ -165,6 +172,27 @@ $GLOBALS['TL_DCA']['tl_dms_access_rights'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_access_rights']['right_publish'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox' 
+		),
+		'published' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_access_rights']['published'],
+			'exclude'                 => true,
+			'inputType'               => 'checkbox',
+			'eval'                    => array('doNotCopy'=>true)
+		),
+		'start' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_access_rights']['start'],
+			'exclude'                 => true,
+			'inputType'               => 'text',
+			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard')
+		),
+		'stop' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_access_rights']['stop'],
+			'exclude'                 => true,
+			'inputType'               => 'text',
+			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard')
 		)
 	)
 );
@@ -180,6 +208,15 @@ $GLOBALS['TL_DCA']['tl_dms_access_rights'] = array
 class tl_dms_access_rights extends Backend
 {
 	/**
+	 * Import the back end user object
+	 */
+	public function __construct()
+	{
+		parent::__construct();
+		$this->import('BackendUser', 'User');
+	}
+	
+	/**
 	 * Add an image to each record
 	 * @param array
 	 * @param string
@@ -187,13 +224,83 @@ class tl_dms_access_rights extends Backend
 	 */
 	public function addIcon($row, $label, DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false)
 	{
-		$accessRightRead = $row['right_read'] == "" ? "" : "<img src='system/modules/DocumentManagementSystem/html/access_right_read.gif' title='" . $GLOBALS['TL_LANG']['tl_dms_access_rights']['right_read'][0] . "'/>";
+		$time = time();
+		$published = ($row['published'] && ($row['start'] == '' || $row['start'] < $time) && ($row['stop'] == '' || $row['stop'] > $time));
+	
+	  $accessRightRead = $row['right_read'] == "" ? "" : "<img src='system/modules/DocumentManagementSystem/html/access_right_read.gif' title='" . $GLOBALS['TL_LANG']['tl_dms_access_rights']['right_read'][0] . "'/>";
 		$accessRightUpload = $row['right_upload'] == "" ? "" : "<img src='system/modules/DocumentManagementSystem/html/access_right_upload.gif' title='" . $GLOBALS['TL_LANG']['tl_dms_access_rights']['right_upload'][0] . "'/>";
 		$accessRightDelete = $row['right_delete'] == "" ? "" : "<img src='system/modules/DocumentManagementSystem/html/access_right_delete.gif' title='" . $GLOBALS['TL_LANG']['tl_dms_access_rights']['right_delete'][0] . "'/>";
 		$accessRightEdit = $row['right_edit'] == "" ? "" : "<img src='system/modules/DocumentManagementSystem/html/access_right_edit.gif' title='" . $GLOBALS['TL_LANG']['tl_dms_access_rights']['right_edit'][0] . "'/>";
 		$accessRightPublish = $row['right_publish'] == "" ? "" : "<img src='system/modules/DocumentManagementSystem/html/access_right_publish.gif' title='" . $GLOBALS['TL_LANG']['tl_dms_access_rights']['right_publish'][0] . "'/>";
 		
-		return $this->generateImage('system/modules/DocumentManagementSystem/html/access_rights.png', '', '') . $label .'<span style="color:#b3b3b3; padding-left:3px;">' . $accessRightRead . ' ' . $accessRightUpload . ' ' . $accessRightDelete . ' ' . $accessRightEdit . ' ' . $accessRightPublish . '</span>';
+		return $this->generateImage('system/modules/DocumentManagementSystem/html/access_rights' . ($published ? '' : '_') . '.png', '', '') . $label .'<span style="color:#b3b3b3; padding-left:3px;">' . $accessRightRead . ' ' . $accessRightUpload . ' ' . $accessRightDelete . ' ' . $accessRightEdit . ' ' . $accessRightPublish . '</span>';
+	}
+	
+		/**
+	 * Return the "toggle visibility" button
+	 * @param array
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @return string
+	 */
+	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
+	{
+		if (strlen($this->Input->get('tid')))
+		{
+			$this->toggleVisibility($this->Input->get('tid'), ($this->Input->get('state') == 1));
+			$this->redirect($this->getReferer());
+		}
+
+		// Check permissions AFTER checking the tid, so hacking attempts are logged
+		if (!$this->User->isAdmin && !$this->User->hasAccess('tl_dms_access_rights::published', 'alexf'))
+		{
+			return '';
+		}
+
+		$href .= '&amp;tid='.$row['id'].'&amp;state='.($row['published'] ? '' : 1);
+
+		if (!$row['published'])
+		{
+			$icon = 'invisible.gif';
+		}
+
+		return '<a href="'.$this->addToUrl($href).'" title="'.specialchars($title).'"'.$attributes.'>'.$this->generateImage($icon, $label).'</a> ';
+	}
+
+	/**
+	 * Activate/deactivate an access right
+	 * @param integer
+	 * @param boolean
+	 */
+	public function toggleVisibility($intId, $blnVisible)
+	{
+		// Check permissions
+		if (!$this->User->isAdmin && !$this->User->hasAccess('tl_dms_access_rights::published', 'alexf'))
+		{
+			$this->log('Not enough permissions to activate/deactivate dms access right ID "'.$intId.'"', 'tl_dms_access_rights toggleVisibility', TL_ERROR);
+			$this->redirect('contao/main.php?act=error');
+		}
+
+		$this->createInitialVersion('tl_dms_access_rights', $intId);
+	
+		// Trigger the save_callback
+		if (is_array($GLOBALS['TL_DCA']['tl_dms_access_rights']['fields']['published']['save_callback']))
+		{
+			foreach ($GLOBALS['TL_DCA']['tl_dms_access_rights']['fields']['published']['save_callback'] as $callback)
+			{
+				$this->import($callback[0]);
+				$blnVisible = $this->$callback[0]->$callback[1]($blnVisible, $this);
+			}
+		}
+
+		// Update the database
+		$this->Database->prepare("UPDATE tl_dms_access_rights SET tstamp=". time() .", published='" . ($blnVisible ? 1 : '') . "' WHERE id=?")
+					   ->execute($intId);
+
+		$this->createNewVersion('tl_dms_access_rights', $intId);
 	}
 }
 

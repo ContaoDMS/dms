@@ -37,12 +37,16 @@ $GLOBALS['TL_LANG']['tl_dms_access_rights']['right_upload']  = array('Dokumente 
 $GLOBALS['TL_LANG']['tl_dms_access_rights']['right_delete']  = array('Dokumente löschen', 'Geben Sie an ob die Mitglieder der Mitgliedergruppe Dokumente in dieser Kategorie löschen dürfen.');
 $GLOBALS['TL_LANG']['tl_dms_access_rights']['right_edit']    = array('Dokumente bearbeiten', 'Geben Sie an ob die Mitglieder der Mitgliedergruppe Dokumente in dieser Kategorie bearbeiten dürfen.');
 $GLOBALS['TL_LANG']['tl_dms_access_rights']['right_publish'] = array('Dokumente veröffentlichen', 'Geben Sie an ob die Mitglieder der Mitgliedergruppe Dokumente in dieser Kategorie veröffentlichen dürfen.');
+$GLOBALS['TL_LANG']['tl_dms_access_rights']['published']     = array('Zugriffsrecht aktivieren', 'Geben Sie an ob das Zugriffsrecht aktiv sein soll.');
+$GLOBALS['TL_LANG']['tl_dms_access_rights']['start']         = array('Aktivieren ab', 'Geben Sie den Tag an ab dem das Zugriffsrecht aktiv sein soll.');
+$GLOBALS['TL_LANG']['tl_dms_access_rights']['stop']          = array('Anzeigen bis', 'Geben Sie den Tag an bis zu dem das Zugriffsrecht aktiv sein soll.');
 
 /**
  * Legends
  */
 $GLOBALS['TL_LANG']['tl_dms_access_rights']['member_group_legend'] = 'Mitgliedergruppe';
 $GLOBALS['TL_LANG']['tl_dms_access_rights']['rights_legend']       = 'Rechte';
+$GLOBALS['TL_LANG']['tl_dms_access_rights']['publish_legend']      = 'Aktivierung';
 
 /**
  * Buttons
@@ -54,5 +58,6 @@ $GLOBALS['TL_LANG']['tl_dms_access_rights']['copy']       = array('Zugriffsrecht
 $GLOBALS['TL_LANG']['tl_dms_access_rights']['delete']     = array('Kategorie löschen', 'Zugriffsrecht ID %s löschen');
 $GLOBALS['TL_LANG']['tl_dms_access_rights']['pasteafter'] = array('Einfügen nach', 'Nach dem Zugriffsrecht ID %s einfügen');
 $GLOBALS['TL_LANG']['tl_dms_access_rights']['pasteinto']  = array('Einfügen in', 'In die Kategorie ID %s einfügen');
+$GLOBALS['TL_LANG']['tl_dms_access_rights']['toggle']     = array('Zugriffsrecht aktivieren/deaktivieren', 'Zugriffsrecht ID %s aktivieren/deaktivieren');
 
 ?>

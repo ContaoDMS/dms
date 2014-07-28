@@ -27,6 +27,8 @@ CREATE TABLE `tl_dms_categories` (
   `general_manage_permission` varchar(64) NOT NULL default 'CUSTOM',
   `cssID` varchar(255) NOT NULL default '',
   `published` char(1) NOT NULL default '',
+  `start` varchar(10) NOT NULL default '',
+  `stop` varchar(10) NOT NULL default '',
   PRIMARY KEY  (`id`),
   KEY `pid` (`pid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -48,6 +50,9 @@ CREATE TABLE `tl_dms_access_rights` (
   `right_delete` char(1) NOT NULL default '',
   `right_edit` char(1) NOT NULL default '',
   `right_publish` char(1) NOT NULL default '',
+  `published` char(1) NOT NULL default '',
+  `start` varchar(10) NOT NULL default '',
+  `stop` varchar(10) NOT NULL default '',
   PRIMARY KEY  (`id`),
   KEY `pid` (`pid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;

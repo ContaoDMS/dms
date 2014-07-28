@@ -7,6 +7,8 @@ Version 2.2.0 (2014-xx-xx)
 - added breadcrumb to backend tree views (see #2)
 - added deleting associated file, when deleting a document (see #3)
 - added deleting associated access rights, when deleting a category (see #1)
+- added time controlled publishing of categories (see #22)
+- added direct and time controlled activating of access rights (see #22)
 
 Version 2.1.0 (2014-07-16)
 --------------------------

@@ -130,7 +130,7 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{category_legend},name,description;{documents_legend},file_types,publish_documents_per_default;{rights_legend},general_read_permission,general_manage_permission;{expert_legend:hide},cssID;{publish_legend},published'
+		'default'                     => '{category_legend},name,description;{documents_legend},file_types,publish_documents_per_default;{rights_legend},general_read_permission,general_manage_permission;{expert_legend:hide},cssID;{publish_legend},published,start,stop'
 	),
 	
 	// Fields
@@ -178,7 +178,7 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 											Category::PUBLISH_DOCUMENTS_PER_DEFAULT_INHERIT
 										 ),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_dms_categories']['publish_documents_per_default_option'],
-			'eval'                    => array('mandatory'=>true, 'helpwizard'=>true, 'tl_class'=>'clr w50')
+			'eval'                    => array('mandatory'=>true, 'helpwizard'=>true, 'tl_class'=>'clr')
 		),
 		'general_read_permission' => array
 		(
@@ -194,7 +194,7 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 											Category::GENERAL_READ_PERMISSION_INHERIT
 										 ),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'],
-			'eval'                    => array('mandatory'=>true, 'helpwizard'=>true, 'tl_class'=>'w50')
+			'eval'                    => array('mandatory'=>true, 'helpwizard'=>true)
 		),
 		'general_manage_permission' => array
 		(
@@ -209,7 +209,7 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 											Category::GENERAL_MANAGE_PERMISSION_INHERIT
 										 ),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_dms_categories']['general_manage_permission_option'],
-			'eval'                    => array('mandatory'=>true, 'helpwizard'=>true, 'tl_class'=>'w50')
+			'eval'                    => array('mandatory'=>true, 'helpwizard'=>true, 'tl_class'=>'clr')
 		),
 		'cssID' => array
 		(
@@ -223,7 +223,21 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_categories']['published'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'filter'                  => true,
+			'eval'                    => array('doNotCopy'=>true)
+		),
+		'start' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_categories']['start'],
+			'exclude'                 => true,
+			'inputType'               => 'text',
+			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard')
+		),
+		'stop' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_categories']['stop'],
+			'exclude'                 => true,
+			'inputType'               => 'text',
+			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard')
 		)
 	)
 );
@@ -258,8 +272,11 @@ class tl_dms_categories extends Backend
 		// Add the breadcrumb link
 		$label = '<a href="' . $this->addToUrl('cat='.$row['id']) . '">' . $label . '</a>';
 		
+		$time = time();
 		$image = 'category.png';
-		if (!$row['published'])
+		
+		$published = ($row['published'] && ($row['start'] == '' || $row['start'] < $time) && ($row['stop'] == '' || $row['stop'] > $time));
+		if (!$published)
 		{
 			$image = 'category_1.png';
 		}
