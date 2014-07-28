@@ -10,6 +10,8 @@ Version 2.2.0 (2014-xx-xx)
 - added time controlled publishing of categories (see #22)
 - added direct and time controlled activating of access rights (see #22)
 
+IMPORTANT NOTE: activate all access rights after updating vie multi edit mode
+
 Version 2.1.0 (2014-07-16)
 --------------------------
 - fixed case sensitive file type checking (see #18)
