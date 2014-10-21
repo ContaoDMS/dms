@@ -9,6 +9,8 @@ It offers the possibility to store versioned files in an unlimited category stru
 
 Access will be controlled by with defined rights for each category and member group. The system uses the [Contao](http://contao.org) build in members and member groups.
 
+For news and infos follow [@ContaoDMS][https://twitter.com/ContaoDMS].
+
 
 Installation
 ------------
