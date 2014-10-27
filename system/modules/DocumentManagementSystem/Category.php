@@ -297,6 +297,26 @@ class Category extends System
 	}
 	
 	/**
+	 * Return if this category has documents in any of its subcategories.
+	 *
+	 * @return	bool	True if there are documents in any the subcategories.
+	 */
+	public function hasDocumentsInSubCategories()
+	{
+		if ($this->hasSubCategories())
+		{
+			foreach ($this->arrSubCategories as $subCategory)
+			{
+				if ($subCategory->hasDocuments() || $subCategory->hasDocumentsInSubCategories())
+				{
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	/**
 	 * Return if this category has published documents.
 	 *
 	 * @return	bool	True if there are published documents.

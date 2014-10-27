@@ -74,6 +74,7 @@ $GLOBALS['TL_LANG']['tl_dms_categories']['cut']        = array('Move category', 
 $GLOBALS['TL_LANG']['tl_dms_categories']['copy']       = array('Duplicate category', 'Duplicate category ID %s');
 $GLOBALS['TL_LANG']['tl_dms_categories']['copyChilds'] = array('Duplicate with subcategories', 'Duplicate category ID %s with its subcategories');
 $GLOBALS['TL_LANG']['tl_dms_categories']['delete']     = array('Delete category', 'Delete category ID %s');
+$GLOBALS['TL_LANG']['tl_dms_categories']['delete_']    = array('Category not deletable', 'The category ID %s can not be deleted because it or one of its subcategories contain documents.');
 $GLOBALS['TL_LANG']['tl_dms_categories']['pasteafter'] = array('Paste after', 'Paste after category ID %s');
 $GLOBALS['TL_LANG']['tl_dms_categories']['pasteinto']  = array('Paste into', 'Paste into category ID %s');
 $GLOBALS['TL_LANG']['tl_dms_categories']['toggle']     = array('Publish/unpublish category', 'Publish/unpublish category ID %s');

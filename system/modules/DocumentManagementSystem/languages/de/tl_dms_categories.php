@@ -75,6 +75,7 @@ $GLOBALS['TL_LANG']['tl_dms_categories']['cut']        = array('Kategorie versch
 $GLOBALS['TL_LANG']['tl_dms_categories']['copy']       = array('Kategorie duplizieren', 'Kategorie ID %s duplizieren');
 $GLOBALS['TL_LANG']['tl_dms_categories']['copyChilds'] = array('Kategorie mit Unterkategorien duplizieren', 'Kategorie ID %s inklusive Unterkategorien duplizieren');
 $GLOBALS['TL_LANG']['tl_dms_categories']['delete']     = array('Kategorie löschen', 'Kategorie ID %s löschen');
+$GLOBALS['TL_LANG']['tl_dms_categories']['delete_']    = array('Kategorie nicht löschbar', 'Die Kategorie ID %s ist nicht löschbar, weil sie oder eine ihrer Unterkategorien Dokumente enthält.');
 $GLOBALS['TL_LANG']['tl_dms_categories']['pasteafter'] = array('Einfügen nach', 'Nach der Kategorie ID %s einfügen');
 $GLOBALS['TL_LANG']['tl_dms_categories']['pasteinto']  = array('Einfügen in', 'In die Kategorie ID %s einfügen');
 $GLOBALS['TL_LANG']['tl_dms_categories']['toggle']     = array('Kategorie veröffentlichen/unveröffentlichen', 'Kategorie ID %s veröffentlichen/unveröffentlichen');

@@ -42,6 +42,7 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 		'enableVersioning'            => true,
 		'onload_callback' => array
 		(
+			array('tl_dms_categories', 'checkPermission'),
 			array('tl_dms_categories', 'addBreadcrumb')
 		)
 	),
@@ -109,7 +110,8 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 				'label'               => &$GLOBALS['TL_LANG']['tl_dms_categories']['delete'],
 				'href'                => 'act=delete',
 				'icon'                => 'delete.gif',
-				'attributes'          => 'onclick="if (!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\')) return false; Backend.getScrollOffset();"'
+				'attributes'          => 'onclick="if (!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\')) return false; Backend.getScrollOffset();"',
+				'button_callback'     => array('tl_dms_categories', 'getDeleteButton')
 			),
 			'toggle' => array
 			(
@@ -384,9 +386,9 @@ class tl_dms_categories extends Backend
 			$this->redirect(preg_replace('/&cat=[^&]*/', '', $this->Environment->request));
 		}
 
-		$intCat = $this->Session->get('tl_category_id');
+		$intCategoryId = $this->Session->get('tl_category_id');
 
-		if ($intCat < 1)
+		if ($intCategoryId < 1)
 		{
 			return;
 		}
@@ -395,48 +397,35 @@ class tl_dms_categories extends Backend
 		$arrLinks = array();
 
 		// Generate breadcrumb trail
-		if ($intCat)
+		$category = $this->getCategoryForId($intCategoryId, true, false);
+		
+		if ($category == null)
 		{
-			$intId = $intCat;
-
-			$params = new DmsLoaderParams();
-			$params->loadRootCategory = true;
-			
-			$dmsLoader = DmsLoader::getInstance();
-			$category = $dmsLoader->loadCategory($intId, $params);
-			
-			if ($category == null)
+			$this->Session->set('tl_category_id', 0);
+			return;
+		}
+		
+		// Add root link
+		$arrLinks[] = '<img src="system/modules/DocumentManagementSystem/html/docmansystem.png" width="16" height="16" alt=""> <a href="' . $this->addToUrl('cat=0') . '">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
+		foreach ($category->getPath(false) as $eachCategory)
+		{
+			$image = 'category.png';
+			if (!$eachCategory->isPublished())
 			{
-				// Currently selected category does not exits
-				if ($intId == $intCat)
-				{
-					$this->Session->set('tl_category_id', 0);
-					return;
-				}
+				$image = 'category_1.png';
 			}
-			
-			// Add root link
-			$arrLinks[] = '<img src="system/modules/DocumentManagementSystem/html/docmansystem.png" width="16" height="16" alt=""> <a href="' . $this->addToUrl('cat=0') . '">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
-			foreach ($category->getPath(false) as $eachCategory)
+			if ($eachCategory->id == $intCategoryId)
 			{
-				$image = 'category.png';
-				if (!$eachCategory->isPublished())
-				{
-					$image = 'category_1.png';
-				}
-				if ($eachCategory->id == $intCat)
-				{
-					$arrLinks[] = $this->generateImage('system/modules/DocumentManagementSystem/html/' . $image, '', "") . ' ' . $eachCategory->name;
-				}
-				else
-				{
-					$arrLinks[] = $this->generateImage('system/modules/DocumentManagementSystem/html/' . $image, '', "") . ' <a href="' . $this->addToUrl('cat='.$eachCategory->id) . '">' . $eachCategory->name . '</a>';
-				}
+				$arrLinks[] = $this->generateImage('system/modules/DocumentManagementSystem/html/' . $image, '', "") . ' ' . $eachCategory->name;
+			}
+			else
+			{
+				$arrLinks[] = $this->generateImage('system/modules/DocumentManagementSystem/html/' . $image, '', "") . ' <a href="' . $this->addToUrl('cat='.$eachCategory->id) . '">' . $eachCategory->name . '</a>';
 			}
 		}
 
 		// Limit tree
-		$GLOBALS['TL_DCA']['tl_dms_categories']['list']['sorting']['root'] = array($intCat);
+		$GLOBALS['TL_DCA']['tl_dms_categories']['list']['sorting']['root'] = array($intCategoryId);
 
 		// Insert breadcrumb menu
 		$GLOBALS['TL_DCA']['tl_dms_categories']['list']['sorting']['breadcrumb'] .= '
@@ -444,6 +433,82 @@ class tl_dms_categories extends Backend
 <ul id="tl_breadcrumb">
   <li>' . implode(' &gt; </li><li>', $arrLinks) . '</li>
 </ul>';
+	}
+	
+	/**
+	 * Check permissions to avoid not allowd deleting
+	 */
+	public function checkPermission()
+	{
+		// Check current action
+		switch ($this->Input->get('act'))
+		{
+			case 'delete':
+				if (!$this->isCategoryDeletable($this->Input->get('id')))
+				{
+					$this->log('Deleting the non empty category with ID "'.$this->Input->get('id').'" is not allowed.', 'tl_dms_categories checkPermission', TL_ERROR);
+					$this->redirect('contao/main.php?act=error');
+				}
+				break;
+		}
+	}
+	
+	/**
+	 * Return the "delete" button
+	 * @param array
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @return string
+	 */
+	public function getDeleteButton($row, $href, $label, $title, $icon, $attributes)
+	{
+		if (!$this->isCategoryDeletable($row['id']))
+		{
+			return $this->generateImage('delete_.gif', $GLOBALS['TL_LANG']['tl_dms_categories']['delete_'][0], 'title="' . sprintf($GLOBALS['TL_LANG']['tl_dms_categories']['delete_'][1], $row['id']) . '"') . " ";
+		}
+		return '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title).'"'.$attributes.'>'.$this->generateImage($icon, $label).'</a> ';
+	}
+	
+	/**
+	 * Get a category via DmsLoader.
+	 */
+	private function getCategoryForId($intId, $blnLoadRootCategory, $blnLoadDocuments)
+	{
+		$params = new DmsLoaderParams();
+		$params->loadRootCategory = $blnLoadRootCategory;
+		$params->loadDocuments = $blnLoadDocuments;
+		
+		$dmsLoader = DmsLoader::getInstance();
+		return $dmsLoader->loadCategory($intId, $params);
+	}
+	
+	/**
+	 * Get a category via DmsLoader.
+	 */
+	private function isCategoryDeletable($intId)
+	{
+		$params = new DmsLoaderParams();
+		$params->rootCategoryId = $intId;
+		$params->includeRootCategory = true;
+		$params->loadRootCategory = true;
+		$params->loadAccessRights = true;
+		$params->loadDocuments = true;
+		
+		$dmsLoader = DmsLoader::getInstance();
+		$arrCategories = $dmsLoader->loadCategories($params);
+		
+		if (count($arrCategories) == 1)
+		{
+			$category = $arrCategories[0];
+			if ($category != null && ($category->hasDocuments() || $category->hasDocumentsInSubCategories()))
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 }
 ?>

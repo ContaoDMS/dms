@@ -216,7 +216,7 @@ class DmsLoader extends Controller
 	protected function getCategoryLevel($parentCategoryId, Category $parentCategory=null, DmsLoaderParams $params)
 	{
 		$arrCategories = array();
-		$objCategory = $this->Database->prepare("SELECT * FROM tl_dms_categories WHERE pid = ? AND published = 1 ORDER BY sorting")
+		$objCategory = $this->Database->prepare("SELECT * FROM tl_dms_categories WHERE pid = ? ORDER BY sorting")
 									  ->execute($parentCategoryId);
 		
 		$category = null;
