@@ -54,6 +54,7 @@ class Category extends System
 	private $strName = "";
 	private $strDescription = "";
 	private $strFileTypes = "";
+	private $blnFileTypesInherit = false;
 	private $strPublishDocumentsPerDefault = "";
 	private $strGeneralReadPermission = "";
 	private $strGeneralManagePermission = "";
@@ -112,6 +113,9 @@ class Category extends System
 				break;
 			case 'fileTypes':
 				$this->strFileTypes = $varValue;
+				break;
+			case 'fileTypesInherit':
+				$this->blnFileTypesInherit = (bool) $varValue;
 				break;
 			case 'publishDocumentsPerDefault':
 				$this->strPublishDocumentsPerDefault = $varValue;
@@ -176,6 +180,9 @@ class Category extends System
 				break;
 			case 'fileTypes':
 				return $this->strFileTypes;
+				break;
+			case 'fileTypesInherit':
+				return $this->blnFileTypesInherit;
 				break;
 			case 'publishDocumentsPerDefault':
 				return $this->strPublishDocumentsPerDefault;
@@ -636,7 +643,19 @@ class Category extends System
 	 */
 	public function getAllowedFileTypes()
 	{
-		return array_map('trim', explode(",", $this->fileTypes));
+		$strFileTypes = str_replace(' ', '', $this->fileTypes);
+		$strFileTypes = strtolower($strFileTypes);
+		$arrFileTypes = explode(",", $strFileTypes);
+		
+		if ($this->fileTypesInherit && !$this->isRootCategory() && $this->hasParentCategory())
+		{
+			$arrFileTypes = array_merge($arrFileTypes, $this->parentCategory->getAllowedFileTypes());
+		}
+		
+		$arrFileTypes = array_unique($arrFileTypes);
+		asort($arrFileTypes);
+		
+		return $arrFileTypes;
 	}
 	
 	/**
@@ -651,8 +670,7 @@ class Category extends System
 		$arrAllowedFileTypes = $this->getAllowedFileTypes();
 		if (!$blnCaseSensitive)
 		{
-			$arrAllowedFileTypes = array_map('strtoupper', $arrAllowedFileTypes);
-			$strFileType = strtoupper($strFileType);
+			$strFileType = strtolower($strFileType);
 		}
 		
 		return in_array($strFileType, $arrAllowedFileTypes);

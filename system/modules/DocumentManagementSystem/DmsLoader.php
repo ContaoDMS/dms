@@ -323,6 +323,7 @@ class DmsLoader extends Controller
 		$category->parentCategoryId = $objCategory->pid;
 		$category->description = $objCategory->description;
 		$category->fileTypes = $objCategory->file_types;
+		$category->fileTypesInherit = $objCategory->file_types_inherit;
 		$category->publishDocumentsPerDefault = $objCategory->publish_documents_per_default;
 		$category->generalReadPermission = $objCategory->general_read_permission;
 		$category->generalManagePermission = $objCategory->general_manage_permission;

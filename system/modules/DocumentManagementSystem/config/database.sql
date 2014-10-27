@@ -22,6 +22,7 @@ CREATE TABLE `tl_dms_categories` (
   `name` varchar(255) NOT NULL default '',
   `description` text NULL,
   `file_types` varchar(255) NOT NULL default '',
+  `file_types_inherit` char(1) NOT NULL default '',
   `publish_documents_per_default` varchar(64) NOT NULL default 'DISABLE',
   `general_read_permission` varchar(64) NOT NULL default 'ALL',
   `general_manage_permission` varchar(64) NOT NULL default 'CUSTOM',

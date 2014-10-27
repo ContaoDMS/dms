@@ -35,6 +35,7 @@ $GLOBALS['TL_LANG']['tl_dms_categories']['description']                   = arra
 $GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission']       = array('General read right', 'Specify the general read right for documents in this category.');
 $GLOBALS['TL_LANG']['tl_dms_categories']['general_manage_permission']     = array('General manage right', 'Specify the general manage right for documents in this category.');
 $GLOBALS['TL_LANG']['tl_dms_categories']['file_types']                    = array('Allowed file types', 'Specify a comma separated list of file types, for which an upload is allowed. The list will be sorted automatically when saving and all file types are converted to lowercase.');
+$GLOBALS['TL_LANG']['tl_dms_categories']['file_types_inherit']            = array('Inheritance of allowed file types', 'Specify if the allowed file types should also be inherited from parent categories.');
 $GLOBALS['TL_LANG']['tl_dms_categories']['publish_documents_per_default'] = array('Publish per default', 'Specify whether the uploaded documents in this category should be be published by default. If this option is enabled the checkbox for publishing in the management module (frontend) is always checked.');
 $GLOBALS['TL_LANG']['tl_dms_categories']['cssID']                         = array('CSS ID/class', 'Specify an ID and one or more classes.');
 $GLOBALS['TL_LANG']['tl_dms_categories']['published']                     = array('Publish category', 'Specify whether the category should be publicly visible.');
