@@ -330,6 +330,17 @@ class DmsLoader extends Controller
 		$category->published = $objCategory->published;
 		$category->publicationStart = $objCategory->start;
 		$category->publicationStop = $objCategory->stop;
+		
+		// HOOK: modify the category
+		if (isset($GLOBALS['TL_HOOKS']['dmsModifyLoadedCategory']) && is_array($GLOBALS['TL_HOOKS']['dmsModifyLoadedCategory']))
+		{
+			foreach ($GLOBALS['TL_HOOKS']['dmsModifyLoadedCategory'] as $callback)
+			{
+				$this->import($callback[0]);
+				$category = $this->$callback[0]->$callback[1]($category, $objCategory);
+			}
+		}
+		
 		return $category;
 	}
 	
@@ -356,6 +367,17 @@ class DmsLoader extends Controller
 		$accessRight->active = $objAccessRight->published;
 		$accessRight->activationStart = $objAccessRight->start;
 		$accessRight->activationStop = $objAccessRight->stop;
+		
+		// HOOK: modify the access right
+		if (isset($GLOBALS['TL_HOOKS']['dmsModifyLoadedAccessRight']) && is_array($GLOBALS['TL_HOOKS']['dmsModifyLoadedAccessRight']))
+		{
+			foreach ($GLOBALS['TL_HOOKS']['dmsModifyLoadedAccessRight'] as $callback)
+			{
+				$this->import($callback[0]);
+				$accessRight = $this->$callback[0]->$callback[1]($accessRight, $objAccessRight);
+			}
+		}
+		
 		return $accessRight;
 	}
 	
@@ -385,6 +407,17 @@ class DmsLoader extends Controller
 		$document->lasteditMemberName = $objDocument->lastedit_member_name;
 		$document->lasteditDate = $objDocument->lastedit_date;
 		$document->published = $objDocument->published;
+		
+		// HOOK: modify the access right
+		if (isset($GLOBALS['TL_HOOKS']['dmsModifyLoadedDocument']) && is_array($GLOBALS['TL_HOOKS']['dmsModifyLoadedDocument']))
+		{
+			foreach ($GLOBALS['TL_HOOKS']['dmsModifyLoadedDocument'] as $callback)
+			{
+				$this->import($callback[0]);
+				$document = $this->$callback[0]->$callback[1]($document, $objDocument);
+			}
+		}
+		
 		return $document;
 	}
 }
