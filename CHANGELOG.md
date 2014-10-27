@@ -9,6 +9,7 @@ Version 2.2.0 (2014-xx-xx)
 - added deleting associated access rights, when deleting a category (see #1)
 - added time controlled publishing of categories (see #22)
 - added direct and time controlled activating of access rights (see #22)
+- added check before deleting non empty categories (see #1)
 
 IMPORTANT NOTE: activate all access rights after updating vie multi edit mode
 
