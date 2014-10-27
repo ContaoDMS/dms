@@ -165,7 +165,8 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_categories']['file_types'],
 			'exclude'                 => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50')
+			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
+			'save_callback'           => array(array('tl_dms_categories', 'saveFileTypes'))
 		),
 		'publish_documents_per_default' => array
 		(
@@ -509,6 +510,24 @@ class tl_dms_categories extends Backend
 			}
 		}
 		return true;
+	}
+	
+	/**
+	 * Cleanup the files types before saving
+	 */
+	public function saveFileTypes($varValue, DataContainer $dc)
+	{
+		if (strlen($varValue) > 0)
+		{
+			$varValue = str_replace(' ', '', $varValue);
+			$varValue = strtolower($varValue);
+			$arrFileTypes = explode(",", $varValue);
+			$arrFileTypes = array_unique($arrFileTypes);
+			asort($arrFileTypes);
+			$varValue = implode(",", $arrFileTypes);
+		}
+		
+		return $varValue;
 	}
 }
 ?>
