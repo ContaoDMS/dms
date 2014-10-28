@@ -100,6 +100,34 @@ class DmsUtils
 		$date = new Date();
 		return $date->getNumericDatimFormat();
 	}
+	
+	/**
+	 * 
+	 * @param string $strFileTypes
+	 * @param array $arrFileTypes
+	 * @return unknown
+	 */
+	public static function getUniqueFileTypes($strFileTypes, $arrFileTypes=array())
+	{
+		$arrUniqueFileTypes = array();
+
+		if ($strFileTypes != null && strlen($strFileTypes) > 0)
+		{
+			$arrUniqueFileTypes = array_merge($arrUniqueFileTypes, explode(",", $strFileTypes));
+		}
+		
+		if ($arrFileTypes != null && !empty($arrFileTypes))
+		{
+			$arrUniqueFileTypes = array_merge($arrUniqueFileTypes, $arrFileTypes);
+		}
+		
+		$arrUniqueFileTypes = array_map('trim', $arrUniqueFileTypes);
+		$arrUniqueFileTypes = array_map('strtolower', $arrUniqueFileTypes);
+		$arrUniqueFileTypes = array_unique($arrUniqueFileTypes);
+		asort($arrUniqueFileTypes);
+		
+		return $arrUniqueFileTypes;
+	}
 }
 
 ?>

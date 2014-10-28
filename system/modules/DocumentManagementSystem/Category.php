@@ -643,17 +643,14 @@ class Category extends System
 	 */
 	public function getAllowedFileTypes()
 	{
-		$strFileTypes = str_replace(' ', '', $this->fileTypes);
-		$strFileTypes = strtolower($strFileTypes);
-		$arrFileTypes = explode(",", $strFileTypes);
+		$arrFileTypesOfParents = array();
 		
 		if ($this->fileTypesInherit && !$this->isRootCategory() && $this->hasParentCategory())
 		{
-			$arrFileTypes = array_merge($arrFileTypes, $this->parentCategory->getAllowedFileTypes());
+			$arrFileTypesOfParents = $this->parentCategory->getAllowedFileTypes();
 		}
 		
-		$arrFileTypes = array_unique($arrFileTypes);
-		asort($arrFileTypes);
+		$arrFileTypes = DmsUtils::getUniqueFileTypes($this->fileTypes, $arrFileTypesOfParents);
 		
 		return $arrFileTypes;
 	}
