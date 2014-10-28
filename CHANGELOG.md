@@ -13,6 +13,7 @@ Version 2.2.0 (2014-xx-xx)
 - added 'dmsModifyLoaded-Hooks' (see #23)
 - improved handling of file types (see #5)
 - added inheritance of file types (see #5)
+- added file type sets  (see #5)
 
 IMPORTANT NOTE: activate all access rights after updating vie multi edit mode
 
