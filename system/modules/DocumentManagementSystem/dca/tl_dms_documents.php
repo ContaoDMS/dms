@@ -107,6 +107,13 @@ $GLOBALS['TL_DCA']['tl_dms_documents'] = array
 				'icon'                => 'delete.gif',
 				'attributes'          => 'onclick="if (!confirm(\'' . $GLOBALS['TL_LANG']['tl_dms_documents']['deleteConfirm'] . '\')) return false; Backend.getScrollOffset();"'
 			),
+			'toggle' => array
+			(
+					'label'               => &$GLOBALS['TL_LANG']['tl_dms_documents']['toggle'],
+					'icon'                => 'visible.gif',
+					'attributes'          => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
+					'button_callback'     => array('tl_dms_documents', 'toggleIcon')
+			),
 			'show' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_dms_documents']['show'],
@@ -264,13 +271,78 @@ class tl_dms_documents extends Backend
 	 */
 	public function addIcon($row, $label, DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false)
 	{
-		$imgName = 'document';
+		$arrMimeInfo = DmsUtils::getMimeInfo($row['data_file_type']);
+		
+		$imgName = $arrMimeInfo['icon'];
 		if (!$row['published'])
 		{
 			$imgName .= '_';
 		}
 		
-		return $this->generateImage('system/modules/DocumentManagementSystem/html/' . $imgName . '.png', '', '') . $label;
+		return $this->generateImage('system/modules/DocumentManagementSystem/html/mime/' . $imgName . '.png', $arrMimeInfo['type']) . $label;
+	}
+	
+	/**
+	 * Return the "toggle visibility" button
+	 * @param array
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @return string
+	 */
+	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
+	{
+		if (strlen($this->Input->get('tid')))
+		{
+			$this->toggleVisibility($this->Input->get('tid'), ($this->Input->get('state') == 1));
+			$this->redirect($this->getReferer());
+		}
+
+		// Check permissions AFTER checking the tid, so hacking attempts are logged
+		if (!$this->User->isAdmin && !$this->User->hasAccess('tl_dms_documents::published', 'alexf'))
+		{
+			return '';
+		}
+
+		$href .= '&amp;tid='.$row['id'].'&amp;state='.($row['published'] ? '' : 1);
+
+		if (!$row['published'])
+		{
+			$icon = 'invisible.gif';
+		}
+
+		return '<a href="'.$this->addToUrl($href).'" title="'.specialchars($title).'"'.$attributes.'>'.$this->generateImage($icon, $label).'</a> ';
+	}
+
+	/**
+	 * Publish/unpublish a category
+	 * @param integer
+	 * @param boolean
+	 */
+	public function toggleVisibility($intId, $blnVisible)
+	{
+		// Check permissions
+		if (!$this->User->isAdmin && !$this->User->hasAccess('tl_dms_documents::published', 'alexf'))
+		{
+			$this->log('Not enough permissions to publish/unpublish dms document ID "'.$intId.'"', 'tl_dms_documents toggleVisibility', TL_ERROR);
+			$this->redirect('contao/main.php?act=error');
+		}
+
+		// Trigger the save_callback
+		if (is_array($GLOBALS['TL_DCA']['tl_dms_documents']['fields']['published']['save_callback']))
+		{
+			foreach ($GLOBALS['TL_DCA']['tl_dms_documents']['fields']['published']['save_callback'] as $callback)
+			{
+				$this->import($callback[0]);
+				$blnVisible = $this->$callback[0]->$callback[1]($blnVisible, $this);
+			}
+		}
+
+		// Update the database
+		$this->Database->prepare("UPDATE tl_dms_documents SET tstamp=". time() .", published='" . ($blnVisible ? 1 : '') . "' WHERE id=?")
+					   ->execute($intId);
 	}
 	
 	/**
@@ -396,8 +468,8 @@ class tl_dms_documents extends Backend
 		$doc = $dc->activeRecord;
 		
 		return DmsConfig::getDocumentFilePath(
-						Document::buildFileNameVersioned($varValue, 
-								Document::buildVersionForFileName($doc->version_major,  $doc->version_minor, $doc->version_patch), 
+						Document::buildFileNameVersioned($varValue,
+								Document::buildVersionForFileName($doc->version_major,  $doc->version_minor, $doc->version_patch),
 														 $doc->data_file_type
 														)
 											  );

@@ -59,11 +59,12 @@ $GLOBALS['TL_LANG']['tl_dms_documents']['publish_legend']      = 'Publish settin
 /**
  * Buttons
  */
-$GLOBALS['TL_LANG']['tl_dms_documents']['show']       = array('Document details', 'Show the details of document ID %s');
-$GLOBALS['TL_LANG']['tl_dms_documents']['edit']       = array('Edit document', 'Edit document ID %s');
-$GLOBALS['TL_LANG']['tl_dms_documents']['cut']        = array('Move document', 'Move document ID %s');
-$GLOBALS['TL_LANG']['tl_dms_documents']['delete']     = array('Delete document', 'Delete document ID %s');
-$GLOBALS['TL_LANG']['tl_dms_documents']['pasteinto']  = array('Paste into', 'Paste into category ID %s');
+$GLOBALS['TL_LANG']['tl_dms_documents']['show']      = array('Document details', 'Show the details of document ID %s');
+$GLOBALS['TL_LANG']['tl_dms_documents']['edit']      = array('Edit document', 'Edit document ID %s');
+$GLOBALS['TL_LANG']['tl_dms_documents']['cut']       = array('Move document', 'Move document ID %s');
+$GLOBALS['TL_LANG']['tl_dms_documents']['delete']    = array('Delete document', 'Delete document ID %s');
+$GLOBALS['TL_LANG']['tl_dms_documents']['pasteinto'] = array('Paste into', 'Paste into category ID %s');
+$GLOBALS['TL_LANG']['tl_dms_categories']['toggle']   = array('Publish/unpublish document', 'Publish/unpublish document ID %s');
 
 /**
  * Messages

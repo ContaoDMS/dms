@@ -60,11 +60,12 @@ $GLOBALS['TL_LANG']['tl_dms_documents']['publish_legend']      = 'Veröffentlich
 /**
  * Buttons
  */
-$GLOBALS['TL_LANG']['tl_dms_documents']['show']       = array('Dokumentdetails', 'Details des Dokuments ID %s anzeigen');
-$GLOBALS['TL_LANG']['tl_dms_documents']['edit']       = array('Dokument bearbeiten', 'Dokument ID %s bearbeiten');
-$GLOBALS['TL_LANG']['tl_dms_documents']['cut']        = array('Dokument verschieben', 'Dokument ID %s verschieben');
-$GLOBALS['TL_LANG']['tl_dms_documents']['delete']     = array('Dokument löschen', 'Dokument ID %s löschen');
-$GLOBALS['TL_LANG']['tl_dms_documents']['pasteinto']  = array('Einfügen in', 'In die Kategorie ID %s einfügen');
+$GLOBALS['TL_LANG']['tl_dms_documents']['show']      = array('Dokumentdetails', 'Details des Dokuments ID %s anzeigen');
+$GLOBALS['TL_LANG']['tl_dms_documents']['edit']      = array('Dokument bearbeiten', 'Dokument ID %s bearbeiten');
+$GLOBALS['TL_LANG']['tl_dms_documents']['cut']       = array('Dokument verschieben', 'Dokument ID %s verschieben');
+$GLOBALS['TL_LANG']['tl_dms_documents']['delete']    = array('Dokument löschen', 'Dokument ID %s löschen');
+$GLOBALS['TL_LANG']['tl_dms_documents']['pasteinto'] = array('Einfügen in', 'In die Kategorie ID %s einfügen');
+$GLOBALS['TL_LANG']['tl_dms_categories']['toggle']   = array('Dokument veröffentlichen/unveröffentlichen', 'Dokument ID %s veröffentlichen/unveröffentlichen');
 
 /**
  * Messages

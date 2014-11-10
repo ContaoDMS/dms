@@ -128,6 +128,160 @@ class DmsUtils
 		
 		return $arrUniqueFileTypes;
 	}
+	
+	/**
+	 * Return the mime type and icon of a file based on its extension
+	 *
+	 * @return array An array with mime type and icon name
+	 */
+	public static function getMimeInfo($strExtension)
+	{
+		$arrMimeTypes = array
+		(
+			// Application files
+			'xl'    => array('type' => 'application/excel', 'icon' => 'excel'),
+			'xls'   => array('type' => 'application/excel', 'icon' => 'excel'),
+			'xlsx'  => array('type' => 'application/excel', 'icon' => 'excel'),
+			'hqx'   => array('type' => 'application/mac-binhex40', 'icon' => 'plain'),
+			'cpt'   => array('type' => 'application/mac-compactpro', 'icon' => 'plain'),
+			'bin'   => array('type' => 'application/macbinary', 'icon' => 'plain'),
+			'doc'   => array('type' => 'application/msword', 'icon' => 'word'),
+			'docx'  => array('type' => 'application/msword', 'icon' => 'word'),
+			'word'  => array('type' => 'application/msword', 'icon' => 'word'),
+			'cto'   => array('type' => 'application/octet-stream', 'icon' => 'zip'),
+			'dms'   => array('type' => 'application/octet-stream', 'icon' => 'plain'),
+			'lha'   => array('type' => 'application/octet-stream', 'icon' => 'plain'),
+			'lzh'   => array('type' => 'application/octet-stream', 'icon' => 'plain'),
+			'exe'   => array('type' => 'application/octet-stream', 'icon' => 'binary'),
+			'class' => array('type' => 'application/octet-stream', 'icon' => 'binary'),
+			'so'    => array('type' => 'application/octet-stream', 'icon' => 'binary'),
+			'sea'   => array('type' => 'application/octet-stream', 'icon' => 'binary'),
+			'dll'   => array('type' => 'application/octet-stream', 'icon' => 'binary'),
+			'oda'   => array('type' => 'application/oda', 'icon' => 'plain'),
+			'pdf'   => array('type' => 'application/pdf', 'icon' => 'pdf'),
+			'ai'    => array('type' => 'application/illustrator', 'icon' => 'illustrator'),
+			'eps'   => array('type' => 'application/postscript', 'icon' => 'plain'),
+			'ps'    => array('type' => 'application/postscript', 'icon' => 'plain'),
+			'pps'   => array('type' => 'application/powerpoint', 'icon' => 'powerpoint'),
+			'ppsx'  => array('type' => 'application/powerpoint', 'icon' => 'powerpoint'),
+			'ppt'   => array('type' => 'application/powerpoint', 'icon' => 'powerpoint'),
+			'pptx'  => array('type' => 'application/powerpoint', 'icon' => 'powerpoint'),
+			'smi'   => array('type' => 'application/smil', 'icon' => 'plain'),
+			'smil'  => array('type' => 'application/smil', 'icon' => 'plain'),
+			'mif'   => array('type' => 'application/vnd.mif', 'icon' => 'plain'),
+			'odc'   => array('type' => 'application/vnd.oasis.opendocument.chart', 'icon' => 'office'),
+			'odf'   => array('type' => 'application/vnd.oasis.opendocument.formula', 'icon' => 'office'),
+			'odg'   => array('type' => 'application/vnd.oasis.opendocument.graphics', 'icon' => 'office'),
+			'odi'   => array('type' => 'application/vnd.oasis.opendocument.image', 'icon' => 'office'),
+			'odp'   => array('type' => 'application/vnd.oasis.opendocument.presentation', 'icon' => 'office'),
+			'ods'   => array('type' => 'application/vnd.oasis.opendocument.spreadsheet', 'icon' => 'office'),
+			'odt'   => array('type' => 'application/vnd.oasis.opendocument.text', 'icon' => 'office'),
+			'wbxml' => array('type' => 'application/wbxml', 'icon' => 'plain'),
+			'wmlc'  => array('type' => 'application/wmlc', 'icon' => 'plain'),
+			'dmg'   => array('type' => 'application/x-apple-diskimage', 'icon' => 'zip'),
+			'dcr'   => array('type' => 'application/x-director', 'icon' => 'plain'),
+			'dir'   => array('type' => 'application/x-director', 'icon' => 'plain'),
+			'dxr'   => array('type' => 'application/x-director', 'icon' => 'plain'),
+			'dvi'   => array('type' => 'application/x-dvi', 'icon' => 'plain'),
+			'gtar'  => array('type' => 'application/x-gtar', 'icon' => 'zip'),
+			'inc'   => array('type' => 'application/x-httpd-php', 'icon' => 'php'),
+			'php'   => array('type' => 'application/x-httpd-php', 'icon' => 'php'),
+			'php3'  => array('type' => 'application/x-httpd-php', 'icon' => 'php'),
+			'php4'  => array('type' => 'application/x-httpd-php', 'icon' => 'php'),
+			'php5'  => array('type' => 'application/x-httpd-php', 'icon' => 'php'),
+			'phtml' => array('type' => 'application/x-httpd-php', 'icon' => 'php'),
+			'phps'  => array('type' => 'application/x-httpd-php-source', 'icon' => 'php'),
+			'js'    => array('type' => 'application/x-javascript', 'icon' => 'js'),
+			'json'  => array('type' => 'application/json', 'icon' => 'js'),
+			'psd'   => array('type' => 'application/x-photoshop', 'icon' => 'photoshop'),
+			'rar'   => array('type' => 'application/x-rar', 'icon' => 'zip'),
+			'fla'   => array('type' => 'application/x-shockwave-flash', 'icon' => 'swf'),
+			'swf'   => array('type' => 'application/x-shockwave-flash', 'icon' => 'swf'),
+			'sit'   => array('type' => 'application/x-stuffit', 'icon' => 'zip'),
+			'tar'   => array('type' => 'application/x-tar', 'icon' => 'zip'),
+			'tgz'   => array('type' => 'application/x-tar', 'icon' => 'zip'),
+			'gz'    => array('type' => 'application/x-gzip', 'icon' => 'zip'),
+			'xhtml' => array('type' => 'application/xhtml+xml', 'icon' => 'html'),
+			'xht'   => array('type' => 'application/xhtml+xml', 'icon' => 'code'),
+			'zip'   => array('type' => 'application/zip', 'icon' => 'zip'),
+			'7z'    => array('type' => 'application/x-7z-compressed', 'icon' => 'zip'),
+			'tex'   => array('type' => 'application/x-tex', 'icon' => 'tex'),
+
+			// audio files
+			'm4a'   => array('type' => 'audio/x-m4a', 'icon' => 'audio'),
+			'mp3'   => array('type' => 'audio/mp3', 'icon' => 'audio'),
+			'wma'   => array('type' => 'audio/wma', 'icon' => 'audio'),
+			'mpeg'  => array('type' => 'audio/mpeg', 'icon' => 'audio'),
+			'wav'   => array('type' => 'audio/wav', 'icon' => 'audio'),
+			'ogg'   => array('type' => 'audio/ogg', 'icon' => 'audio'),
+			'mid'   => array('type' => 'audio/midi', 'icon' => 'audio'),
+			'midi'  => array('type' => 'audio/midi', 'icon' => 'audio'),
+			'aif'   => array('type' => 'audio/x-aiff', 'icon' => 'audio'),
+			'aiff'  => array('type' => 'audio/x-aiff', 'icon' => 'audio'),
+			'aifc'  => array('type' => 'audio/x-aiff', 'icon' => 'audio'),
+			'ram'   => array('type' => 'audio/x-pn-realaudio', 'icon' => 'audio'),
+			'rm'    => array('type' => 'audio/x-pn-realaudio', 'icon' => 'audio'),
+			'rpm'   => array('type' => 'audio/x-pn-realaudio-plugin', 'icon' => 'audio'),
+			'ra'    => array('type' => 'audio/x-realaudio', 'icon' => 'audio'),
+
+			// images
+			'bmp'   => array('type' => 'image/bmp', 'icon' => 'bmp'),
+			'gif'   => array('type' => 'image/gif', 'icon' => 'gif'),
+			'jpeg'  => array('type' => 'image/jpeg', 'icon' => 'jpg'),
+			'jpg'   => array('type' => 'image/jpeg', 'icon' => 'jpg'),
+			'jpe'   => array('type' => 'image/jpeg', 'icon' => 'jpg'),
+			'png'   => array('type' => 'image/png', 'icon' => 'tif'),
+			'tiff'  => array('type' => 'image/tiff', 'icon' => 'tif'),
+			'tif'   => array('type' => 'image/tiff', 'icon' => 'tif'),
+
+			// mailbox files
+			'eml'   => array('type' => 'message/rfc822', 'icon' => 'plain'),
+
+			// text files
+			'asp'   => array('type' => 'text/asp', 'icon' => 'plain'),
+			'css'   => array('type' => 'text/css', 'icon' => 'css'),
+			'csv'   => array('type' => 'text/csv', 'icon' => 'csv'),
+			'scss'  => array('type' => 'text/x-scss', 'icon' => 'css'),
+			'less'  => array('type' => 'text/x-less', 'icon' => 'css'),
+			'html'  => array('type' => 'text/html', 'icon' => 'html'),
+			'htm'   => array('type' => 'text/html', 'icon' => 'html'),
+			'shtml' => array('type' => 'text/html', 'icon' => 'html'),
+			'html5' => array('type' => 'text/html', 'icon' => 'html'),
+			'txt'   => array('type' => 'text/plain', 'icon' => 'text'),
+			'text'  => array('type' => 'text/plain', 'icon' => 'text'),
+			'log'   => array('type' => 'text/plain', 'icon' => 'text'),
+			'rtx'   => array('type' => 'text/richtext', 'icon' => 'plain'),
+			'rtf'   => array('type' => 'text/rtf', 'icon' => 'plain'),
+			'xml'   => array('type' => 'text/xml', 'icon' => 'code'),
+			'xsl'   => array('type' => 'text/xml', 'icon' => 'code'),
+
+			// videos
+			'mp4'   => array('type' => 'video/mp4', 'icon' => 'video'),
+			'm4v'   => array('type' => 'video/x-m4v', 'icon' => 'video'),
+			'mov'   => array('type' => 'video/mov', 'icon' => 'video'),
+			'wmv'   => array('type' => 'video/wmv', 'icon' => 'video'),
+			'webm'  => array('type' => 'video/webm', 'icon' => 'video'),
+			'qt'    => array('type' => 'video/quicktime', 'icon' => 'video'),
+			'rv'    => array('type' => 'video/vnd.rn-realvideo', 'icon' => 'video'),
+			'avi'   => array('type' => 'video/x-msvideo', 'icon' => 'video'),
+			'ogv'   => array('type' => 'video/ogg', 'icon' => 'video'),
+			'movie' => array('type' => 'video/x-sgi-movie', 'icon' => 'video')
+		);
+
+		// Extend the default lookup array
+		if (!empty($GLOBALS['TL_DMS_MIME']) && is_array($GLOBALS['TL_DMS_MIME']))
+		{
+			$arrMimeTypes = array_merge($arrMimeTypes, $GLOBALS['TL_DMS_MIME']);
+		}
+
+		// Fallback to application/octet-stream
+		if (!isset($arrMimeTypes[$strExtension]))
+		{
+			return array('type' => 'application/octet-stream', 'icon' => 'plain');
+		}
+
+		return $arrMimeTypes[$strExtension];
+	}
 }
 
 ?>

@@ -14,6 +14,8 @@ Version 2.2.0 (2014-xx-xx)
 - improved handling of file types (see #5)
 - added inheritance of file types (see #5)
 - added file type sets  (see #5)
+- added mime icons for different document types (see #3)
+- added publishing of documents via toggle button (see #3)
 
 IMPORTANT NOTE: activate all access rights after updating vie multi edit mode
 
