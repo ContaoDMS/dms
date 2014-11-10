@@ -297,11 +297,6 @@ class tl_dms_categories extends Backend
 			return $this->generateImage($image, '', $imageAttribute);
 		}
 		
-		$pubDocPerDef = $row['publish_documents_per_default'];
-		$pubDocPerDefImg = '<span style="padding-left:3px;">'
-						. $this->generateImage('system/modules/DocumentManagementSystem/html/publish_documents_per_default_' . $pubDocPerDef . '.png', $pubDocPerDef, 'title="' . $GLOBALS['TL_LANG']['tl_dms_categories']['publish_documents_per_default_option'][$pubDocPerDef][0] . '"')
-						. '</span>';
-		
 		$genReadPerm = $row['general_read_permission'];
 		$genReadPermImg = '<span style="padding-left:3px;">'
 						. $this->generateImage('system/modules/DocumentManagementSystem/html/general_read_permission_' . $genReadPerm . '.png', $genReadPerm, 'title="' . $GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'][$genReadPerm][0] . '"')
@@ -311,7 +306,25 @@ class tl_dms_categories extends Backend
 						. $this->generateImage('system/modules/DocumentManagementSystem/html/general_manage_permission_' . $genManagePerm . '.png', $genManagePerm, 'title="' . $GLOBALS['TL_LANG']['tl_dms_categories']['general_manage_permission_option'][$genManagePerm][0] . '"')
 						. '</span>';
 		
-		return '<a>' . $this->generateImage('system/modules/DocumentManagementSystem/html/' . $image, '', $imageAttribute) . '</a>' . $label . $pubDocPerDefImg . $genReadPermImg . $genManagePermImg;
+		$pubDocPerDef = $row['publish_documents_per_default'];
+		$pubDocPerDefImg = "";
+		if ($pubDocPerDef != Category::PUBLISH_DOCUMENTS_PER_DEFAULT_DISABLE)
+		{
+			$pubDocPerDefImg = '<span style="padding-left:3px;">'
+							. $this->generateImage('system/modules/DocumentManagementSystem/html/publish_documents_per_default_' . $pubDocPerDef . '.png', $pubDocPerDef, 'title="' . $GLOBALS['TL_LANG']['tl_dms_categories']['publish_documents_per_default_option'][$pubDocPerDef][0] . '"')
+							. '</span>';
+		}
+		
+		$inhFileTypes = $row['file_types_inherit'];
+		$inhFileTypesImg = "";
+		if ($inhFileTypes)
+		{
+			$inhFileTypesImg = '<span style="padding-left:3px;">'
+							 . $this->generateImage('system/modules/DocumentManagementSystem/html/file_types_inherit_ACTIVE.png', "", 'title="' . $GLOBALS['TL_LANG']['tl_dms_categories']['file_types_inherit_option']['ACTIVE'][0] . '"')
+							 . '</span>';
+		}
+		
+		return '<a>' . $this->generateImage('system/modules/DocumentManagementSystem/html/' . $image, '', $imageAttribute) . '</a>' . $label . $genReadPermImg . $genManagePermImg . $pubDocPerDefImg . $inhFileTypesImg;
 	}
 
 	
