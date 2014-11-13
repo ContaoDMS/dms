@@ -2,7 +2,7 @@
 Contao Extension "DocumentManagementSystem"
 ===========================================
 
-Version 2.2.0 (2014-xx-xx)
+Version 2.2.0 (2014-11-xx)
 --------------------------
 - added breadcrumb to backend tree views (see #2)
 - added deleting associated file, when deleting a document (see #3)
@@ -16,6 +16,7 @@ Version 2.2.0 (2014-xx-xx)
 - added file type sets  (see #5)
 - added mime icons for different document types (see #3)
 - added publishing of documents via toggle button (see #3)
+- added a hint to backend documents view that not all fields are completely checked (see #3)
 
 IMPORTANT NOTE: activate all access rights after updating vie multi edit mode
 

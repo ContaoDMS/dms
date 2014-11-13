@@ -47,7 +47,8 @@ $GLOBALS['TL_DCA']['tl_dms_documents'] = array
 		'onload_callback'             => array
 		(
 			array('tl_dms_documents', 'resortDocuments'),
-			array('tl_dms_categories', 'addBreadcrumb')
+			array('tl_dms_categories', 'addBreadcrumb'),
+			array('tl_dms_documents', 'showNotCompletelyCheckedHint')
 		),
 		'ondelete_callback' => array
 		(
@@ -504,6 +505,20 @@ class tl_dms_documents extends Backend
 		{
 			unlink($filePath);
 		}
+	}
+	
+	/**
+	 * Show a hint that not all fields are completely checked (like in the frontend)
+	 * //TODO Remove when realizing #32 and #33
+	 */
+	public function showNotCompletelyCheckedHint($dc)
+	{
+		if ($_POST || $this->Input->get('act') != 'edit')
+		{
+			return;
+		}
+
+		$this->addInfoMessage("Achtung, aktuell werden noch nicht alle Felder komplett gepr&uuml;ft (wie im Frontend).<br/>Attention, currently not all fields are completely checked (like in the frontend).");
 	}
 }
 
