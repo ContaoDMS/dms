@@ -2,7 +2,7 @@
 Contao Extension "DocumentManagementSystem"
 ===========================================
 
-Version 2.2.0 (2014-11-xx)
+Version 2.2.0 (2014-11-14)
 --------------------------
 - added breadcrumb to backend tree views (see #2)
 - added deleting associated file, when deleting a document (see #3)
@@ -18,7 +18,7 @@ Version 2.2.0 (2014-11-xx)
 - added publishing of documents via toggle button (see #3)
 - added a hint to backend documents view that not all fields are completely checked (see #3)
 
-IMPORTANT NOTE: activate all access rights after updating vie multi edit mode
+IMPORTANT NOTE: activate all access rights after updating to this version (set published using the multi edit mode).
 
 Version 2.1.0 (2014-07-16)
 --------------------------
