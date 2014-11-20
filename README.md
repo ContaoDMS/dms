@@ -36,7 +36,7 @@ Compatibility
 -------------
 
 - min. version: Contao 2.9.5
-- max. version: Contao 2.11.x
+- max. version: Contao 3.4.x
 
 
 Dependency
@@ -55,8 +55,6 @@ Documentation, Configuration and Customization
 ----------------------------------------------
 
 For documentation hints please have a look at https://github.com/ContaoDMS/documentation.
-
-For configuration hints please have a look at https://github.com/ContaoDMS/configuration.
 
 For customization hints please have a look at https://github.com/ContaoDMS/customization.
 
