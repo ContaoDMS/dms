@@ -2,6 +2,10 @@
 Contao Extension "DocumentManagementSystem"
 ===========================================
 
+Version 3.3.0 (2015-01-xx)
+--------------------------
+- ???
+
 Version 2.2.0 (2014-11-14)
 --------------------------
 - added breadcrumb to backend tree views (see #2)

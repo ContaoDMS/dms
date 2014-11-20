@@ -19,10 +19,11 @@ For news and infos follow [@ContaoDMS](https://twitter.com/ContaoDMS).
 Installation
 ------------
 
-The extension can be installed using the Contao extension manager in the Contao
-back end. If you prefer to install it manually, download the files here:
+The extension can be installed using the Contao extension manager in the Contao backend.
 
-http://www.contao.org/de/extension-list/view/DokManSystem.html
+Or install it via [composer](https://packagist.org/packages/contao-dms/dms).
+
+If you prefer to install it manually, download the latest release here: https://github.com/ContaoDMS/dms/releases
 
 
 Tracker

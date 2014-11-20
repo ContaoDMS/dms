@@ -1,5 +1,5 @@
 {
-	"name":"cliffparnitzky/document-management-system",
+	"name":"contao-dms/dms",
 	"description":"Provides a document management system for the Contao CMS. It offers the possibility to store versioned files in an unlimited category structure.",
 	"keywords":["contao", "dms", "document", "management", "files"],
 	"type":"contao-module",
@@ -18,7 +18,7 @@
 	},
 	"require":{
 		"php":">=5.3",
-		"contao/core":">=2.9.5,<3.0.0-dev",
+		"contao/core":">=2.9.5,<4.0.0-dev",
 		"contao-community-alliance/composer-installer":"*"
 	},
 	"replace": {
@@ -28,11 +28,11 @@
 		"contao":{
 			"sources":{
 				"system/modules/DocumentManagementSystem":"system/modules/DocumentManagementSystem",
-				"tl_files/dms": "tl_files/dms"
+				"dms": "dms"
 			}
 		},
 		"branch-alias": {
-			"dev-master": "2.3.x-dev"
+			"dev-master": "3.0.x-dev"
 		}
 	}
 }
