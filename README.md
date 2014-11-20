@@ -21,7 +21,7 @@ Installation
 
 The extension can be installed using the Contao extension manager in the Contao backend.
 
-Or install it via [composer](https://packagist.org/packages/contao-dms/dms).
+Or install it via composer: [contao-dms/dms](https://packagist.org/packages/contao-dms/dms).
 
 If you prefer to install it manually, download the latest release here: https://github.com/ContaoDMS/dms/releases
 
