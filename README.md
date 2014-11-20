@@ -1,6 +1,6 @@
-[![Latest Version on Packagist](http://img.shields.io/packagist/v/cliffparnitzky/document-management-system.svg?style=flat)](https://packagist.org/packages/cliffparnitzky/document-management-system)
-[![Installations via composer per month](http://img.shields.io/packagist/dm/cliffparnitzky/document-management-system.svg?style=flat)](https://packagist.org/packages/cliffparnitzky/document-management-system)
-[![Installations via composer total](http://img.shields.io/packagist/dt/cliffparnitzky/document-management-system.svg?style=flat)](https://packagist.org/packages/cliffparnitzky/document-management-system)
+[![Latest Version on Packagist](http://img.shields.io/packagist/v/contao-dms/dms.svg?style=flat)](https://packagist.org/packages/contao-dms/dms)
+[![Installations via composer per month](http://img.shields.io/packagist/dm/contao-dms/dms.svg?style=flat)](https://packagist.org/packages/contao-dms/dms)
+[![Installations via composer total](http://img.shields.io/packagist/dt/contao-dms/dms.svg?style=flat)](https://packagist.org/packages/contao-dms/dms)
 
 Contao Extension: DocumentManagementSystem
 ==========================================
