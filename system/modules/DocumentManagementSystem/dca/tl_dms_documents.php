@@ -353,10 +353,13 @@ class tl_dms_documents extends Backend
 	{
 		$db = Database::getInstance();
 		$input = Input::getInstance();
-		$objCategory = $db->prepare('SELECT cat.* FROM tl_dms_categories cat JOIN tl_dms_documents doc ON doc.pid = cat.id WHERE doc.id = ?')->execute($input->get('id'));
-		if ($objCategory->numRows)
+		if($db->tableExists('tl_dms_categories') && $db->tableExists('tl_dms_documents'))
 		{
-			return $objCategory->file_types;
+			$objCategory = $db->prepare('SELECT cat.* FROM tl_dms_categories cat JOIN tl_dms_documents doc ON doc.pid = cat.id WHERE doc.id = ?')->execute($input->get('id'));
+			if ($objCategory->numRows)
+			{
+				return $objCategory->file_types;
+			}
 		}
 		return "";
 	}
