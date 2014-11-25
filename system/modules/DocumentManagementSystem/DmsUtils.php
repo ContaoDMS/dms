@@ -89,8 +89,9 @@ class DmsUtils
 	}
 	
 	/**
-	 * Return the numeric datim format string
-	 * @return string
+	 * Return the numeric datim format string.
+	 *
+	 * @return string The format string.
 	 */
 	public static function getNumericDatimFormat()
 	{
@@ -102,10 +103,11 @@ class DmsUtils
 	}
 	
 	/**
-	 * 
-	 * @param string $strFileTypes
-	 * @param array $arrFileTypes
-	 * @return unknown
+	 * Return a sorted and unified array of file types.
+	 *
+	 * @param string $strFileTypes The file types as string.
+	 * @param array $arrFileTypes An optional array of file type which should be merged.
+	 * @return array The sorted and unified array of file types.
 	 */
 	public static function getUniqueFileTypes($strFileTypes, $arrFileTypes=array())
 	{
@@ -132,7 +134,8 @@ class DmsUtils
 	/**
 	 * Return the mime type and icon of a file based on its extension
 	 *
-	 * @return array An array with mime type and icon name
+	 * @param string $strExtension The extension of the file.
+	 * @return array An array with mime type and icon name.
 	 */
 	public static function getMimeInfo($strExtension)
 	{
@@ -281,6 +284,76 @@ class DmsUtils
 		}
 
 		return $arrMimeTypes[$strExtension];
+	}
+	
+	/**
+	 * Send a file of a document to the browser so the "save as" dialogue opens.
+	 *
+	 * @param Document $document The document whose file should be downloaded.
+	 * @return bool Return false, if the file is invalid or could not be found.
+	 */
+	public static function sendDocumentFileToBrowser($document)
+	{
+		$strFile = DmsConfig::getDocumentFilePath($document->getFileNameVersioned());
+		
+		// Make sure there are no attempts to hack the file system
+		if (preg_match('@^\.+@i', $strFile) || preg_match('@\.+/@i', $strFile) || preg_match('@(://)+@i', $strFile))
+		{
+			// Invalid file name
+			return false;
+		}
+
+		// Limit downloads to the dms base directory
+		if (!preg_match('@^' . preg_quote(DmsConfig::getBaseDirectory(false), '@') . '@i', $strFile))
+		{
+			// Invalid path
+			return false;
+		}
+
+		// Check whether the file exists
+		if (!file_exists(TL_ROOT . '/' . $strFile))
+		{
+			// File not found
+			return false;
+		}
+
+		$objFile = new File($strFile);
+
+		// Make sure no output buffer is active
+		// @see http://ch2.php.net/manual/en/function.fpassthru.php#74080
+		while (@ob_end_clean());
+
+		// Prevent session locking (see #2804)
+		session_write_close();
+
+		// Disable zlib.output_compression (see #6717)
+		ini_set('zlib.output_compression', 'Off');
+		// Open the "save as …" dialogue
+		header('Content-Type: ' . $objFile->mime);
+		header('Content-Transfer-Encoding: binary');
+		header('Content-Disposition: attachment; filename="' . $objFile->basename . '"');
+		header('Content-Length: ' . $objFile->filesize);
+		header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+		header('Pragma: public');
+		header('Expires: 0');
+		header('Connection: close');
+
+		$resFile = fopen(TL_ROOT . '/' . $strFile, 'rb');
+		fpassthru($resFile);
+		fclose($resFile);
+
+		// HOOK: post download callback
+		if (isset($GLOBALS['TL_HOOKS']['dmsPostDownload']) && is_array($GLOBALS['TL_HOOKS']['dmsPostDownload']))
+		{
+			foreach ($GLOBALS['TL_HOOKS']['dmsPostDownload'] as $callback)
+			{
+				$this->import($callback[0]);
+				$this->$callback[0]->$callback[1]($strFile, $document);
+			}
+		}
+
+		// Stop script
+		exit;
 	}
 }
 

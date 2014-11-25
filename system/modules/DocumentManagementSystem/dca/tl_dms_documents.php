@@ -48,7 +48,8 @@ $GLOBALS['TL_DCA']['tl_dms_documents'] = array
 		(
 			array('tl_dms_documents', 'resortDocuments'),
 			array('tl_dms_categories', 'addBreadcrumb'),
-			array('tl_dms_documents', 'showNotCompletelyCheckedHint')
+			array('tl_dms_documents', 'showNotCompletelyCheckedHint'),
+			array('tl_dms_documents', 'removeFilemanagerIcon')
 		),
 		'ondelete_callback' => array
 		(
@@ -522,6 +523,23 @@ class tl_dms_documents extends Backend
 		}
 
 		$this->addInfoMessage("Achtung, aktuell werden noch nicht alle Felder komplett gepr&uuml;ft (wie im Frontend).<br/>Attention, currently not all fields are completely checked (like in the frontend).");
+	}
+	
+	/**
+	 * Adding a javascript to remove the filemanager icon.
+	 * @param DataContainer
+	 */
+	public function removeFilemanagerIcon(DataContainer $dc)
+	{
+		if ($this->Input->get('act'))
+		{
+			$GLOBALS['TL_MOOTOOLS'][] =  <<<EOT
+<script type="text/javascript">
+	<!-- Removing the filemanager icon -->
+	$('data_file_name').getPrevious('h3').getChildren('a').getFirst().dispose();
+</script>
+EOT;
+		}
 	}
 }
 

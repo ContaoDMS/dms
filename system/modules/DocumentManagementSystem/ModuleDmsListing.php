@@ -132,12 +132,7 @@ class ModuleDmsListing extends Module
 						else
 						{
 							// Send the file to the browser
-							$file = DmsConfig::getDocumentFilePath($document->getFileNameVersioned());
-							if (file_exists(TL_ROOT . '/' . $file))
-							{
-								$this->sendFileToBrowser($file);
-							}
-							else
+							if (!DmsUtils::sendDocumentFileToBrowser($document))
 							{
 								$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['download_file_not_found'];
 							}

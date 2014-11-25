@@ -32,7 +32,6 @@
  * Fields
  */
 $GLOBALS['TL_LANG']['tl_settings']['dms_legend']                    = "Dokumenten Management System";
-$GLOBALS['TL_LANG']['tl_settings']['dmsBaseDirectory']              = array('Basisverzeichnis', 'Hier können Sie das Basisverzeichnis für die Dokumente auswählen. Der empfohlene Ort ist <em>tl_files/dms</em>.');
 $GLOBALS['TL_LANG']['tl_settings']['dmsMaxUploadFileSize']          = array('Maximale Upload Dateigröße', 'Geben Sie die maximale Größe von Dateien an, die hochgeladen werden dürfen. Diese Größe darf die PHP Einstellung für <i>upload_max_filesize</i> nicht überschreiten.');
 $GLOBALS['TL_LANG']['tl_settings']['dmsPublishDocumentsPerDefault'] = array('Dokumente standardmäßig veröffentlichen', 'Geben Sie an, ob die hochgeladenen Dokumente standardmäßig veröffentlicht werden sollen. Ist diese Option aktiviert wird die Checkbox zum Veröffentlichen im Verwaltungsmodul (Frontend) immer angekreuzt.');
 
