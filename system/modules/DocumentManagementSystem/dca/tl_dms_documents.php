@@ -531,7 +531,7 @@ class tl_dms_documents extends Backend
 	 */
 	public function removeFilemanagerIcon(DataContainer $dc)
 	{
-		if ($this->Input->get('act'))
+		if ($this->Input->get('act') && version_compare(VERSION, '3.0', '<'))
 		{
 			$GLOBALS['TL_MOOTOOLS'][] =  <<<EOT
 <script type="text/javascript">
