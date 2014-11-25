@@ -2,9 +2,15 @@
 Contao Extension "DocumentManagementSystem"
 ===========================================
 
-Version 3.3.0 (2015-01-xx)
+Version 3.0.0 (2015-01-xx)
 --------------------------
-- ???
+- moved base direcotory to `TL_ROOT` (see #31)
+- added Contao 3 compatibility (see #19)
+- added `dmsPostDocumentDownload` hook (see #23)
+
+*ATTENTION:* The base directory is now `TL_ROOT\dms`. So move your current directory to `TL_ROOT` and rename it to `dms`. Ensure you have a backup of your files before the update.
+
+*IMPORTANT NOTE:* The base directory is now `TL_ROOT\dms` and could not be changed. Delete the definition `$GLOBALS['TL_CONFIG']['dmsBaseDirectory']` from your `system/config/localconfig.php`.
 
 Version 2.2.0 (2014-11-14)
 --------------------------
@@ -14,7 +20,7 @@ Version 2.2.0 (2014-11-14)
 - added time controlled publishing of categories (see #22)
 - added direct and time controlled activating of access rights (see #22)
 - added check before deleting non empty categories (see #1)
-- added `dmsModifyLoaded-Hooks` (see #23)
+- added `dmsModifyLoaded...` hooks (see #23)
 - improved handling of file types (see #5)
 - added inheritance of file types (see #5)
 - added file type sets  (see #5)
@@ -22,7 +28,7 @@ Version 2.2.0 (2014-11-14)
 - added publishing of documents via toggle button (see #3)
 - added a hint to backend documents view that not all fields are completely checked (see #3)
 
-IMPORTANT NOTE: activate all access rights after updating to this version (set published using the multi edit mode).
+*IMPORTANT NOTE:* activate all access rights after updating to this version (set published using the multi edit mode).
 
 Version 2.1.0 (2014-07-16)
 --------------------------
@@ -34,7 +40,7 @@ Version 2.1.0 (2014-07-16)
 - added jumping back to the starting point of the action in listing module (see #17)
 - improved date formatting (getting date format from system settings / page definition)
 - added option to define if documents should be published per default to system settings, management module, member groups and categories (see #7)
-- improve documents backend view (file type and file size are no readonly, the values will be determined in upload)
+- improved documents backend view (file type and file size are no readonly, the values will be determined in upload)
 - added english translation (see #11)
 
 Version 2.0.0 (2014-05-31)
