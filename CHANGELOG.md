@@ -4,7 +4,7 @@ Contao Extension "DocumentManagementSystem"
 
 Version 3.0.0 (2015-01-xx)
 --------------------------
-- moved base direcotory to `TL_ROOT` (see #31)
+- moved base direcotory to `TL_ROOT` (see dms#31)
 - added Contao 3 compatibility (see #19)
 - added `dmsPostDocumentDownload` hook (see #23)
 
