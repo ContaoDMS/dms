@@ -28,7 +28,7 @@
 		"contao":{
 			"sources":{
 				"system/modules/DocumentManagementSystem":"system/modules/DocumentManagementSystem",
-				"dms": "dms"
+				"files/dms": "files/dms"
 			}
 		},
 		"branch-alias": {

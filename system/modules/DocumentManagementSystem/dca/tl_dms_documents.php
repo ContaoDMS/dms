@@ -48,8 +48,7 @@ $GLOBALS['TL_DCA']['tl_dms_documents'] = array
 		(
 			array('tl_dms_documents', 'resortDocuments'),
 			array('tl_dms_categories', 'addBreadcrumb'),
-			array('tl_dms_documents', 'showNotCompletelyCheckedHint'),
-			array('tl_dms_documents', 'removeFilemanagerIcon')
+			array('tl_dms_documents', 'showNotCompletelyCheckedHint')
 		),
 		'ondelete_callback' => array
 		(
@@ -128,7 +127,7 @@ $GLOBALS['TL_DCA']['tl_dms_documents'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{document_legend},name,description,keywords;{file_legend},data_file_name_org,data_file_name,data_file_type,data_file_size,data_file_preview;{version_legend},version_major,version_minor,version_patch;{modification_legend},upload_member,upload_date,lastedit_member,lastedit_date;{publish_legend},published'
+		'default'                     => '{document_legend},name,description,keywords;{file_legend},data_file_name_org,data_file_name,data_file_type,data_file_size;{version_legend},version_major,version_minor,version_patch;{modification_legend},upload_member,upload_date,lastedit_member,lastedit_date;{publish_legend},published'
 	),
 
 	// Fields
@@ -186,12 +185,6 @@ $GLOBALS['TL_DCA']['tl_dms_documents'] = array
 		(
 			'input_field_callback'    => array('tl_dms_documents', 'getFileSizeWidget')
 		),
-		/*'data_file_preview' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_documents']['data_file_preview'],
-			'inputType'               => 'fileTree',
-			'eval'                    => array('files'=>true, 'filesOnly'=>true, 'extensions'=>'jpg,png,gif', 'fieldType'=>'radio', 'path'=>DmsConfig::getPreviewDirectory(false))
-		),*/
 		'version_major' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_documents']['version_major'],
@@ -472,12 +465,24 @@ class tl_dms_documents extends Backend
 	{
 		$doc = $dc->activeRecord;
 		
-		return DmsConfig::getDocumentFilePath(
-						Document::buildFileNameVersioned($varValue,
-								Document::buildVersionForFileName($doc->version_major,  $doc->version_minor, $doc->version_patch),
-														 $doc->data_file_type
-														)
-											  );
+		$strFile = DmsConfig::getDocumentFilePath
+		           (
+		                   Document::buildFileNameVersioned
+		                   (
+		                           $varValue,
+		                           Document::buildVersionForFileName($doc->version_major,  $doc->version_minor, $doc->version_patch),
+		                           $doc->data_file_type
+		                   )
+		           );
+		
+		if (version_compare(VERSION, '3.0', '<'))
+		{
+			return $strFile;
+		}
+		else
+		{
+			return \FilesModel::findByPath($strFile)->uuid;
+		}
 	}
 	
 	/**
@@ -488,13 +493,19 @@ class tl_dms_documents extends Backend
 	 */
 	public function reduceFilePath($varValue, DataContainer $dc)
 	{
-		$doc = $dc->activeRecord;
-		
-		$arrFileNameParts = Document::splitFileName(substr($varValue, strlen(DmsConfig::getBaseDirectory(true))));
-		// TODO: reset the new fileType
-		// TODO: reset the new fileSize
-		// TODO: get version parts from POST ... maybe changed ... or reduce fileName via finding and counting underscores and removing them
-		
+	    $doc = $dc->activeRecord;
+	    
+	    $path = $varValue;
+	    if (version_compare(VERSION, '3.0', '>='))
+	    {
+	        $path = \FilesModel::findByUuid($varValue)->path;
+	    }
+	    
+		$arrFileNameParts = Document::splitFileName(substr($path, strlen(DmsConfig::getBaseDirectory(true))));
+	    
+		// TODO (#33): reset the new fileType
+		// TODO (#33): reset the new fileSize
+		// TODO (#33): get version parts from POST ... maybe changed ... or reduce fileName via finding and counting underscores and removing them
 		return $arrFileNameParts['fileName'];
 	}
 	
@@ -523,23 +534,6 @@ class tl_dms_documents extends Backend
 		}
 
 		$this->addInfoMessage("Achtung, aktuell werden noch nicht alle Felder komplett gepr&uuml;ft (wie im Frontend).<br/>Attention, currently not all fields are completely checked (like in the frontend).");
-	}
-	
-	/**
-	 * Adding a javascript to remove the filemanager icon.
-	 * @param DataContainer
-	 */
-	public function removeFilemanagerIcon(DataContainer $dc)
-	{
-		if ($this->Input->get('act') && version_compare(VERSION, '3.0', '<'))
-		{
-			$GLOBALS['TL_MOOTOOLS'][] =  <<<EOT
-<script type="text/javascript">
-	<!-- Removing the filemanager icon -->
-	$('data_file_name').getPrevious('h3').getChildren('a').getFirst().dispose();
-</script>
-EOT;
-		}
 	}
 }
 

@@ -31,11 +31,17 @@
 /**
  * Add to palette
  */
-$GLOBALS['TL_DCA']['tl_settings']['palettes']['default'] .= ';{dms_legend},dmsMaxUploadFileSize,dmsPublishDocumentsPerDefault';
+$GLOBALS['TL_DCA']['tl_settings']['palettes']['default'] .= ';{dms_legend},dmsBaseDirectory,dmsMaxUploadFileSize,dmsPublishDocumentsPerDefault';
 
 /**
  * Add fields
  */
+$GLOBALS['TL_DCA']['tl_settings']['fields']['dmsBaseDirectory'] = array(
+	'label'     => &$GLOBALS['TL_LANG']['tl_settings']['dmsBaseDirectory'],
+	'inputType' => 'fileTree',
+	'eval'      => array('files'=>false, 'fieldType'=>'radio', 'mandatory'=>true)
+);
+
 $GLOBALS['TL_DCA']['tl_settings']['fields']['dmsMaxUploadFileSize'] = array(
 	'label'     => &$GLOBALS['TL_LANG']['tl_settings']['dmsMaxUploadFileSize'],
 	'inputType' => 'inputUnit',

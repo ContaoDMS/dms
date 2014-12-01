@@ -36,19 +36,23 @@ class DmsConfig
 	/**
 	 * Define constants.
 	 */
-	const DIRECTORY_NAME_BASE    = "dms";
 	const DIRECTORY_NAME_PREVIEW = "preview";
-	const DIRECTORY_NAME_TEMP    = "temp";
+	const DIRECTORY_NAME_TEMP = "temp";
 	
 	/**
-	 * Return base directory for the DMS documents.
+	 * Return base directory for the DMS documents, defined in system settings.
 	 *
 	 * @param	bool	$blnAppendTrailingSlash	True if a trailing slash should be appended.
 	 * @return	string	The path to the base directory.
 	 */
 	public static function getBaseDirectory($blnAppendTrailingSlash)
 	{
-		$path = self::DIRECTORY_NAME_BASE;
+		$path = $GLOBALS['TL_CONFIG']['dmsBaseDirectory'];
+		
+		if (version_compare(VERSION, '3.0', '>='))
+		{
+		      $path = \FilesModel::findByUuid($path)->path;
+		}
 		
 		if ($blnAppendTrailingSlash)
 		{

@@ -4,13 +4,11 @@ Contao Extension "DocumentManagementSystem"
 
 Version 3.0.0 (2015-01-xx)
 --------------------------
-- moved base direcotory to `TL_ROOT` (see #31)
+- moved base direcotory to `TL_ROOT/files` (see #31)
 - added Contao 3 compatibility (see #19)
 - added `dmsPostDocumentDownload` hook (see #23)
 
-*ATTENTION:* The base directory is now `TL_ROOT\dms`. So move your current directory to `TL_ROOT` and rename it to `dms`. Ensure you have a backup of your files before the update.
-
-*IMPORTANT NOTE:* The base directory is now `TL_ROOT\dms` and could not be changed. Delete the definition `$GLOBALS['TL_CONFIG']['dmsBaseDirectory']` from your `system/config/localconfig.php`.
+*ATTENTION:* For Contao 3 the base directory moved to`TL_ROOT/files/dms`. If you run Contao 2.11.x move this directory to `TL_ROOT/tl_files`. Ensure you have a backup of your dms base directory before the update. Ensure you have set a correct base directory (system settings) after the backup.
 
 Version 2.2.0 (2014-11-14)
 --------------------------
