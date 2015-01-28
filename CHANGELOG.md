@@ -2,11 +2,12 @@
 Contao Extension "DocumentManagementSystem"
 ===========================================
 
-Version 3.0.0 (2015-01-xx)
+Version 3.0.0 (2015-02-02)
 --------------------------
 - moved base direcotory to `TL_ROOT/files` (see #31)
 - added Contao 3 compatibility (see #19)
 - added `dmsPostDocumentDownload` hook (see #23)
+- added `<!-- indexer::stop -->` to templates (see #41)
 
 *ATTENTION:* For Contao 3 the base directory moved to`TL_ROOT/files/dms`. If you run Contao 2.11.x move this directory to `TL_ROOT/tl_files`. Ensure you have a backup of your dms base directory before the update. Ensure you have set a correct base directory (system settings) after the backup.
 
