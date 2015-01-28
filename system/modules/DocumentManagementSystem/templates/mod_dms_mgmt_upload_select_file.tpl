@@ -1,3 +1,4 @@
+<!-- indexer::stop -->
 <div class="mod_dms <?php echo $this->class; ?>"<?php echo $this->cssID; ?><?php if ($this->style): ?> style="<?php echo $this->style; ?>"<?php endif; ?>>
 <?php if ($this->headline): ?>
 
@@ -110,3 +111,4 @@
 </script>
 
 </div>
+<!-- indexer::continue --> 
