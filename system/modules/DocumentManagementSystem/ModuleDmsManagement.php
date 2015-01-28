@@ -510,6 +510,11 @@ class ModuleDmsManagement extends Module
 				// move the temp file to dms dir and append version
 				rename(DmsConfig::getTempDirectory(true) . $tempFileNameCleaned, DmsConfig::getDocumentFilePath($fileFileNameVersioned));
 				
+				if(version_compare(VERSION,'3.2', '>='))
+				{
+					\Dbafs::addResource(DmsConfig::getDocumentFilePath($fileFileNameVersioned));
+				}
+				
 				// store document
 				$document = new Document(-1, $documentName);
 				$document->categoryId = $category->id;
@@ -706,6 +711,11 @@ class ModuleDmsManagement extends Module
 					if (file_exists(TL_ROOT . '/' . $filePath))
 					{
 						unlink($filePath);
+						if(version_compare(VERSION,'3.2', '>='))
+						{
+							\Dbafs::deleteResource($filePath); 
+						}
+						
 						$arrMessages['successes'][] = $GLOBALS['TL_LANG']['DMS']['SUCCESS']['document_file_successfully_deleted'];
 					}
 					else
