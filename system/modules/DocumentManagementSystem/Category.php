@@ -530,11 +530,18 @@ class Category extends System
 		{
 			$blnIsAccessible = false;
 			$arrMemberGroups = deserialize($this->User->groups);
-			foreach($this->arrAccessRights as $accessRight)
+			if(version_compare(VERSION,'3.2', '>='))
 			{
-				if ($accessRight->isActive() && in_array($accessRight->memberGroup, $arrMemberGroups))
+				$arrMemberGroups = deserialize(\FrontendUser::getInstance()->groups);
+			}
+			if (!empty($arrMemberGroups))
+			{
+				foreach($this->arrAccessRights as $accessRight)
 				{
-					$blnIsAccessible = $blnIsAccessible || $accessRight->$strAccessRight;
+					if ($accessRight->isActive() && in_array($accessRight->memberGroup, $arrMemberGroups))
+					{
+						$blnIsAccessible = $blnIsAccessible || $accessRight->$strAccessRight;
+					}
 				}
 			}
 			return $blnIsAccessible;
