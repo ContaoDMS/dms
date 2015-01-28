@@ -34,7 +34,7 @@
 $this->loadDataContainer('tl_dms_categories');
 
 /**
- * Table tl_dms_access_rights 
+ * Table tl_dms_access_rights
  */
 $GLOBALS['TL_DCA']['tl_dms_access_rights'] = array
 (

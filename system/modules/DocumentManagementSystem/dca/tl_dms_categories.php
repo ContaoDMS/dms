@@ -46,13 +46,14 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 			array('tl_dms_categories', 'addBreadcrumb')
 		)
 	),
-	
+
 	// List
 	'list' => array
 	(
 		'sorting' => array
 		(
 			'mode'                    => 5,
+			'panelLayout'             => 'search',
 			'icon'                    => "system/modules/DocumentManagementSystem/html/docmansystem.png"
 		),
 		'label' => array
@@ -128,13 +129,13 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 			)
 		)
 	),
-	
+
 	// Palettes
 	'palettes' => array
 	(
 		'default'                     => '{category_legend},name,description;{documents_legend},file_types,file_types_inherit,publish_documents_per_default;{rights_legend},general_read_permission,general_manage_permission;{expert_legend:hide},cssID;{publish_legend},published,start,stop'
 	),
-	
+
 	// Fields
 	'fields' => array
 	(
@@ -150,6 +151,7 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_categories']['name'],
 			'exclude'                 => true,
+			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>255)
 		),
@@ -157,6 +159,7 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_categories']['description'],
 			'exclude'                 => true,
+			'search'                  => true,
 			'inputType'               => 'textarea',
 			'eval'                    => array('rte'=>'tinyMCE')
 		),
@@ -164,8 +167,9 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_categories']['file_types'],
 			'exclude'                 => true,
+			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
+		    'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
 			'save_callback'           => array(array('tl_dms_categories', 'saveFileTypes'))
 		),
 		'file_types_inherit' => array
@@ -179,7 +183,7 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_categories']['publish_documents_per_default'],
 			'exclude'                 => true,
-			'default'                 => Category::PUBLISH_DOCUMENTS_PER_DEFAULT_DISABLE,
+		    'default'                 => Category::PUBLISH_DOCUMENTS_PER_DEFAULT_DISABLE,
 			'inputType'               => 'radio',
 			'options'                 => array
 										 (
@@ -194,7 +198,7 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission'],
 			'exclude'                 => true,
-			'default'                 => Category::GENERAL_READ_PERMISSION_ALL,
+		    'default'                 => Category::GENERAL_READ_PERMISSION_ALL,
 			'inputType'               => 'radio',
 			'options'                 => array
 										 (
@@ -210,7 +214,7 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_categories']['general_manage_permission'],
 			'exclude'                 => true,
-			'default'                 => Category::GENERAL_MANAGE_PERMISSION_CUSTOM,
+		    'default'                 => Category::GENERAL_MANAGE_PERMISSION_CUSTOM,
 			'inputType'               => 'radio',
 			'options'                 => array
 										 (
@@ -225,6 +229,7 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_categories']['cssID'],
 			'exclude'                 => true,
+			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('multiple'=>true, 'size'=>2, 'tl_class'=>'w50')
 		),
@@ -270,7 +275,7 @@ class tl_dms_categories extends Backend
 		parent::__construct();
 		$this->import('BackendUser', 'User');
 	}
-	
+
 	/**
 	 * Add an image to each record
 	 * @param array
@@ -281,22 +286,22 @@ class tl_dms_categories extends Backend
 	{
 		// Add the breadcrumb link
 		$label = '<a href="' . $this->addToUrl('cat='.$row['id']) . '">' . $label . '</a>';
-		
+
 		$time = time();
 		$image = 'category.png';
-		
+
 		$published = ($row['published'] && ($row['start'] == '' || $row['start'] < $time) && ($row['stop'] == '' || $row['stop'] > $time));
 		if (!$published)
 		{
 			$image = 'category_1.png';
 		}
-		
+
 		// Return the image only
 		if ($blnReturnImage)
 		{
 			return $this->generateImage($image, '', $imageAttribute);
 		}
-		
+
 		$genReadPerm = $row['general_read_permission'];
 		$genReadPermImg = '<span style="padding-left:3px;">'
 						. $this->generateImage('system/modules/DocumentManagementSystem/html/general_read_permission_' . $genReadPerm . '.png', $genReadPerm, 'title="' . $GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'][$genReadPerm][0] . '"')
@@ -305,7 +310,7 @@ class tl_dms_categories extends Backend
 		$genManagePermImg = '<span style="padding-left:3px;">'
 						. $this->generateImage('system/modules/DocumentManagementSystem/html/general_manage_permission_' . $genManagePerm . '.png', $genManagePerm, 'title="' . $GLOBALS['TL_LANG']['tl_dms_categories']['general_manage_permission_option'][$genManagePerm][0] . '"')
 						. '</span>';
-		
+
 		$pubDocPerDef = $row['publish_documents_per_default'];
 		$pubDocPerDefImg = "";
 		if ($pubDocPerDef != Category::PUBLISH_DOCUMENTS_PER_DEFAULT_DISABLE)
@@ -314,7 +319,7 @@ class tl_dms_categories extends Backend
 							. $this->generateImage('system/modules/DocumentManagementSystem/html/publish_documents_per_default_' . $pubDocPerDef . '.png', $pubDocPerDef, 'title="' . $GLOBALS['TL_LANG']['tl_dms_categories']['publish_documents_per_default_option'][$pubDocPerDef][0] . '"')
 							. '</span>';
 		}
-		
+
 		$inhFileTypes = $row['file_types_inherit'];
 		$inhFileTypesImg = "";
 		if ($inhFileTypes)
@@ -323,11 +328,11 @@ class tl_dms_categories extends Backend
 							 . $this->generateImage('system/modules/DocumentManagementSystem/html/file_types_inherit_ACTIVE.png', "", 'title="' . $GLOBALS['TL_LANG']['tl_dms_categories']['file_types_inherit_option']['ACTIVE'][0] . '"')
 							 . '</span>';
 		}
-		
+
 		return '<a>' . $this->generateImage('system/modules/DocumentManagementSystem/html/' . $image, '', $imageAttribute) . '</a>' . $label . $genReadPermImg . $genManagePermImg . $pubDocPerDefImg . $inhFileTypesImg;
 	}
 
-	
+
 	/**
 	 * Return the "toggle visibility" button
 	 * @param array
@@ -377,7 +382,7 @@ class tl_dms_categories extends Backend
 		}
 
 		$this->createInitialVersion('tl_dms_categories', $intId);
-	
+
 		// Trigger the save_callback
 		if (is_array($GLOBALS['TL_DCA']['tl_dms_categories']['fields']['published']['save_callback']))
 		{
@@ -394,7 +399,7 @@ class tl_dms_categories extends Backend
 
 		$this->createNewVersion('tl_dms_categories', $intId);
 	}
-	
+
 	/**
 	 * Add the breadcrumb menu
 	 */
@@ -413,19 +418,19 @@ class tl_dms_categories extends Backend
 		{
 			return;
 		}
-		
+
 		$arrIds = array();
 		$arrLinks = array();
 
 		// Generate breadcrumb trail
 		$category = $this->getCategoryForId($intCategoryId, true, false);
-		
+
 		if ($category == null)
 		{
 			$this->Session->set('tl_category_id', 0);
 			return;
 		}
-		
+
 		// Add root link
 		$arrLinks[] = '<img src="system/modules/DocumentManagementSystem/html/docmansystem.png" width="16" height="16" alt=""> <a href="' . $this->addToUrl('cat=0') . '">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
 		foreach ($category->getPath(false) as $eachCategory)
@@ -455,7 +460,7 @@ class tl_dms_categories extends Backend
   <li>' . implode(' &gt; </li><li>', $arrLinks) . '</li>
 </ul>';
 	}
-	
+
 	/**
 	 * Check permissions to avoid not allowd deleting
 	 */
@@ -473,7 +478,7 @@ class tl_dms_categories extends Backend
 				break;
 		}
 	}
-	
+
 	/**
 	 * Return the "delete" button
 	 * @param array
@@ -492,7 +497,7 @@ class tl_dms_categories extends Backend
 		}
 		return '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title).'"'.$attributes.'>'.$this->generateImage($icon, $label).'</a> ';
 	}
-	
+
 	/**
 	 * Get a category via DmsLoader.
 	 */
@@ -501,11 +506,11 @@ class tl_dms_categories extends Backend
 		$params = new DmsLoaderParams();
 		$params->loadRootCategory = $blnLoadRootCategory;
 		$params->loadDocuments = $blnLoadDocuments;
-		
+
 		$dmsLoader = DmsLoader::getInstance();
 		return $dmsLoader->loadCategory($intId, $params);
 	}
-	
+
 	/**
 	 * Get a category via DmsLoader.
 	 */
@@ -517,10 +522,10 @@ class tl_dms_categories extends Backend
 		$params->loadRootCategory = true;
 		$params->loadAccessRights = true;
 		$params->loadDocuments = true;
-		
+
 		$dmsLoader = DmsLoader::getInstance();
 		$arrCategories = $dmsLoader->loadCategories($params);
-		
+
 		if (count($arrCategories) == 1)
 		{
 			$category = $arrCategories[0];
@@ -531,7 +536,7 @@ class tl_dms_categories extends Backend
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Cleanup the files types before saving
 	 */
@@ -542,7 +547,7 @@ class tl_dms_categories extends Backend
 			$arrFileTypes = DmsUtils::getUniqueFileTypes($varValue);
 			$varValue = implode(",", $arrFileTypes);
 		}
-		
+
 		return $varValue;
 	}
 }

@@ -34,7 +34,7 @@
 $this->loadDataContainer('tl_dms_categories');
 
 /**
- * Table tl_dms_documents 
+ * Table tl_dms_documents
  */
 $GLOBALS['TL_DCA']['tl_dms_documents'] = array
 (
@@ -55,20 +55,21 @@ $GLOBALS['TL_DCA']['tl_dms_documents'] = array
 			array('tl_dms_documents', 'deleteFile')
 		)
 	),
-	
+
 	// List
 	'list' => array
 	(
 		'sorting' => array
 		(
 			'mode'                    => 6,
-			'paste_button_callback'   => array('tl_dms_documents', 'pasteDocument'), 
+			'panelLayout'             => 'search',
+			'paste_button_callback'   => array('tl_dms_documents', 'pasteDocument'),
 		),
 		'label' => array
 		(
 			'fields'                  => array('name', 'version_major', 'version_minor', 'version_patch'),
 			'format'                  => '%s v%s.%s.%s',
-			'label_callback'          => array('tl_dms_documents', 'addIcon') 
+			'label_callback'          => array('tl_dms_documents', 'addIcon')
 		),
 		'global_operations' => array
 		(
@@ -144,18 +145,24 @@ $GLOBALS['TL_DCA']['tl_dms_documents'] = array
 		'name' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_documents']['name'],
+			'exclude'                 => true,
+			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'tl_class'=>'long', 'maxlength'=>255)
 		),
 		'description' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_documents']['description'],
+			'exclude'                 => true,
+			'search'                  => true,
 			'inputType'               => 'textarea',
 			'eval'                    => array('style'=>'height:60px;')
 		),
 		'keywords' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_documents']['keywords'],
+			'exclude'                 => true,
+			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('tl_class'=>'long', 'maxlength'=>255)
 		),
@@ -166,6 +173,7 @@ $GLOBALS['TL_DCA']['tl_dms_documents'] = array
 		'data_file_name' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_documents']['data_file_name'],
+			'exclude'                 => true,
 			'inputType'               => 'fileTree',
 			'eval'                    => array('mandatory'=>true, 'files'=>true, 'filesOnly'=>true, 'fieldType'=>'radio', 'path'=>DmsConfig::getBaseDirectory(false), 'extensions'=>tl_dms_documents::getValidFileTypesForCategory(), 'tl_class'=>'clr'),
 			'load_callback'           => array
@@ -188,24 +196,31 @@ $GLOBALS['TL_DCA']['tl_dms_documents'] = array
 		'version_major' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_documents']['version_major'],
+			'exclude'                 => true,
+			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'digit', 'tl_class'=>'w30', 'maxlength'=>3)
 		),
 		'version_minor' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_documents']['version_minor'],
+			'exclude'                 => true,
+			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'digit', 'tl_class'=>'w30', 'maxlength'=>3)
 		),
 		'version_patch' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_documents']['version_patch'],
+			'exclude'                 => true,
+			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'digit', 'tl_class'=>'w30', 'maxlength'=>3)
 		),
 		'upload_member' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_documents']['upload_member'],
+			'exclude'                 => true,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_member.CONCAT(firstname," ",lastname)',
 			'eval'                    => array('mandatory'=>true, 'tl_class'=>'w50', 'includeBlankOption'=>true)
@@ -213,12 +228,14 @@ $GLOBALS['TL_DCA']['tl_dms_documents'] = array
 		'upload_date' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_documents']['upload_date'],
+			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'datim', 'datepicker'=>$this->getDatePickerString(), 'tl_class'=>'w50 wizard')
 		),
 		'lastedit_member' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_documents']['lastedit_member'],
+			'exclude'                 => true,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_member.CONCAT(firstname," ",lastname)',
 			'eval'                    => array('tl_class'=>'w50 clr', 'includeBlankOption'=>true, 'blankOptionLabel'=>'&nbsp;')
@@ -226,13 +243,14 @@ $GLOBALS['TL_DCA']['tl_dms_documents'] = array
 		'lastedit_date' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_documents']['lastedit_date'],
+			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>$this->getDatePickerString(), 'tl_class'=>'w50 wizard')
 		),
 		'published' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_documents']['published'],
-			'filter'                  => true,
+			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50')
 		)
@@ -257,7 +275,7 @@ class tl_dms_documents extends Backend
 		parent::__construct();
 		$this->import('BackendUser', 'User');
 	}
-	
+
 	/**
 	 * Add an image to each record
 	 * @param array
@@ -267,16 +285,16 @@ class tl_dms_documents extends Backend
 	public function addIcon($row, $label, DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false)
 	{
 		$arrMimeInfo = DmsUtils::getMimeInfo($row['data_file_type']);
-		
+
 		$imgName = $arrMimeInfo['icon'];
 		if (!$row['published'])
 		{
 			$imgName .= '_';
 		}
-		
+
 		return $this->generateImage('system/modules/DocumentManagementSystem/html/mime/' . $imgName . '.png', $arrMimeInfo['type']) . $label;
 	}
-	
+
 	/**
 	 * Return the "toggle visibility" button
 	 * @param array
@@ -339,7 +357,7 @@ class tl_dms_documents extends Backend
 		$this->Database->prepare("UPDATE tl_dms_documents SET tstamp=". time() .", published='" . ($blnVisible ? 1 : '') . "' WHERE id=?")
 					   ->execute($intId);
 	}
-	
+
 	/**
 	 * Determine the valid file types for the current category
 	 */
@@ -357,7 +375,7 @@ class tl_dms_documents extends Backend
 		}
 		return "";
 	}
-	
+
 	/**
 	 * Resort the document sorting value
 	 * @param DataContainer
@@ -377,7 +395,7 @@ class tl_dms_documents extends Backend
 			$db->prepare($stmt)->execute();
 		}
 	}
-	
+
 	/**
 	 * Return the paste document button
 	 * @param \DataContainer
@@ -403,7 +421,7 @@ class tl_dms_documents extends Backend
 
 		return (($arrClipboard['mode'] == 'cut' && $arrClipboard['id'] == $row['id']) || ($arrClipboard['mode'] == 'cutAll' && in_array($row['id'], $arrClipboard['id'])) || (!$this->User->isAdmin && !$this->User->isAllowed(5, $objPage->row())) || $cr) ? $this->generateImage('pasteafter_.gif', '', 'class="blink"').' ' : ''; //'<a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&amp;mode=1&amp;pid='.$row['id'].(!is_array($arrClipboard['id']) ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.specialchars(sprintf($GLOBALS['TL_LANG'][$dc->table]['pasteafter'][1], $row['id'])).'" onclick="Backend.getScrollOffset()">'.$imagePasteAfter.'</a> '; 	}
 	}
-	
+
 	/**
 	 * Return the complete file path
 	 * @param DataContainer
@@ -412,7 +430,7 @@ class tl_dms_documents extends Backend
 	public function getOriginalFileNameWidget(DataContainer $dc)
 	{
 		$doc = $dc->activeRecord;
-		
+
 		return '
 <div class="w50">
   <h3><label for="ctrl_purge">'.$GLOBALS['TL_LANG']['tl_dms_documents']['data_file_name_org'][0].'</label></h3>
@@ -420,7 +438,7 @@ class tl_dms_documents extends Backend
   <p class="tl_help tl_tip">'.$GLOBALS['TL_LANG']['tl_dms_documents']['data_file_name_org'][1].'</p>
 </div>';
 	}
-	
+
 	/**
 	 * Return the complete file path
 	 * @param DataContainer
@@ -429,7 +447,7 @@ class tl_dms_documents extends Backend
 	public function getFileTypeWidget(DataContainer $dc)
 	{
 		$doc = $dc->activeRecord;
-		
+
 		return '
 <div class="w50">
   <h3><label for="ctrl_purge">'.$GLOBALS['TL_LANG']['tl_dms_documents']['data_file_type'][0].'</label></h3>
@@ -437,7 +455,7 @@ class tl_dms_documents extends Backend
   <p class="tl_help tl_tip">'.$GLOBALS['TL_LANG']['tl_dms_documents']['data_file_type'][1].'</p>
 </div>';
 	}
-	
+
 	/**
 	 * Return the complete file path
 	 * @param DataContainer
@@ -446,7 +464,7 @@ class tl_dms_documents extends Backend
 	public function getFileSizeWidget(DataContainer $dc)
 	{
 		$doc = $dc->activeRecord;
-		
+
 		return '
 <div class="w50">
   <h3><label for="ctrl_purge">'.$GLOBALS['TL_LANG']['tl_dms_documents']['data_file_size'][0].'</label></h3>
@@ -454,7 +472,7 @@ class tl_dms_documents extends Backend
   <p class="tl_help tl_tip">'.$GLOBALS['TL_LANG']['tl_dms_documents']['data_file_size'][1].'</p>
 </div>';
 	}
-	
+
 	/**
 	 * Return the complete file path
 	 * @param mixed
@@ -464,7 +482,7 @@ class tl_dms_documents extends Backend
 	public function getFullFilePath($varValue, DataContainer $dc)
 	{
 		$doc = $dc->activeRecord;
-		
+
 		$strFile = DmsConfig::getDocumentFilePath
 		           (
 		                   Document::buildFileNameVersioned
@@ -474,7 +492,7 @@ class tl_dms_documents extends Backend
 		                           $doc->data_file_type
 		                   )
 		           );
-		
+
 		if (version_compare(VERSION, '3.0', '<'))
 		{
 			return $strFile;
@@ -484,7 +502,7 @@ class tl_dms_documents extends Backend
 			return \FilesModel::findByPath($strFile)->uuid;
 		}
 	}
-	
+
 	/**
 	 * Return the reduced file name
 	 * @param mixed
@@ -494,21 +512,21 @@ class tl_dms_documents extends Backend
 	public function reduceFilePath($varValue, DataContainer $dc)
 	{
 	    $doc = $dc->activeRecord;
-	    
+
 	    $path = $varValue;
 	    if (version_compare(VERSION, '3.0', '>='))
 	    {
 	        $path = \FilesModel::findByUuid($varValue)->path;
 	    }
-	    
+
 		$arrFileNameParts = Document::splitFileName(substr($path, strlen(DmsConfig::getBaseDirectory(true))));
-	    
+
 		// TODO (#33): reset the new fileType
 		// TODO (#33): reset the new fileSize
 		// TODO (#33): get version parts from POST ... maybe changed ... or reduce fileName via finding and counting underscores and removing them
 		return $arrFileNameParts['fileName'];
 	}
-	
+
 	/**
 	 * Delete the file, if the document will be deleted.
 	 * @param DataContainer
@@ -521,7 +539,7 @@ class tl_dms_documents extends Backend
 			unlink($filePath);
 		}
 	}
-	
+
 	/**
 	 * Show a hint that not all fields are completely checked (like in the frontend)
 	 * //TODO Remove when realizing #32 and #33
