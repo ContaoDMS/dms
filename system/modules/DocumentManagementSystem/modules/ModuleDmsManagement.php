@@ -1,8 +1,8 @@
-<?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
+<?php
 
 /**
  * Contao Open Source CMS
- * Copyright (C) 2005-2014 Leo Feyer
+ * Copyright (C) 2005-2015 Leo Feyer
  *
  * Formerly known as TYPOlight Open Source CMS.
  *
@@ -21,7 +21,7 @@
  * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  Cliff Parnitzky 2014
+ * @copyright  Cliff Parnitzky 2014-2015
  * @author     Cliff Parnitzky
  * @package    DocumentManagementSystem
  * @license    LGPL
@@ -29,20 +29,24 @@
  */
 
 /**
+ * Run in a custom namespace, so the class can be replaced
+ */
+namespace ContaoDMS;
+
+/**
  * Class ModuleDmsManagement
  *
- * @copyright  Cliff Parnitzky 2014
+ * @copyright  Cliff Parnitzky 2014-2015
  * @author     Cliff Parnitzky
  * @package    Controller
  */
-class ModuleDmsManagement extends Module
+class ModuleDmsManagement extends \Module
 {
 	/**
 	 * Template
 	 * @var string
 	 */
 	protected $strTemplate = 'mod_dms_management';
-	
 
 	/**
 	 * Display a wildcard in the back end
@@ -52,7 +56,7 @@ class ModuleDmsManagement extends Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			$objTemplate = new BackendTemplate('be_wildcard');
+			$objTemplate = new \BackendTemplate('be_wildcard');
 
 			$objTemplate->wildcard = '### DOCUMENT MANAGEMENT SYSTEM - MANAGEMENT ###';
 			$objTemplate->title = $this->headline;
@@ -75,7 +79,7 @@ class ModuleDmsManagement extends Module
 	{
 		if (!FE_USER_LOGGED_IN)
 		{
-			$this->Template = new FrontendTemplate('mod_dms_mgmt_access_denied');
+			$this->Template = new \FrontendTemplate('mod_dms_mgmt_access_denied');
 			$this->Template->action = ampersand($this->Environment->request);
 		}
 		else
@@ -88,14 +92,14 @@ class ModuleDmsManagement extends Module
 				$this->Template->setData($this->arrData);
 			}
 			
-			$dmsLoader = DmsLoader::getInstance();
+			$dmsLoader = \DmsLoader::getInstance();
 			
 			$formId = "dms_management_" . $this->id;
 			
 			$arrMessages = array('errors' => array(), 'warnings' => array(), 'successes' => array(), 'infos' => array());
 			
 			// Prepare paramters for loader
-			$params = new DmsLoaderParams();
+			$params = new \DmsLoaderParams();
 			$params->rootCategoryId = $this->dmsStartCategory;
 			$params->includeRootCategory = $this->dmsStartCategoryIncluded;
 			
@@ -196,7 +200,7 @@ class ModuleDmsManagement extends Module
 				if ($tempFileName != null && strlen($tempFileName) > 0)
 				{
 					// delete the temp file, if action was aborted
-					unlink(DmsConfig::getTempDirectory(true) . $tempFileName);
+					unlink(\DmsConfig::getTempDirectory(true) . $tempFileName);
 				}
 			}
 			
@@ -210,7 +214,7 @@ class ModuleDmsManagement extends Module
 				// apply the access permissions, to only show valid categories
 				$arrCategories = $this->applyAccessPermissionsToCategories($arrCategories);
 				// flatten the tree structure (easier to use in template)
-				$arrCategories = DmsLoader::flattenCategories($arrCategories);
+				$arrCategories = \DmsLoader::flattenCategories($arrCategories);
 				
 				if (count($arrCategories) == 0)
 				{
@@ -256,11 +260,11 @@ class ModuleDmsManagement extends Module
 			$this->Template->setData($this->arrData);
 			
 			$this->Template->category = $category;
-			$this->Template->maxUploadFileSizeByte = DmsConfig::getMaxUploadFileSize(Document::FILE_SIZE_UNIT_BYTE, false);
-			$this->Template->maxUploadFileSizeByteFormatted = DmsConfig::getMaxUploadFileSize(Document::FILE_SIZE_UNIT_BYTE, true);
-			$this->Template->maxUploadFileSizeKbFormatted = DmsConfig::getMaxUploadFileSize(Document::FILE_SIZE_UNIT_KB, true);
-			$this->Template->maxUploadFileSizeMbFormatted = DmsConfig::getMaxUploadFileSize(Document::FILE_SIZE_UNIT_MB, true);
-			$this->Template->maxUploadFileSizeGbFormatted = DmsConfig::getMaxUploadFileSize(Document::FILE_SIZE_UNIT_GB, true);
+			$this->Template->maxUploadFileSizeByte = \DmsConfig::getMaxUploadFileSize(\Document::FILE_SIZE_UNIT_BYTE, false);
+			$this->Template->maxUploadFileSizeByteFormatted = \DmsConfig::getMaxUploadFileSize(\Document::FILE_SIZE_UNIT_BYTE, true);
+			$this->Template->maxUploadFileSizeKbFormatted = \DmsConfig::getMaxUploadFileSize(\Document::FILE_SIZE_UNIT_KB, true);
+			$this->Template->maxUploadFileSizeMbFormatted = \DmsConfig::getMaxUploadFileSize(\Document::FILE_SIZE_UNIT_MB, true);
+			$this->Template->maxUploadFileSizeGbFormatted = \DmsConfig::getMaxUploadFileSize(\Document::FILE_SIZE_UNIT_GB, true);
 			
 			$blnShowStart = false;
 		}
@@ -278,7 +282,7 @@ class ModuleDmsManagement extends Module
 	{
 		$strFileName = basename($_FILES['dmsFile']['name']);
 		$strFileNameCleaned = strtr(utf8_romanize($strFileName), $GLOBALS['TL_DMS']['SPECIALCHARS']);
-		$arrFileParts = Document::splitFileName($strFileNameCleaned);
+		$arrFileParts = \Document::splitFileName($strFileNameCleaned);
 		$strFileNameUnversioned = $arrFileParts['fileName'] . "." . $arrFileParts['fileType'];
 		$intFileSize = (int) $_FILES['dmsFile']['size']; // this will always be bytes ... so no conversion is needed
 		$intUploadError = (int) $_FILES['dmsFile']['error'];
@@ -305,9 +309,9 @@ class ModuleDmsManagement extends Module
 			$blnShowStart = false;
 			$this->uploadSelectFile($params, $dmsLoader, $uploadCategory, $arrMessages, $blnShowStart);
 		}
-		else if ($intFileSize > DmsConfig::getMaxUploadFileSize(Document::FILE_SIZE_UNIT_BYTE, false) || $intUploadError == UPLOAD_ERR_FORM_SIZE)
+		else if ($intFileSize > \DmsConfig::getMaxUploadFileSize(\Document::FILE_SIZE_UNIT_BYTE, false) || $intUploadError == UPLOAD_ERR_FORM_SIZE)
 		{
-			$arrMessages['errors'][] = sprintf($GLOBALS['TL_LANG']['DMS']['ERR']['upload_file_size_exceeded'], DmsConfig::getMaxUploadFileSize(Document::FILE_SIZE_UNIT_MB, true));
+			$arrMessages['errors'][] = sprintf($GLOBALS['TL_LANG']['DMS']['ERR']['upload_file_size_exceeded'], \DmsConfig::getMaxUploadFileSize(\Document::FILE_SIZE_UNIT_MB, true));
 			$blnShowStart = false;
 			$this->uploadSelectFile($params, $dmsLoader, $uploadCategory, $arrMessages, $blnShowStart);
 		}
@@ -320,14 +324,14 @@ class ModuleDmsManagement extends Module
 		else
 		{
 			// move the uploaded file to dms temp dir
-			move_uploaded_file($_FILES['dmsFile']['tmp_name'], DmsConfig::getTempDirectory(true) . $strFileNameUnversioned);
+			move_uploaded_file($_FILES['dmsFile']['tmp_name'], \DmsConfig::getTempDirectory(true) . $strFileNameUnversioned);
 			
 			// load possible documents for file name
 			$params->loadCategory = true; // need the category of existing documents
 			$arrDocuments = $dmsLoader->loadDocuments($arrFileParts['fileName'], $arrFileParts['fileType'], $params);
 			$params->loadCategory = false;
 			
-			$arrFileNameParts = Document::splitFileName($strFileName);
+			$arrFileNameParts = \Document::splitFileName($strFileName);
 			$proposedDocumentName = str_replace('_', ' ', $arrFileNameParts['fileName']); // propose original file name (uncleaned, unversioned, underscores to blanks) as document name
 			$proposedDocumentDescription = "";
 			$proposedDocumentKeywords = "";
@@ -380,10 +384,10 @@ class ModuleDmsManagement extends Module
 			$this->Template->fileName = $strFileName;
 			$this->Template->fileType = $arrFileParts['fileType'];
 			$this->Template->fileSize = $intFileSize;
-			$this->Template->fileSizeByteFormatted = Document::formatFileSize($intFileSize, Document::FILE_SIZE_UNIT_BYTE);
-			$this->Template->fileSizeKbFormatted = Document::formatFileSize(Document::convertFileSize($intFileSize, Document::FILE_SIZE_UNIT_BYTE, Document::FILE_SIZE_UNIT_KB), Document::FILE_SIZE_UNIT_KB);
-			$this->Template->fileSizeMbFormatted = Document::formatFileSize(Document::convertFileSize($intFileSize, Document::FILE_SIZE_UNIT_BYTE, Document::FILE_SIZE_UNIT_MB), Document::FILE_SIZE_UNIT_MB);
-			$this->Template->fileSizeGbFormatted = Document::formatFileSize(Document::convertFileSize($intFileSize, Document::FILE_SIZE_UNIT_BYTE, Document::FILE_SIZE_UNIT_GB), Document::FILE_SIZE_UNIT_GB);
+			$this->Template->fileSizeByteFormatted = \Document::formatFileSize($intFileSize, \Document::FILE_SIZE_UNIT_BYTE);
+			$this->Template->fileSizeKbFormatted = \Document::formatFileSize(\Document::convertFileSize($intFileSize, \Document::FILE_SIZE_UNIT_BYTE, \Document::FILE_SIZE_UNIT_KB), \Document::FILE_SIZE_UNIT_KB);
+			$this->Template->fileSizeMbFormatted = \Document::formatFileSize(\Document::convertFileSize($intFileSize, \Document::FILE_SIZE_UNIT_BYTE, \Document::FILE_SIZE_UNIT_MB), \Document::FILE_SIZE_UNIT_MB);
+			$this->Template->fileSizeGbFormatted = \Document::formatFileSize(\Document::convertFileSize($intFileSize, \Document::FILE_SIZE_UNIT_BYTE, \Document::FILE_SIZE_UNIT_GB), \Document::FILE_SIZE_UNIT_GB);
 			$this->Template->existingDocuments = $arrDocuments;
 			$this->Template->documentName = $proposedDocumentName;
 			$this->Template->documentDescription = $proposedDocumentDescription;
@@ -392,7 +396,7 @@ class ModuleDmsManagement extends Module
 			$this->Template->documentVersionMinor = $proposedDocumentVersionMinor;
 			$this->Template->documentVersionPatch = $proposedDocumentVersionPatch;
 			
-			$documentPublish = DmsUtils::publishDocumentsPerDefault($this, $this->Member, $category);
+			$documentPublish = \DmsUtils::publishDocumentsPerDefault($this, $this->Member, $category);
 			$this->Template->documentPublish = $documentPublish;
 			
 			if (!$category->isPublishableForCurrentMember())
@@ -416,7 +420,7 @@ class ModuleDmsManagement extends Module
 	{
 		$tempFileName = $this->Input->post('tempFileName');
 		$tempFileNameCleaned = strtr(utf8_romanize($tempFileName), $GLOBALS['TL_DMS']['SPECIALCHARS']); // only to ensure that the transmitted value from hidden field is clean
-		$arrTempFileParts = Document::splitFileName($tempFileNameCleaned, false);
+		$arrTempFileParts = \Document::splitFileName($tempFileNameCleaned, false);
 		$intFileSize = (int) $this->Input->post('fileSize');
 		
 		$documentName = $this->Input->post('documentName');
@@ -439,7 +443,7 @@ class ModuleDmsManagement extends Module
 			{
 				$arrMessages['infos'][] = $GLOBALS['TL_LANG']['DMS']['INFO']['publish_document_not_allowed'];
 			}
-			$documentPublish = DmsUtils::publishDocumentsPerDefault($this, $this->Member, $category);
+			$documentPublish = \DmsUtils::publishDocumentsPerDefault($this, $this->Member, $category);
 			
 		}
 
@@ -448,7 +452,7 @@ class ModuleDmsManagement extends Module
 			$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['upload_document_not_allowed'];
 			$blnShowStart = true;
 		}
-		else if (!file_exists(TL_ROOT . '/' . DmsConfig::getTempDirectory(true) . $tempFileNameCleaned))
+		else if (!file_exists(TL_ROOT . '/' . \DmsConfig::getTempDirectory(true) . $tempFileNameCleaned))
 		{
 			$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['upload_temp_file_not_found'];
 			$blnShowStart = false;
@@ -504,19 +508,15 @@ class ModuleDmsManagement extends Module
 			}
 			else
 			{
-				$documentVersion = Document::buildVersionForFileName($documentVersionMajor, $documentVersionMinor, $documentVersionPatch);
-				$fileFileNameVersioned = Document::buildFileNameVersioned($arrTempFileParts['fileName'], $documentVersion, $arrTempFileParts['fileType']);
+				$documentVersion = \Document::buildVersionForFileName($documentVersionMajor, $documentVersionMinor, $documentVersionPatch);
+				$fileFileNameVersioned = \Document::buildFileNameVersioned($arrTempFileParts['fileName'], $documentVersion, $arrTempFileParts['fileType']);
 				
 				// move the temp file to dms dir and append version
-				rename(DmsConfig::getTempDirectory(true) . $tempFileNameCleaned, DmsConfig::getDocumentFilePath($fileFileNameVersioned));
-				
-				if(version_compare(VERSION,'3.2', '>='))
-				{
-					\Dbafs::addResource(DmsConfig::getDocumentFilePath($fileFileNameVersioned));
-				}
+				rename(\DmsConfig::getTempDirectory(true) . $tempFileNameCleaned, \DmsConfig::getDocumentFilePath($fileFileNameVersioned));
+				\Dbafs::addResource(\DmsConfig::getDocumentFilePath($fileFileNameVersioned));
 				
 				// store document
-				$document = new Document(-1, $documentName);
+				$document = new \Document(-1, $documentName);
 				$document->categoryId = $category->id;
 				$document->description = $documentDescription;
 				$document->keywords = $documentKeywords;
@@ -533,7 +533,7 @@ class ModuleDmsManagement extends Module
 				$document->lasteditDate = '';
 				$document->published = $documentPublish;
 				
-				$dmsWriter = DmsWriter::getInstance();
+				$dmsWriter = \DmsWriter::getInstance();
 				$document = $dmsWriter->storeDocument($document);
 				
 				$this->Template = new \FrontendTemplate("mod_dms_mgmt_upload_processed");
@@ -549,10 +549,10 @@ class ModuleDmsManagement extends Module
 			$this->Template->fileName = $this->Input->post('fileName');
 			$this->Template->fileType = $this->Input->post('fileType');
 			$this->Template->fileSize = $intFileSize;
-			$this->Template->fileSizeByteFormatted = Document::formatFileSize($intFileSize, Document::FILE_SIZE_UNIT_BYTE);
-			$this->Template->fileSizeKbFormatted = Document::formatFileSize(Document::convertFileSize($intFileSize, Document::FILE_SIZE_UNIT_BYTE, Document::FILE_SIZE_UNIT_KB), Document::FILE_SIZE_UNIT_KB);
-			$this->Template->fileSizeMbFormatted = Document::formatFileSize(Document::convertFileSize($intFileSize, Document::FILE_SIZE_UNIT_BYTE, Document::FILE_SIZE_UNIT_MB), Document::FILE_SIZE_UNIT_MB);
-			$this->Template->fileSizeGbFormatted = Document::formatFileSize(Document::convertFileSize($intFileSize, Document::FILE_SIZE_UNIT_BYTE, Document::FILE_SIZE_UNIT_GB), Document::FILE_SIZE_UNIT_GB);
+			$this->Template->fileSizeByteFormatted = \Document::formatFileSize($intFileSize, \Document::FILE_SIZE_UNIT_BYTE);
+			$this->Template->fileSizeKbFormatted = \Document::formatFileSize(\Document::convertFileSize($intFileSize, \Document::FILE_SIZE_UNIT_BYTE, \Document::FILE_SIZE_UNIT_KB), \Document::FILE_SIZE_UNIT_KB);
+			$this->Template->fileSizeMbFormatted = \Document::formatFileSize(\Document::convertFileSize($intFileSize, \Document::FILE_SIZE_UNIT_BYTE, \Document::FILE_SIZE_UNIT_MB), \Document::FILE_SIZE_UNIT_MB);
+			$this->Template->fileSizeGbFormatted = \Document::formatFileSize(\Document::convertFileSize($intFileSize, \Document::FILE_SIZE_UNIT_BYTE, \Document::FILE_SIZE_UNIT_GB), \Document::FILE_SIZE_UNIT_GB);
 			$this->Template->existingDocuments = $arrDocuments;
 			
 			$blnShowStart = false;
@@ -617,7 +617,7 @@ class ModuleDmsManagement extends Module
 					$document->lasteditDate = time();
 					$document->published = true;
 					
-					$dmsWriter = DmsWriter::getInstance();
+					$dmsWriter = \DmsWriter::getInstance();
 					$document = $dmsWriter->updateDocument($document);
 					$arrMessages['successes'][] = $GLOBALS['TL_LANG']['DMS']['SUCCESS']['document_successfully_published'];
 				}
@@ -661,7 +661,7 @@ class ModuleDmsManagement extends Module
 					$document->lasteditDate = time();
 					$document->published = false;
 					
-					$dmsWriter = DmsWriter::getInstance();
+					$dmsWriter = \DmsWriter::getInstance();
 					$document = $dmsWriter->updateDocument($document);
 					$arrMessages['successes'][] = $GLOBALS['TL_LANG']['DMS']['SUCCESS']['document_successfully_unpublished'];
 				}
@@ -700,21 +700,18 @@ class ModuleDmsManagement extends Module
 			if ($document != null)
 			{
 				// delete the document in the database
-				$dmsWriter = DmsWriter::getInstance();
+				$dmsWriter = \DmsWriter::getInstance();
 				
 				if ($dmsWriter->deleteDocument($document))
 				{
 					$arrMessages['successes'][] = $GLOBALS['TL_LANG']['DMS']['SUCCESS']['document_successfully_deleted'];
 					
 					// delete the file
-					$filePath = DmsConfig::getDocumentFilePath($document->getFileNameVersioned());
+					$filePath = \DmsConfig::getDocumentFilePath($document->getFileNameVersioned());
 					if (file_exists(TL_ROOT . '/' . $filePath))
 					{
 						unlink($filePath);
-						if(version_compare(VERSION,'3.2', '>='))
-						{
-							\Dbafs::deleteResource($filePath); 
-						}
+						\Dbafs::deleteResource($filePath);
 						
 						$arrMessages['successes'][] = $GLOBALS['TL_LANG']['DMS']['SUCCESS']['document_file_successfully_deleted'];
 					}
@@ -891,7 +888,7 @@ class ModuleDmsManagement extends Module
 			else
 			{
 				// update document
-				$dmsWriter = DmsWriter::getInstance();
+				$dmsWriter = \DmsWriter::getInstance();
 				$document = $dmsWriter->updateDocument($document);
 				
 				$arrMessages['successes'][] = $GLOBALS['TL_LANG']['DMS']['SUCCESS']['document_successfully_edited'];
@@ -899,10 +896,10 @@ class ModuleDmsManagement extends Module
 				// rename the file if the version changed
 				if ($versionChanged)
 				{
-					$filePath = DmsConfig::getDocumentFilePath($documentOriginal->getFileNameVersioned());
+					$filePath = \DmsConfig::getDocumentFilePath($documentOriginal->getFileNameVersioned());
 					if (file_exists(TL_ROOT . '/' . $filePath))
 					{
-						rename($filePath, DmsConfig::getDocumentFilePath($document->getFileNameVersioned()));
+						rename($filePath, \DmsConfig::getDocumentFilePath($document->getFileNameVersioned()));
 						$arrMessages['successes'][] = $GLOBALS['TL_LANG']['DMS']['SUCCESS']['document_file_successfully_renamed'];
 					}
 					else

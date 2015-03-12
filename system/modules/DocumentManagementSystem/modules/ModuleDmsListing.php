@@ -1,8 +1,8 @@
-<?php if (!defined('TL_ROOT')) die('You cannot access this file directly!');
+<?php
 
 /**
  * Contao Open Source CMS
- * Copyright (C) 2005-2014 Leo Feyer
+ * Copyright (C) 2005-2015 Leo Feyer
  *
  * Formerly known as TYPOlight Open Source CMS.
  *
@@ -21,7 +21,7 @@
  * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  Cliff Parnitzky 2014
+ * @copyright  Cliff Parnitzky 2014-2015
  * @author     Cliff Parnitzky
  * @package    DocumentManagementSystem
  * @license    LGPL
@@ -29,13 +29,18 @@
  */
 
 /**
+ * Run in a custom namespace, so the class can be replaced
+ */
+namespace ContaoDMS;
+
+/**
  * Class ModuleDmsListing
  *
- * @copyright  Cliff Parnitzky 2014
+ * @copyright  Cliff Parnitzky 2014-2015
  * @author     Cliff Parnitzky
  * @package    Controller
  */
-class ModuleDmsListing extends Module
+class ModuleDmsListing extends \Module
 {
 	/**
 	 * Template
@@ -51,7 +56,7 @@ class ModuleDmsListing extends Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			$objTemplate = new BackendTemplate('be_wildcard');
+			$objTemplate = new \BackendTemplate('be_wildcard');
 
 			$objTemplate->wildcard = '### DOCUMENT MANAGEMENT SYSTEM - LISTING ###';
 			$objTemplate->title = $this->headline;
@@ -79,7 +84,7 @@ class ModuleDmsListing extends Module
 		}
 		
 		$dmsLoader = DmsLoader::getInstance();
-		$params = new DmsLoaderParams();
+		$params = new \DmsLoaderParams();
 		// Prepare paramters for loader
 		$params->rootCategoryId = $this->dmsStartCategory;
 		$params->includeRootCategory = $this->dmsStartCategoryIncluded;
@@ -132,7 +137,7 @@ class ModuleDmsListing extends Module
 						else
 						{
 							// Send the file to the browser
-							if (!DmsUtils::sendDocumentFileToBrowser($document))
+							if (!\DmsUtils::sendDocumentFileToBrowser($document))
 							{
 								$arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['download_file_not_found'];
 							}

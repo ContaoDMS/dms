@@ -1,8 +1,8 @@
-<?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
+<?php
 
 /**
  * Contao Open Source CMS
- * Copyright (C) 2005-2014 Leo Feyer
+ * Copyright (C) 2005-2015 Leo Feyer
  *
  * Formerly known as TYPOlight Open Source CMS.
  *
@@ -21,7 +21,7 @@
  * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  Cliff Parnitzky 2014
+ * @copyright  Cliff Parnitzky 2014-2015
  * @author     Cliff Parnitzky
  * @package    DocumentManagementSystem
  * @license    LGPL
@@ -44,6 +44,14 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 		(
 			array('tl_dms_categories', 'checkPermission'),
 			array('tl_dms_categories', 'addBreadcrumb')
+		),
+		'sql' => array
+		(
+			'keys' => array
+			(
+				'id' => 'primary',
+				'pid' => 'index'
+			)
 		)
 	),
 
@@ -54,7 +62,7 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 		(
 			'mode'                    => 5,
 			'panelLayout'             => 'search',
-			'icon'                    => "system/modules/DocumentManagementSystem/html/docmansystem.png"
+			'icon'                    => "system/modules/DocumentManagementSystem/assets/dms.png"
 		),
 		'label' => array
 		(
@@ -139,13 +147,28 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 	// Fields
 	'fields' => array
 	(
+		'id' => array
+		(
+			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
+		),
 		'pid' => array
 		(
+			'foreignKey'              => 'tl_dms_categories.name',
+			'sql'                     => "int(10) unsigned NOT NULL default '0'",
+			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy'),
 			'eval'                    => array('doNotShow'=>true)
 		),
 		'sorting' => array
 		(
-			'eval'                    => array('doNotShow'=>true)
+			'label'                   => &$GLOBALS['TL_LANG']['MSC']['sorting'],
+			'sorting'                 => true,
+			'flag'                    => 11,
+			'eval'                    => array('doNotShow'=>true),
+			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+		),
+		'tstamp' => array
+		(
+			'sql'                     => "int(10) unsigned NOT NULL default '0'"
 		),
 		'name' => array
 		(
@@ -153,7 +176,8 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>255)
+			'eval'                    => array('mandatory'=>true, 'maxlength'=>255),
+			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'description' => array
 		(
@@ -161,7 +185,8 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'textarea',
-			'eval'                    => array('rte'=>'tinyMCE')
+			'eval'                    => array('rte'=>'tinyMCE'),
+			'sql'                     => "text NULL"
 		),
 		'file_types' => array
 		(
@@ -169,61 +194,66 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-		    'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
-			'save_callback'           => array(array('tl_dms_categories', 'saveFileTypes'))
+			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
+			'save_callback'           => array(array('tl_dms_categories', 'saveFileTypes')),
+			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'file_types_inherit' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_categories']['file_types_inherit'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50')
+			'eval'                    => array('tl_class'=>'w50'),
+			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'publish_documents_per_default' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_categories']['publish_documents_per_default'],
 			'exclude'                 => true,
-		    'default'                 => Category::PUBLISH_DOCUMENTS_PER_DEFAULT_DISABLE,
+			'default'                 => \Category::PUBLISH_DOCUMENTS_PER_DEFAULT_DISABLE,
 			'inputType'               => 'radio',
 			'options'                 => array
-										 (
-											Category::PUBLISH_DOCUMENTS_PER_DEFAULT_DISABLE,
-											Category::PUBLISH_DOCUMENTS_PER_DEFAULT_ENABLE,
-											Category::PUBLISH_DOCUMENTS_PER_DEFAULT_INHERIT
-										 ),
+			(
+				\Category::PUBLISH_DOCUMENTS_PER_DEFAULT_DISABLE,
+				\Category::PUBLISH_DOCUMENTS_PER_DEFAULT_ENABLE,
+				\Category::PUBLISH_DOCUMENTS_PER_DEFAULT_INHERIT
+			),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_dms_categories']['publish_documents_per_default_option'],
-			'eval'                    => array('mandatory'=>true, 'helpwizard'=>true, 'tl_class'=>'clr')
+			'eval'                    => array('mandatory'=>true, 'helpwizard'=>true, 'tl_class'=>'clr'),
+			'sql'                     => "varchar(64) NOT NULL default 'DISABLE'"
 		),
 		'general_read_permission' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission'],
 			'exclude'                 => true,
-		    'default'                 => Category::GENERAL_READ_PERMISSION_ALL,
+			'default'                 => \Category::GENERAL_READ_PERMISSION_ALL,
 			'inputType'               => 'radio',
 			'options'                 => array
-										 (
-											Category::GENERAL_READ_PERMISSION_ALL,
-											Category::GENERAL_READ_PERMISSION_LOGGED_USER,
-											Category::GENERAL_READ_PERMISSION_CUSTOM,
-											Category::GENERAL_READ_PERMISSION_INHERIT
-										 ),
+			(
+				\Category::GENERAL_READ_PERMISSION_ALL,
+				\Category::GENERAL_READ_PERMISSION_LOGGED_USER,
+				\Category::GENERAL_READ_PERMISSION_CUSTOM,
+				\Category::GENERAL_READ_PERMISSION_INHERIT
+			),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'],
-			'eval'                    => array('mandatory'=>true, 'helpwizard'=>true)
+			'eval'                    => array('mandatory'=>true, 'helpwizard'=>true),
+			'sql'                     => "varchar(64) NOT NULL default 'ALL'"
 		),
 		'general_manage_permission' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_categories']['general_manage_permission'],
 			'exclude'                 => true,
-		    'default'                 => Category::GENERAL_MANAGE_PERMISSION_CUSTOM,
+			'default'                 => \Category::GENERAL_MANAGE_PERMISSION_CUSTOM,
 			'inputType'               => 'radio',
 			'options'                 => array
-										 (
-											Category::GENERAL_MANAGE_PERMISSION_LOGGED_USER,
-											Category::GENERAL_MANAGE_PERMISSION_CUSTOM,
-											Category::GENERAL_MANAGE_PERMISSION_INHERIT
-										 ),
+			(
+				\Category::GENERAL_MANAGE_PERMISSION_LOGGED_USER,
+				\Category::GENERAL_MANAGE_PERMISSION_CUSTOM,
+				\Category::GENERAL_MANAGE_PERMISSION_INHERIT
+			),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_dms_categories']['general_manage_permission_option'],
-			'eval'                    => array('mandatory'=>true, 'helpwizard'=>true, 'tl_class'=>'clr')
+			'eval'                    => array('mandatory'=>true, 'helpwizard'=>true, 'tl_class'=>'clr'),
+			'sql'                     => "varchar(64) NOT NULL default 'CUSTOM'"
 		),
 		'cssID' => array
 		(
@@ -231,28 +261,32 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('multiple'=>true, 'size'=>2, 'tl_class'=>'w50')
+			'eval'                    => array('multiple'=>true, 'size'=>2, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'published' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_categories']['published'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('doNotCopy'=>true)
+			'eval'                    => array('doNotCopy'=>true),
+			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'start' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_categories']['start'],
 			'exclude'                 => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard')
+			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
+			'sql'                     => "varchar(10) NOT NULL default ''"
 		),
 		'stop' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_categories']['stop'],
 			'exclude'                 => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard')
+			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
+			'sql'                     => "varchar(10) NOT NULL default ''"
 		)
 	)
 );
@@ -261,11 +295,11 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
  * Class tl_dms_categories
  *
  * Provide miscellaneous methods that are used by the data configuration array.
- * @copyright  Cliff Parnitzky 2014
+ * @copyright  Cliff Parnitzky 2014-2015
  * @author     Cliff Parnitzky
  * @package    Controller
  */
-class tl_dms_categories extends Backend
+class tl_dms_categories extends \Backend
 {
 	/**
 	 * Import the back end user object
@@ -282,7 +316,7 @@ class tl_dms_categories extends Backend
 	 * @param string
 	 * @return string
 	 */
-	public function addIcon($row, $label, DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false)
+	public function addIcon($row, $label, \DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false)
 	{
 		// Add the breadcrumb link
 		$label = '<a href="' . $this->addToUrl('cat='.$row['id']) . '">' . $label . '</a>';
@@ -304,19 +338,19 @@ class tl_dms_categories extends Backend
 
 		$genReadPerm = $row['general_read_permission'];
 		$genReadPermImg = '<span style="padding-left:3px;">'
-						. $this->generateImage('system/modules/DocumentManagementSystem/html/general_read_permission_' . $genReadPerm . '.png', $genReadPerm, 'title="' . $GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'][$genReadPerm][0] . '"')
+						. $this->generateImage('system/modules/DocumentManagementSystem/assets/general_read_permission_' . $genReadPerm . '.png', $genReadPerm, 'title="' . $GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'][$genReadPerm][0] . '"')
 						. '</span>';
 		$genManagePerm = $row['general_manage_permission'];
 		$genManagePermImg = '<span style="padding-left:3px;">'
-						. $this->generateImage('system/modules/DocumentManagementSystem/html/general_manage_permission_' . $genManagePerm . '.png', $genManagePerm, 'title="' . $GLOBALS['TL_LANG']['tl_dms_categories']['general_manage_permission_option'][$genManagePerm][0] . '"')
+						. $this->generateImage('system/modules/DocumentManagementSystem/assets/general_manage_permission_' . $genManagePerm . '.png', $genManagePerm, 'title="' . $GLOBALS['TL_LANG']['tl_dms_categories']['general_manage_permission_option'][$genManagePerm][0] . '"')
 						. '</span>';
 
 		$pubDocPerDef = $row['publish_documents_per_default'];
 		$pubDocPerDefImg = "";
-		if ($pubDocPerDef != Category::PUBLISH_DOCUMENTS_PER_DEFAULT_DISABLE)
+		if ($pubDocPerDef != \Category::PUBLISH_DOCUMENTS_PER_DEFAULT_DISABLE)
 		{
 			$pubDocPerDefImg = '<span style="padding-left:3px;">'
-							. $this->generateImage('system/modules/DocumentManagementSystem/html/publish_documents_per_default_' . $pubDocPerDef . '.png', $pubDocPerDef, 'title="' . $GLOBALS['TL_LANG']['tl_dms_categories']['publish_documents_per_default_option'][$pubDocPerDef][0] . '"')
+							. $this->generateImage('system/modules/DocumentManagementSystem/assets/publish_documents_per_default_' . $pubDocPerDef . '.png', $pubDocPerDef, 'title="' . $GLOBALS['TL_LANG']['tl_dms_categories']['publish_documents_per_default_option'][$pubDocPerDef][0] . '"')
 							. '</span>';
 		}
 
@@ -325,11 +359,11 @@ class tl_dms_categories extends Backend
 		if ($inhFileTypes)
 		{
 			$inhFileTypesImg = '<span style="padding-left:3px;">'
-							 . $this->generateImage('system/modules/DocumentManagementSystem/html/file_types_inherit_ACTIVE.png', "", 'title="' . $GLOBALS['TL_LANG']['tl_dms_categories']['file_types_inherit_option']['ACTIVE'][0] . '"')
+							 . $this->generateImage('system/modules/DocumentManagementSystem/assets/file_types_inherit_ACTIVE.png', "", 'title="' . $GLOBALS['TL_LANG']['tl_dms_categories']['file_types_inherit_option']['ACTIVE'][0] . '"')
 							 . '</span>';
 		}
 
-		return '<a>' . $this->generateImage('system/modules/DocumentManagementSystem/html/' . $image, '', $imageAttribute) . '</a>' . $label . $genReadPermImg . $genManagePermImg . $pubDocPerDefImg . $inhFileTypesImg;
+		return '<a>' . $this->generateImage('system/modules/DocumentManagementSystem/assets/' . $image, '', $imageAttribute) . '</a>' . $label . $genReadPermImg . $genManagePermImg . $pubDocPerDefImg . $inhFileTypesImg;
 	}
 
 
@@ -403,7 +437,7 @@ class tl_dms_categories extends Backend
 	/**
 	 * Add the breadcrumb menu
 	 */
-	public function addBreadcrumb(DataContainer $dc)
+	public function addBreadcrumb(\DataContainer $dc)
 	{
 		// Set a new cat
 		if (isset($_GET['cat']))
@@ -432,7 +466,7 @@ class tl_dms_categories extends Backend
 		}
 
 		// Add root link
-		$arrLinks[] = '<img src="system/modules/DocumentManagementSystem/html/docmansystem.png" width="16" height="16" alt=""> <a href="' . $this->addToUrl('cat=0') . '">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
+		$arrLinks[] = '<img src="system/modules/DocumentManagementSystem/assets/dms.png" width="16" height="16" alt=""> <a href="' . $this->addToUrl('cat=0') . '">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
 		foreach ($category->getPath(false) as $eachCategory)
 		{
 			$image = 'category.png';
@@ -442,11 +476,11 @@ class tl_dms_categories extends Backend
 			}
 			if ($eachCategory->id == $intCategoryId)
 			{
-				$arrLinks[] = $this->generateImage('system/modules/DocumentManagementSystem/html/' . $image, '', "") . ' ' . $eachCategory->name;
+				$arrLinks[] = $this->generateImage('system/modules/DocumentManagementSystem/assets/' . $image, '', "") . ' ' . $eachCategory->name;
 			}
 			else
 			{
-				$arrLinks[] = $this->generateImage('system/modules/DocumentManagementSystem/html/' . $image, '', "") . ' <a href="' . $this->addToUrl('cat='.$eachCategory->id) . '">' . $eachCategory->name . '</a>';
+				$arrLinks[] = $this->generateImage('system/modules/DocumentManagementSystem/assets/' . $image, '', "") . ' <a href="' . $this->addToUrl('cat='.$eachCategory->id) . '">' . $eachCategory->name . '</a>';
 			}
 		}
 
@@ -503,11 +537,11 @@ class tl_dms_categories extends Backend
 	 */
 	private function getCategoryForId($intId, $blnLoadRootCategory, $blnLoadDocuments)
 	{
-		$params = new DmsLoaderParams();
+		$params = new \DmsLoaderParams();
 		$params->loadRootCategory = $blnLoadRootCategory;
 		$params->loadDocuments = $blnLoadDocuments;
 
-		$dmsLoader = DmsLoader::getInstance();
+		$dmsLoader = \DmsLoader::getInstance();
 		return $dmsLoader->loadCategory($intId, $params);
 	}
 
@@ -516,14 +550,14 @@ class tl_dms_categories extends Backend
 	 */
 	private function isCategoryDeletable($intId)
 	{
-		$params = new DmsLoaderParams();
+		$params = new \DmsLoaderParams();
 		$params->rootCategoryId = $intId;
 		$params->includeRootCategory = true;
 		$params->loadRootCategory = true;
 		$params->loadAccessRights = true;
 		$params->loadDocuments = true;
 
-		$dmsLoader = DmsLoader::getInstance();
+		$dmsLoader = \DmsLoader::getInstance();
 		$arrCategories = $dmsLoader->loadCategories($params);
 
 		if (count($arrCategories) == 1)
@@ -544,7 +578,7 @@ class tl_dms_categories extends Backend
 	{
 		if (strlen($varValue) > 0)
 		{
-			$arrFileTypes = DmsUtils::getUniqueFileTypes($varValue);
+			$arrFileTypes = \DmsUtils::getUniqueFileTypes($varValue);
 			$varValue = implode(",", $arrFileTypes);
 		}
 

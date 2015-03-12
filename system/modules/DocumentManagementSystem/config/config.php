@@ -1,8 +1,8 @@
-<?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
+<?php
 
 /**
  * Contao Open Source CMS
- * Copyright (C) 2005-2014 Leo Feyer
+ * Copyright (C) 2005-2015 Leo Feyer
  *
  * Formerly known as TYPOlight Open Source CMS.
  *
@@ -21,7 +21,7 @@
  * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  Cliff Parnitzky 2014
+ * @copyright  Cliff Parnitzky 2014-2015
  * @author     Cliff Parnitzky
  * @package    DocumentManagementSystem
  * @license    LGPL
@@ -38,18 +38,18 @@ array_insert($GLOBALS['BE_MOD'], 1, array
 		'dms_categories' => array
 		(
 			'tables'     => array('tl_dms_categories'),
-			'icon'       => 'system/modules/DocumentManagementSystem/html/categories.png'
+			'icon'       => 'system/modules/DocumentManagementSystem/assets/categories.png'
 		),
 		'dms_access_rights' => array
 		(
 			'tables'     => array('tl_dms_access_rights'),
-			'icon'       => 'system/modules/DocumentManagementSystem/html/access_rights.png'
+			'icon'       => 'system/modules/DocumentManagementSystem/assets/access_rights.png'
 		),
 		
 		'dms_documents' => array
 		(
 			'tables'     => array('tl_dms_documents'),
-			'icon'       => 'system/modules/DocumentManagementSystem/html/documents.png'
+			'icon'       => 'system/modules/DocumentManagementSystem/assets/documents.png'
 		)
 	)
 ));
@@ -86,7 +86,7 @@ $GLOBALS['TL_DMS']['SPECIALCHARS'] = array
  */
 if (TL_MODE == 'BE')
 {
-	$GLOBALS['TL_CSS'][] = 'system/modules/DocumentManagementSystem/html/dms_backend.css';
+	$GLOBALS['TL_CSS'][] = 'system/modules/DocumentManagementSystem/assets/dms_backend.css';
 }
  
 ?>

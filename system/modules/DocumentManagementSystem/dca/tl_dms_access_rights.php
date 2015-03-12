@@ -1,8 +1,8 @@
-<?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
+<?php
 
 /**
  * Contao Open Source CMS
- * Copyright (C) 2005-2014 Leo Feyer
+ * Copyright (C) 2005-2015 Leo Feyer
  *
  * Formerly known as TYPOlight Open Source CMS.
  *
@@ -21,7 +21,7 @@
  * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  Cliff Parnitzky 2014
+ * @copyright  Cliff Parnitzky 2014-2015
  * @author     Cliff Parnitzky
  * @package    DocumentManagementSystem
  * @license    LGPL
@@ -47,6 +47,14 @@ $GLOBALS['TL_DCA']['tl_dms_access_rights'] = array
 		'onload_callback' => array
 		(
 			array('tl_dms_categories', 'addBreadcrumb')
+		),
+		'sql' => array
+		(
+			'keys' => array
+			(
+				'id' => 'primary',
+				'pid' => 'index'
+			)
 		)
 	),
 
@@ -126,13 +134,28 @@ $GLOBALS['TL_DCA']['tl_dms_access_rights'] = array
 	// Fields
 	'fields' => array
 	(
+		'id' => array
+		(
+			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
+		),
 		'pid' => array
 		(
+			'foreignKey'              => 'tl_dms_categories.name',
+			'sql'                     => "int(10) unsigned NOT NULL default '0'",
+			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy'),
 			'eval'                    => array('doNotShow'=>true)
 		),
 		'sorting' => array
 		(
-			'eval'                    => array('doNotShow'=>true)
+			'label'                   => &$GLOBALS['TL_LANG']['MSC']['sorting'],
+			'sorting'                 => true,
+			'flag'                    => 11,
+			'eval'                    => array('doNotShow'=>true),
+			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+		),
+		'tstamp' => array
+		(
+			'sql'                     => "int(10) unsigned NOT NULL default '0'"
 		),
 		'member_group' => array
 		(
@@ -140,59 +163,68 @@ $GLOBALS['TL_DCA']['tl_dms_access_rights'] = array
 			'exclude'                 => true,
 			'inputType'               => 'radio',
 			'foreignKey'              => 'tl_member_group.name',
-			'eval'                    => array('multiple'=>false, 'mandatory'=>true, 'doNotCopy'=>true)
+			'eval'                    => array('multiple'=>false, 'mandatory'=>true, 'doNotCopy'=>true),
+			'sql'                     => "int(10) unsigned NOT NULL default '0'"
 		),
 		'right_read' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_access_rights']['right_read'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'default'                 => '1'
+			'default'                 => '1',
+			'sql'                     => "char(1) NOT NULL default '1'"
 		),
 		'right_upload' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_access_rights']['right_upload'],
 			'exclude'                 => true,
-			'inputType'               => 'checkbox'
+			'inputType'               => 'checkbox',
+			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'right_edit' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_access_rights']['right_edit'],
 			'exclude'                 => true,
-			'inputType'               => 'checkbox'
+			'inputType'               => 'checkbox',
+			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'right_delete' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_access_rights']['right_delete'],
 			'exclude'                 => true,
-			'inputType'               => 'checkbox' 
+			'inputType'               => 'checkbox',
+			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'right_publish' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_access_rights']['right_publish'],
 			'exclude'                 => true,
-			'inputType'               => 'checkbox' 
+			'inputType'               => 'checkbox',
+			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'published' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_access_rights']['published'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('doNotCopy'=>true)
+			'eval'                    => array('doNotCopy'=>true),
+			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'start' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_access_rights']['start'],
 			'exclude'                 => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard')
+			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
+			'sql'                     => "varchar(10) NOT NULL default ''"
 		),
 		'stop' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_dms_access_rights']['stop'],
 			'exclude'                 => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard')
+			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
+			'sql'                     => "varchar(10) NOT NULL default ''"
 		)
 	)
 );
@@ -201,11 +233,11 @@ $GLOBALS['TL_DCA']['tl_dms_access_rights'] = array
  * Class tl_dms_access_rights
  *
  * Provide miscellaneous methods that are used by the data configuration array.
- * @copyright  Cliff Parnitzky 2014
+ * @copyright  Cliff Parnitzky 2014-2015
  * @author     Cliff Parnitzky
  * @package    Controller
  */
-class tl_dms_access_rights extends Backend
+class tl_dms_access_rights extends \Backend
 {
 	/**
 	 * Import the back end user object
@@ -222,18 +254,18 @@ class tl_dms_access_rights extends Backend
 	 * @param string
 	 * @return string
 	 */
-	public function addIcon($row, $label, DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false)
+	public function addIcon($row, $label, \DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false)
 	{
 		$time = time();
 		$published = ($row['published'] && ($row['start'] == '' || $row['start'] < $time) && ($row['stop'] == '' || $row['stop'] > $time));
 	
-	  $accessRightRead = $row['right_read'] == "" ? "" : "<img src='system/modules/DocumentManagementSystem/html/access_right_read.gif' title='" . $GLOBALS['TL_LANG']['tl_dms_access_rights']['right_read'][0] . "'/>";
-		$accessRightUpload = $row['right_upload'] == "" ? "" : "<img src='system/modules/DocumentManagementSystem/html/access_right_upload.gif' title='" . $GLOBALS['TL_LANG']['tl_dms_access_rights']['right_upload'][0] . "'/>";
-		$accessRightDelete = $row['right_delete'] == "" ? "" : "<img src='system/modules/DocumentManagementSystem/html/access_right_delete.gif' title='" . $GLOBALS['TL_LANG']['tl_dms_access_rights']['right_delete'][0] . "'/>";
-		$accessRightEdit = $row['right_edit'] == "" ? "" : "<img src='system/modules/DocumentManagementSystem/html/access_right_edit.gif' title='" . $GLOBALS['TL_LANG']['tl_dms_access_rights']['right_edit'][0] . "'/>";
-		$accessRightPublish = $row['right_publish'] == "" ? "" : "<img src='system/modules/DocumentManagementSystem/html/access_right_publish.gif' title='" . $GLOBALS['TL_LANG']['tl_dms_access_rights']['right_publish'][0] . "'/>";
+	  $accessRightRead = $row['right_read'] == "" ? "" : "<img src='system/modules/DocumentManagementSystem/assets/access_right_read.gif' title='" . $GLOBALS['TL_LANG']['tl_dms_access_rights']['right_read'][0] . "'/>";
+		$accessRightUpload = $row['right_upload'] == "" ? "" : "<img src='system/modules/DocumentManagementSystem/assets/access_right_upload.gif' title='" . $GLOBALS['TL_LANG']['tl_dms_access_rights']['right_upload'][0] . "'/>";
+		$accessRightDelete = $row['right_delete'] == "" ? "" : "<img src='system/modules/DocumentManagementSystem/assets/access_right_delete.gif' title='" . $GLOBALS['TL_LANG']['tl_dms_access_rights']['right_delete'][0] . "'/>";
+		$accessRightEdit = $row['right_edit'] == "" ? "" : "<img src='system/modules/DocumentManagementSystem/assets/access_right_edit.gif' title='" . $GLOBALS['TL_LANG']['tl_dms_access_rights']['right_edit'][0] . "'/>";
+		$accessRightPublish = $row['right_publish'] == "" ? "" : "<img src='system/modules/DocumentManagementSystem/assets/access_right_publish.gif' title='" . $GLOBALS['TL_LANG']['tl_dms_access_rights']['right_publish'][0] . "'/>";
 		
-		return $this->generateImage('system/modules/DocumentManagementSystem/html/access_rights' . ($published ? '' : '_') . '.png', '', '') . $label .'<span style="color:#b3b3b3; padding-left:3px;">' . $accessRightRead . ' ' . $accessRightUpload . ' ' . $accessRightDelete . ' ' . $accessRightEdit . ' ' . $accessRightPublish . '</span>';
+		return $this->generateImage('system/modules/DocumentManagementSystem/assets/access_rights' . ($published ? '' : '_') . '.png', '', '') . $label .'<span style="color:#b3b3b3; padding-left:3px;">' . $accessRightRead . ' ' . $accessRightUpload . ' ' . $accessRightDelete . ' ' . $accessRightEdit . ' ' . $accessRightPublish . '</span>';
 	}
 	
 		/**

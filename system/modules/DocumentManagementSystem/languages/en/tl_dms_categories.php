@@ -1,8 +1,8 @@
-<?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
+<?php
 
 /**
  * Contao Open Source CMS
- * Copyright (C) 2005-2014 Leo Feyer
+ * Copyright (C) 2005-2015 Leo Feyer
  *
  * Formerly known as TYPOlight Open Source CMS.
  *
@@ -21,7 +21,7 @@
  * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  Cliff Parnitzky 2014
+ * @copyright  Cliff Parnitzky 2014-2015
  * @author     Cliff Parnitzky
  * @package    DocumentManagementSystem
  * @license    LGPL
@@ -54,17 +54,17 @@ $GLOBALS['TL_LANG']['tl_dms_categories']['publish_legend']   = 'Publish settings
 /**
  * Reference
  */
-$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'][Category::GENERAL_READ_PERMISSION_ALL]                 = array('Read right for all members', 'All members have unrestricted read right in this category. They must <u>not</u> be logged on.');
-$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'][Category::GENERAL_READ_PERMISSION_LOGGED_USER]         = array('Read right for logged members', 'Only <u>logged</u> members have unrestricted read rights in this category.');
-$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'][Category::GENERAL_READ_PERMISSION_CUSTOM]              = array('Special read rights for individual member groups', 'For this category special read rights for individual members groups will be assigned (in access rights).');
-$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'][Category::GENERAL_READ_PERMISSION_INHERIT]             = array('Inheritance of read rights by upper category', 'For this category the read rights of the upper category will be used.');
-$GLOBALS['TL_LANG']['tl_dms_categories']['general_manage_permission_option'][Category::GENERAL_MANAGE_PERMISSION_LOGGED_USER]     = array('All manage rights for logged members', 'All <u>logged</u> members have unrestricted manage rights in this category.');
-$GLOBALS['TL_LANG']['tl_dms_categories']['general_manage_permission_option'][Category::GENERAL_MANAGE_PERMISSION_CUSTOM]          = array('Special manage rights for individual member groups', 'For this category special manage rights for individual members groups will be assigned (in access rights).');
-$GLOBALS['TL_LANG']['tl_dms_categories']['general_manage_permission_option'][Category::GENERAL_MANAGE_PERMISSION_INHERIT]         = array('Inheritance of manage rights by upper category', 'For this category the manage rights of the upper category will be used.');
-$GLOBALS['TL_LANG']['tl_dms_categories']['publish_documents_per_default_option'][Category::PUBLISH_DOCUMENTS_PER_DEFAULT_DISABLE] = array('Not default publication', 'The uploaded documents in this category will <u>not</u> be published by default. The checkbox for publishing in the management module (frontend) is <u>not</u> checked (may be dependent on the definitions in system settings, modules and member groups).');
-$GLOBALS['TL_LANG']['tl_dms_categories']['publish_documents_per_default_option'][Category::PUBLISH_DOCUMENTS_PER_DEFAULT_ENABLE]  = array('Publish documents per default', 'The uploaded documents in this category <u>will be published</u> by default. The checkbox for publishing in the management module (frontend) is <u>always</u> checked.');
-$GLOBALS['TL_LANG']['tl_dms_categories']['publish_documents_per_default_option'][Category::PUBLISH_DOCUMENTS_PER_DEFAULT_INHERIT] = array('Inheritance of default publication by upper category', 'For this category the default publication of the upper category will be used.');
-$GLOBALS['TL_LANG']['tl_dms_categories']['file_types_inherit_option']['ACTIVE']                                                   = array('Inheritance also of allowed file types by upper category');
+$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'][\Category::GENERAL_READ_PERMISSION_ALL]                 = array('Read right for all members', 'All members have unrestricted read right in this category. They must <u>not</u> be logged on.');
+$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'][\Category::GENERAL_READ_PERMISSION_LOGGED_USER]         = array('Read right for logged members', 'Only <u>logged</u> members have unrestricted read rights in this category.');
+$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'][\Category::GENERAL_READ_PERMISSION_CUSTOM]              = array('Special read rights for individual member groups', 'For this category special read rights for individual members groups will be assigned (in access rights).');
+$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'][\Category::GENERAL_READ_PERMISSION_INHERIT]             = array('Inheritance of read rights by upper category', 'For this category the read rights of the upper category will be used.');
+$GLOBALS['TL_LANG']['tl_dms_categories']['general_manage_permission_option'][\Category::GENERAL_MANAGE_PERMISSION_LOGGED_USER]     = array('All manage rights for logged members', 'All <u>logged</u> members have unrestricted manage rights in this category.');
+$GLOBALS['TL_LANG']['tl_dms_categories']['general_manage_permission_option'][\Category::GENERAL_MANAGE_PERMISSION_CUSTOM]          = array('Special manage rights for individual member groups', 'For this category special manage rights for individual members groups will be assigned (in access rights).');
+$GLOBALS['TL_LANG']['tl_dms_categories']['general_manage_permission_option'][\Category::GENERAL_MANAGE_PERMISSION_INHERIT]         = array('Inheritance of manage rights by upper category', 'For this category the manage rights of the upper category will be used.');
+$GLOBALS['TL_LANG']['tl_dms_categories']['publish_documents_per_default_option'][\Category::PUBLISH_DOCUMENTS_PER_DEFAULT_DISABLE] = array('Not default publication', 'The uploaded documents in this category will <u>not</u> be published by default. The checkbox for publishing in the management module (frontend) is <u>not</u> checked (may be dependent on the definitions in system settings, modules and member groups).');
+$GLOBALS['TL_LANG']['tl_dms_categories']['publish_documents_per_default_option'][\Category::PUBLISH_DOCUMENTS_PER_DEFAULT_ENABLE]  = array('Publish documents per default', 'The uploaded documents in this category <u>will be published</u> by default. The checkbox for publishing in the management module (frontend) is <u>always</u> checked.');
+$GLOBALS['TL_LANG']['tl_dms_categories']['publish_documents_per_default_option'][\Category::PUBLISH_DOCUMENTS_PER_DEFAULT_INHERIT] = array('Inheritance of default publication by upper category', 'For this category the default publication of the upper category will be used.');
+$GLOBALS['TL_LANG']['tl_dms_categories']['file_types_inherit_option']['ACTIVE']                                                    = array('Inheritance also of allowed file types by upper category');
 
 /**
  * Buttons

@@ -1,8 +1,8 @@
-<?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
+<?php
 
 /**
  * Contao Open Source CMS
- * Copyright (C) 2005-2014 Leo Feyer
+ * Copyright (C) 2005-2015 Leo Feyer
  *
  * Formerly known as TYPOlight Open Source CMS.
  *
@@ -21,7 +21,7 @@
  * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  Cliff Parnitzky 2014
+ * @copyright  Cliff Parnitzky 2014-2015
  * @author     Cliff Parnitzky
  * @package    DocumentManagementSystem
  * @license    LGPL
@@ -55,17 +55,17 @@ $GLOBALS['TL_LANG']['tl_dms_categories']['publish_legend']   = 'Veröffentlichun
 /**
  * Reference
  */
-$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'][Category::GENERAL_READ_PERMISSION_ALL]                 = array('Leserecht für alle Mitglieder', 'Alle Mitglieder haben uneingeschränktes Leserecht in dieser Kategorie. Sie müssen dazu <u>nicht</u> angemeldet sein.');
-$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'][Category::GENERAL_READ_PERMISSION_LOGGED_USER]         = array('Leserecht für angemeldete Mitglieder', 'Nur <u>angemeldete</u> Mitglieder haben uneingeschränktes Leserecht in dieser Kategorie.');
-$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'][Category::GENERAL_READ_PERMISSION_CUSTOM]              = array('Spezielle Leserechte für einzelne Mitgliedergruppen', 'Es werden für diese Kategorie spezielle Leserechte für einzelne Mitgliedergruppen vergeben (im Bereich Zugriffsrechte).');
-$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'][Category::GENERAL_READ_PERMISSION_INHERIT]             = array('Vererbung der Leserechte durch Oberkategorie(n)', 'Es werden für diese Kategorie die Leserechte der Oberkategorie(n) verwendet.');
-$GLOBALS['TL_LANG']['tl_dms_categories']['general_manage_permission_option'][Category::GENERAL_MANAGE_PERMISSION_LOGGED_USER]     = array('Alle Verwaltungsrechte für angemeldete Mitglieder', 'Alle <u>angemeldeten</u> Mitglieder haben uneingeschränktes Verwaltungsrechte in dieser Kategorie.');
-$GLOBALS['TL_LANG']['tl_dms_categories']['general_manage_permission_option'][Category::GENERAL_MANAGE_PERMISSION_CUSTOM]          = array('Spezielle Verwaltungsrechte für einzelne Mitgliedergruppen', 'Es werden für diese Kategorie spezielle Verwaltungsrechte für einzelne Mitgliedergruppen vergeben (im Bereich Zugriffsrechte).');
-$GLOBALS['TL_LANG']['tl_dms_categories']['general_manage_permission_option'][Category::GENERAL_MANAGE_PERMISSION_INHERIT]         = array('Vererbung der Verwaltungsrechte durch Oberkategorie(n)', 'Es werden für diese Kategorie die Verwaltungsrechte der Oberkategorie(n) verwendet.');
-$GLOBALS['TL_LANG']['tl_dms_categories']['publish_documents_per_default_option'][Category::PUBLISH_DOCUMENTS_PER_DEFAULT_DISABLE] = array('Keine standardmäßige Veröffentlichung', 'Die in diese Kategorie hochgeladenen Dokumente werden standardmäßig <u>nicht</u> veröffentlicht. Die Checkbox zum Veröffentlichen im Verwaltungsmodul (Frontend) ist <u>nicht</u> angekreuzt (ggf. abhängig von Definition in System Einstellungen, Modulen und Mitgliedergruppen).');
-$GLOBALS['TL_LANG']['tl_dms_categories']['publish_documents_per_default_option'][Category::PUBLISH_DOCUMENTS_PER_DEFAULT_ENABLE]  = array('Dokumente standardmäßig veröffentlichen', 'Die in diese Kategorie hochgeladenen Dokumente <u>werden standardmäßig veröffentlicht</u>. Die Checkbox zum Veröffentlichen im Verwaltungsmodul (Frontend) ist <u>immer</u> angekreuzt.');
-$GLOBALS['TL_LANG']['tl_dms_categories']['publish_documents_per_default_option'][Category::PUBLISH_DOCUMENTS_PER_DEFAULT_INHERIT] = array('Vererbung der standardmäßigen Veröffentlichung durch Oberkategorie(n)', 'Es wird für diese Kategorie die standardmäßige Veröffentlichung der Oberkategorie(n) verwendet.');
-$GLOBALS['TL_LANG']['tl_dms_categories']['file_types_inherit_option']['ACTIVE']                                                   = array('Vererbung der erlaubten Dateitypen auch von den Oberkategorie(n)');
+$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'][\Category::GENERAL_READ_PERMISSION_ALL]                 = array('Leserecht für alle Mitglieder', 'Alle Mitglieder haben uneingeschränktes Leserecht in dieser Kategorie. Sie müssen dazu <u>nicht</u> angemeldet sein.');
+$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'][\Category::GENERAL_READ_PERMISSION_LOGGED_USER]         = array('Leserecht für angemeldete Mitglieder', 'Nur <u>angemeldete</u> Mitglieder haben uneingeschränktes Leserecht in dieser Kategorie.');
+$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'][\Category::GENERAL_READ_PERMISSION_CUSTOM]              = array('Spezielle Leserechte für einzelne Mitgliedergruppen', 'Es werden für diese Kategorie spezielle Leserechte für einzelne Mitgliedergruppen vergeben (im Bereich Zugriffsrechte).');
+$GLOBALS['TL_LANG']['tl_dms_categories']['general_read_permission_option'][\Category::GENERAL_READ_PERMISSION_INHERIT]             = array('Vererbung der Leserechte durch Oberkategorie(n)', 'Es werden für diese Kategorie die Leserechte der Oberkategorie(n) verwendet.');
+$GLOBALS['TL_LANG']['tl_dms_categories']['general_manage_permission_option'][\Category::GENERAL_MANAGE_PERMISSION_LOGGED_USER]     = array('Alle Verwaltungsrechte für angemeldete Mitglieder', 'Alle <u>angemeldeten</u> Mitglieder haben uneingeschränktes Verwaltungsrechte in dieser Kategorie.');
+$GLOBALS['TL_LANG']['tl_dms_categories']['general_manage_permission_option'][\Category::GENERAL_MANAGE_PERMISSION_CUSTOM]          = array('Spezielle Verwaltungsrechte für einzelne Mitgliedergruppen', 'Es werden für diese Kategorie spezielle Verwaltungsrechte für einzelne Mitgliedergruppen vergeben (im Bereich Zugriffsrechte).');
+$GLOBALS['TL_LANG']['tl_dms_categories']['general_manage_permission_option'][\Category::GENERAL_MANAGE_PERMISSION_INHERIT]         = array('Vererbung der Verwaltungsrechte durch Oberkategorie(n)', 'Es werden für diese Kategorie die Verwaltungsrechte der Oberkategorie(n) verwendet.');
+$GLOBALS['TL_LANG']['tl_dms_categories']['publish_documents_per_default_option'][\Category::PUBLISH_DOCUMENTS_PER_DEFAULT_DISABLE] = array('Keine standardmäßige Veröffentlichung', 'Die in diese Kategorie hochgeladenen Dokumente werden standardmäßig <u>nicht</u> veröffentlicht. Die Checkbox zum Veröffentlichen im Verwaltungsmodul (Frontend) ist <u>nicht</u> angekreuzt (ggf. abhängig von Definition in System Einstellungen, Modulen und Mitgliedergruppen).');
+$GLOBALS['TL_LANG']['tl_dms_categories']['publish_documents_per_default_option'][\Category::PUBLISH_DOCUMENTS_PER_DEFAULT_ENABLE]  = array('Dokumente standardmäßig veröffentlichen', 'Die in diese Kategorie hochgeladenen Dokumente <u>werden standardmäßig veröffentlicht</u>. Die Checkbox zum Veröffentlichen im Verwaltungsmodul (Frontend) ist <u>immer</u> angekreuzt.');
+$GLOBALS['TL_LANG']['tl_dms_categories']['publish_documents_per_default_option'][\Category::PUBLISH_DOCUMENTS_PER_DEFAULT_INHERIT] = array('Vererbung der standardmäßigen Veröffentlichung durch Oberkategorie(n)', 'Es wird für diese Kategorie die standardmäßige Veröffentlichung der Oberkategorie(n) verwendet.');
+$GLOBALS['TL_LANG']['tl_dms_categories']['file_types_inherit_option']['ACTIVE']                                                    = array('Vererbung der erlaubten Dateitypen auch von den Oberkategorie(n)');
 
 /**
  * Buttons

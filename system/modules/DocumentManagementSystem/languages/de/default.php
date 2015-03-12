@@ -1,8 +1,8 @@
-<?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
+<?php
 
 /**
  * Contao Open Source CMS
- * Copyright (C) 2005-2014 Leo Feyer
+ * Copyright (C) 2005-2015 Leo Feyer
  *
  * Formerly known as TYPOlight Open Source CMS.
  *
@@ -21,7 +21,7 @@
  * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  Cliff Parnitzky 2014
+ * @copyright  Cliff Parnitzky 2014-2015
  * @author     Cliff Parnitzky
  * @package    DocumentManagementSystem
  * @license    LGPL
@@ -155,10 +155,10 @@ $GLOBALS['TL_LANG']['DMS']['listing_lastedited']                = "Zuletzt bearb
 /**
  * File size units
  */
-$GLOBALS['TL_LANG']['DMS']['file_size_unit'][Document::FILE_SIZE_UNIT_BYTE] = 'Byte';
-$GLOBALS['TL_LANG']['DMS']['file_size_unit'][Document::FILE_SIZE_UNIT_KB]   = 'KB';
-$GLOBALS['TL_LANG']['DMS']['file_size_unit'][Document::FILE_SIZE_UNIT_MB]   = 'MB';
-$GLOBALS['TL_LANG']['DMS']['file_size_unit'][Document::FILE_SIZE_UNIT_GB]   = 'GB';
+$GLOBALS['TL_LANG']['DMS']['file_size_unit'][\Document::FILE_SIZE_UNIT_BYTE] = 'Byte';
+$GLOBALS['TL_LANG']['DMS']['file_size_unit'][\Document::FILE_SIZE_UNIT_KB]   = 'KB';
+$GLOBALS['TL_LANG']['DMS']['file_size_unit'][\Document::FILE_SIZE_UNIT_MB]   = 'MB';
+$GLOBALS['TL_LANG']['DMS']['file_size_unit'][\Document::FILE_SIZE_UNIT_GB]   = 'GB';
 $GLOBALS['TL_LANG']['DMS']['file_size_format']['text']                      = '%s %s';
 $GLOBALS['TL_LANG']['DMS']['file_size_format']['dec_point']                 = ',';
 $GLOBALS['TL_LANG']['DMS']['file_size_format']['$thousands_sep']            = '.';

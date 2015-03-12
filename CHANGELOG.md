@@ -2,6 +2,10 @@
 Contao Extension "DocumentManagementSystem"
 ===========================================
 
+Version 3.1.0 (2015-03-12)
+--------------------------
+- removed the Contao 2 compatibility (see #42)
+
 Version 3.0.0 (2015-01-29)
 --------------------------
 - moved base direcotory to `TL_ROOT/files` (see #31)

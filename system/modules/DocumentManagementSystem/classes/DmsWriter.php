@@ -1,8 +1,8 @@
-<?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
+<?php
 
 /**
  * Contao Open Source CMS
- * Copyright (C) 2005-2014 Leo Feyer
+ * Copyright (C) 2005-2015 Leo Feyer
  *
  * Formerly known as TYPOlight Open Source CMS.
  *
@@ -21,17 +21,22 @@
  * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  Cliff Parnitzky 2014
+ * @copyright  Cliff Parnitzky 2014-2015
  * @author     Cliff Parnitzky
  * @package    DocumentManagementSystem
  * @license    LGPL
  */
 
 /**
+ * Run in a custom namespace, so the class can be replaced
+ */
+namespace ContaoDMS;
+
+/**
  * Class DmsWriter
  * The writer of the dms
  */
-class DmsWriter extends Controller
+class DmsWriter extends \Controller
 {
 	/**
 	 * Current object instance (do not remove)
@@ -69,7 +74,7 @@ class DmsWriter extends Controller
 	 * @param	Document	$document	The document to store.
 	 * @return	document	Returns the document.
 	 */
-	public function storeDocument(Document $document)
+	public function storeDocument(\Document $document)
 	{
 		$arrSet = $this->buildDocumentDataArray($document, false);
 		
@@ -85,7 +90,7 @@ class DmsWriter extends Controller
 	 * @param	Document	$document	The document to update.
 	 * @return	document	Returns the document.
 	 */
-	public function updateDocument(Document $document)
+	public function updateDocument(\Document $document)
 	{
 		$arrSet = $this->buildDocumentDataArray($document, false);
 		
@@ -100,7 +105,7 @@ class DmsWriter extends Controller
 	 * @param	Document	$document	The document to delete.
 	 * @return	bool	Returns true, if the document was successfully deleted.
 	 */
-	public function deleteDocument(Document $document)
+	public function deleteDocument(\Document $document)
 	{
 		$objStmt = $this->Database->prepare("DELETE FROM tl_dms_documents WHERE id=?")->execute($document->id);
 		
@@ -114,7 +119,7 @@ class DmsWriter extends Controller
 	 * @param	bool	$blnIncludeId	False if the id should be excluded (should not be in resulting array).
 	 * @return	array	The associative array of properties and values.
 	 */
-	private function buildDocumentDataArray(Document $document, $blnIncludeId)
+	private function buildDocumentDataArray(\Document $document, $blnIncludeId)
 	{
 		$arrData = array();
 		if (!blnIncludeId)

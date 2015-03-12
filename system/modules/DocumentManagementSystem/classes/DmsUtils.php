@@ -1,8 +1,8 @@
-<?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
+<?php
 
 /**
  * Contao Open Source CMS
- * Copyright (C) 2005-2014 Leo Feyer
+ * Copyright (C) 2005-2015 Leo Feyer
  *
  * Formerly known as TYPOlight Open Source CMS.
  *
@@ -21,11 +21,16 @@
  * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  Cliff Parnitzky 2014
+ * @copyright  Cliff Parnitzky 2014-2015
  * @author     Cliff Parnitzky
  * @package    DocumentManagementSystem
  * @license    LGPL
  */
+
+/**
+ * Run in a custom namespace, so the class can be replaced
+ */
+namespace ContaoDMS;
 
 /**
  * Class DmsUtils
@@ -41,9 +46,9 @@ class DmsUtils
 	 * @param	Category	$category	The current category.
 	 * @return	bool	Returns true if documents should be published per default, otherwise false.
 	 */
-	public static function publishDocumentsPerDefault(Module $module, FrontendUser $member, Category $category)
+	public static function publishDocumentsPerDefault(\Module $module, \FrontendUser $member, \Category $category)
 	{
-		$blnPublish = DmsConfig::publishDocumentsPerDefault();
+		$blnPublish = \DmsConfig::publishDocumentsPerDefault();
 		
 		if (!$blnPublish)
 		{
@@ -69,7 +74,7 @@ class DmsUtils
 	 * @param	FrontendUser	$member	The current logged member.
 	 * @return	bool	Returns true if documents should be published per default for the current members groups, otherwise false.
 	 */
-	public static function publishDocumentsPerDefaultForCurrentMembersGroups(FrontendUser $member)
+	public static function publishDocumentsPerDefaultForCurrentMembersGroups(\FrontendUser $member)
 	{
 		$blnPublish = false;
 		
@@ -79,7 +84,7 @@ class DmsUtils
 			
 			if (is_array($arrMemberGroups) && count($arrMemberGroups) > 0)
 			{
-				$db = Database::getInstance();
+				$db = \Database::getInstance();
 				$objMemberGroups = $db->prepare('SELECT * FROM tl_member_group WHERE dmsPublishDocumentsPerDefault = ? AND id IN (' . implode(',', $arrMemberGroups) . ')')->execute('1');
 				return $objMemberGroups->numRows;
 			}
@@ -95,10 +100,7 @@ class DmsUtils
 	 */
 	public static function getNumericDatimFormat()
 	{
-		if (version_compare(VERSION, '2.11', '<')) {
-			return $GLOBALS['TL_CONFIG']['datimFormat'];
-		}
-		$date = new Date();
+		$date = new \Date();
 		return $date->getNumericDatimFormat();
 	}
 	
@@ -294,7 +296,7 @@ class DmsUtils
 	 */
 	public static function sendDocumentFileToBrowser($document)
 	{
-		$strFile = DmsConfig::getDocumentFilePath($document->getFileNameVersioned());
+		$strFile = \DmsConfig::getDocumentFilePath($document->getFileNameVersioned());
 		
 		// Make sure there are no attempts to hack the file system
 		if (preg_match('@^\.+@i', $strFile) || preg_match('@\.+/@i', $strFile) || preg_match('@(://)+@i', $strFile))
@@ -304,7 +306,7 @@ class DmsUtils
 		}
 
 		// Limit downloads to the dms base directory
-		if (!preg_match('@^' . preg_quote(DmsConfig::getBaseDirectory(false), '@') . '@i', $strFile))
+		if (!preg_match('@^' . preg_quote(\DmsConfig::getBaseDirectory(false), '@') . '@i', $strFile))
 		{
 			// Invalid path
 			return false;
@@ -317,7 +319,7 @@ class DmsUtils
 			return false;
 		}
 
-		$objFile = new File($strFile);
+		$objFile = new \File($strFile);
 
 		// Make sure no output buffer is active
 		// @see http://ch2.php.net/manual/en/function.fpassthru.php#74080
@@ -343,9 +345,9 @@ class DmsUtils
 		fclose($resFile);
 
 		// HOOK: post download callback
-		if (isset($GLOBALS['TL_HOOKS']['dmsPostDownload']) && is_array($GLOBALS['TL_HOOKS']['dmsPostDownload']))
+		if (isset($GLOBALS['TL_HOOKS']['dmsPostDocumentDownload']) && is_array($GLOBALS['TL_HOOKS']['dmsPostDocumentDownload']))
 		{
-			foreach ($GLOBALS['TL_HOOKS']['dmsPostDownload'] as $callback)
+			foreach ($GLOBALS['TL_HOOKS']['dmsPostDocumentDownload'] as $callback)
 			{
 				$this->import($callback[0]);
 				$this->$callback[0]->$callback[1]($strFile, $document);

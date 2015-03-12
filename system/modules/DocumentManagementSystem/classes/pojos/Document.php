@@ -1,8 +1,8 @@
-<?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
+<?php
 
 /**
  * Contao Open Source CMS
- * Copyright (C) 2005-2014 Leo Feyer
+ * Copyright (C) 2005-2015 Leo Feyer
  *
  * Formerly known as TYPOlight Open Source CMS.
  *
@@ -21,11 +21,16 @@
  * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  Cliff Parnitzky 2014
+ * @copyright  Cliff Parnitzky 2014-2015
  * @author     Cliff Parnitzky
  * @package    DocumentManagementSystem
  * @license    LGPL
  */
+
+/**
+ * Run in a custom namespace, so the class can be replaced
+ */
+namespace ContaoDMS;
 
 /**
  * Class Document
@@ -312,16 +317,16 @@ class Document
 	 */
 	public function getFileSize($strUnit, $blnFormatted = false)
 	{
-		$doubleFileSize = Document::convertFileSize($this->intFileSize, self::FILE_SIZE_UNIT_BYTE, $strUnit);
+		$doubleFileSize = \Document::convertFileSize($this->intFileSize, self::FILE_SIZE_UNIT_BYTE, $strUnit);
 		if ($doubleFileSize < 0)
 		{
-			throw new Exception(sprintf('Invalid file size [%s] or unit [%s] for document.', $this->intFileSize, $strKey));
+			throw new \Exception(sprintf('Invalid file size [%s] or unit [%s] for document.', $this->intFileSize, $strKey));
 			break;
 		}
 		
 		if ($blnFormatted)
 		{
-			return Document::formatFileSize($doubleFileSize, $strUnit);
+			return \Document::formatFileSize($doubleFileSize, $strUnit);
 		}
 		
 		return $doubleFileSize;
@@ -343,40 +348,40 @@ class Document
 			return $doubleFileSize;
 		}
 		
-		if ($strSourceUnit == Document::FILE_SIZE_UNIT_BYTE)
+		if ($strSourceUnit == \Document::FILE_SIZE_UNIT_BYTE)
 		{
 			switch ($strTargetUnit)
 			{
-				case Document::FILE_SIZE_UNIT_KB : return $doubleFileSize / 1024;
-				case Document::FILE_SIZE_UNIT_MB : return $doubleFileSize / 1024 / 1024;
-				case Document::FILE_SIZE_UNIT_GB : return $doubleFileSize / 1024 / 1024 / 1024;
+				case \Document::FILE_SIZE_UNIT_KB : return $doubleFileSize / 1024;
+				case \Document::FILE_SIZE_UNIT_MB : return $doubleFileSize / 1024 / 1024;
+				case \Document::FILE_SIZE_UNIT_GB : return $doubleFileSize / 1024 / 1024 / 1024;
 			}
 		}
-		else if ($strSourceUnit == Document::FILE_SIZE_UNIT_KB)
+		else if ($strSourceUnit == \Document::FILE_SIZE_UNIT_KB)
 		{
 			switch ($strTargetUnit)
 			{
-				case Document::FILE_SIZE_UNIT_BYTE : return $doubleFileSize * 1024;
-				case Document::FILE_SIZE_UNIT_MB   : return $doubleFileSize / 1024;
-				case Document::FILE_SIZE_UNIT_GB   : return $doubleFileSize / 1024 / 1024;
+				case \Document::FILE_SIZE_UNIT_BYTE : return $doubleFileSize * 1024;
+				case \Document::FILE_SIZE_UNIT_MB   : return $doubleFileSize / 1024;
+				case \Document::FILE_SIZE_UNIT_GB   : return $doubleFileSize / 1024 / 1024;
 			}
 		}
-		else if ($strSourceUnit == Document::FILE_SIZE_UNIT_MB)
+		else if ($strSourceUnit == \Document::FILE_SIZE_UNIT_MB)
 		{
 			switch ($strTargetUnit)
 			{
-				case Document::FILE_SIZE_UNIT_BYTE : return $doubleFileSize * 1024 * 1024;
-				case Document::FILE_SIZE_UNIT_KB   : return $doubleFileSize * 1024;
-				case Document::FILE_SIZE_UNIT_GB   : return $doubleFileSize / 1024;
+				case \Document::FILE_SIZE_UNIT_BYTE : return $doubleFileSize * 1024 * 1024;
+				case \Document::FILE_SIZE_UNIT_KB   : return $doubleFileSize * 1024;
+				case \Document::FILE_SIZE_UNIT_GB   : return $doubleFileSize / 1024;
 			}
 		}
-		else if ($strSourceUnit == Document::FILE_SIZE_UNIT_GB)
+		else if ($strSourceUnit == \Document::FILE_SIZE_UNIT_GB)
 		{
 			switch ($strTargetUnit)
 			{
-				case Document::FILE_SIZE_UNIT_BYTE : return $doubleFileSize * 1024 * 1024 * 1024;
-				case Document::FILE_SIZE_UNIT_KB   : return $doubleFileSize * 1024 * 1024;
-				case Document::FILE_SIZE_UNIT_MB   : return $doubleFileSize * 1024;
+				case \Document::FILE_SIZE_UNIT_BYTE : return $doubleFileSize * 1024 * 1024 * 1024;
+				case \Document::FILE_SIZE_UNIT_KB   : return $doubleFileSize * 1024 * 1024;
+				case \Document::FILE_SIZE_UNIT_MB   : return $doubleFileSize * 1024;
 			}
 		}
 		// no match
@@ -411,7 +416,7 @@ class Document
 		{
 			return "";
 		}
-		return date(DmsUtils::getNumericDatimFormat(), $this->intUploadDate);
+		return date(\DmsUtils::getNumericDatimFormat(), $this->intUploadDate);
 	}
 	
 	/**
@@ -425,7 +430,7 @@ class Document
 		{
 			return "";
 		}
-		return date(DmsUtils::getNumericDatimFormat(), $this->intLasteditDate);
+		return date(\DmsUtils::getNumericDatimFormat(), $this->intLasteditDate);
 	}
 	
 	/**
@@ -450,7 +455,7 @@ class Document
 	 */
 	public function getLastModificationDate()
 	{
-		return date(DmsUtils::getNumericDatimFormat(), $this->getLastModificationTimestamp());
+		return date(\DmsUtils::getNumericDatimFormat(), $this->getLastModificationTimestamp());
 	}
 	
 	/**

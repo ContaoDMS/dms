@@ -1,8 +1,8 @@
-<?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
+<?php
 
 /**
  * Contao Open Source CMS
- * Copyright (C) 2005-2014 Leo Feyer
+ * Copyright (C) 2005-2015 Leo Feyer
  *
  * Formerly known as TYPOlight Open Source CMS.
  *
@@ -21,11 +21,16 @@
  * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  Cliff Parnitzky 2014
+ * @copyright  Cliff Parnitzky 2014-2015
  * @author     Cliff Parnitzky
  * @package    DocumentManagementSystem
  * @license    LGPL
  */
+
+/**
+ * Run in a custom namespace, so the class can be replaced
+ */
+namespace ContaoDMS;
 
 /**
  * Class DmsConfig
@@ -47,12 +52,7 @@ class DmsConfig
 	 */
 	public static function getBaseDirectory($blnAppendTrailingSlash)
 	{
-		$path = $GLOBALS['TL_CONFIG']['dmsBaseDirectory'];
-		
-		if (version_compare(VERSION, '3.0', '>='))
-		{
-		      $path = \FilesModel::findByUuid($path)->path;
-		}
+		$path = \FilesModel::findByUuid($GLOBALS['TL_CONFIG']['dmsBaseDirectory'])->path;
 		
 		if ($blnAppendTrailingSlash)
 		{
@@ -118,11 +118,11 @@ class DmsConfig
 		$arrValue = deserialize($GLOBALS['TL_CONFIG']['dmsMaxUploadFileSize']);
 		$dmsUnit = $arrValue['unit'];
 		
-		$dmsVal = Document::convertFileSize((double) $arrValue['value'], $dmsUnit, $strUnit);
+		$dmsVal = \Document::convertFileSize((double) $arrValue['value'], $dmsUnit, $strUnit);
 		
 		if ($blnFormatted)
 		{
-			return Document::formatFileSize($dmsVal, $strUnit);
+			return \Document::formatFileSize($dmsVal, $strUnit);
 		}
 		
 		return $dmsVal;

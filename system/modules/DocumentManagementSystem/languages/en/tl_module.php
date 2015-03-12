@@ -1,8 +1,8 @@
-<?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
+<?php
 
 /**
  * Contao Open Source CMS
- * Copyright (C) 2005-2014 Leo Feyer
+ * Copyright (C) 2005-2015 Leo Feyer
  *
  * Formerly known as TYPOlight Open Source CMS.
  *
@@ -21,7 +21,7 @@
  * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  Cliff Parnitzky 2014
+ * @copyright  Cliff Parnitzky 2014-2015
  * @author     Cliff Parnitzky
  * @package    DocumentManagementSystem
  * @license    LGPL
@@ -42,7 +42,7 @@ $GLOBALS['TL_LANG']['tl_module']['dmsTemplate']                   = array('DMS T
 /**
  * Options
  */
-$GLOBALS['TL_LANG']['tl_module']['dmsDefaultSearchTypeOptions'][DmsLoaderParams::DOCUMENT_SEARCH_EXACT] = $GLOBALS['TL_LANG']['DMS']['listing_search_type_exact'];
-$GLOBALS['TL_LANG']['tl_module']['dmsDefaultSearchTypeOptions'][DmsLoaderParams::DOCUMENT_SEARCH_LIKE]  = $GLOBALS['TL_LANG']['DMS']['listing_search_type_like'];
+$GLOBALS['TL_LANG']['tl_module']['dmsDefaultSearchTypeOptions'][\DmsLoaderParams::DOCUMENT_SEARCH_EXACT] = $GLOBALS['TL_LANG']['DMS']['listing_search_type_exact'];
+$GLOBALS['TL_LANG']['tl_module']['dmsDefaultSearchTypeOptions'][\DmsLoaderParams::DOCUMENT_SEARCH_LIKE]  = $GLOBALS['TL_LANG']['DMS']['listing_search_type_like'];
 
 ?>

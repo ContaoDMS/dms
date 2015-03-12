@@ -1,8 +1,8 @@
-<?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
+<?php
 
 /**
  * Contao Open Source CMS
- * Copyright (C) 2005-2014 Leo Feyer
+ * Copyright (C) 2005-2015 Leo Feyer
  *
  * Formerly known as TYPOlight Open Source CMS.
  *
@@ -21,17 +21,22 @@
  * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  Cliff Parnitzky 2014
+ * @copyright  Cliff Parnitzky 2014-2015
  * @author     Cliff Parnitzky
  * @package    DocumentManagementSystem
  * @license    LGPL
  */
 
 /**
+ * Run in a custom namespace, so the class can be replaced
+ */
+namespace ContaoDMS;
+
+/**
  * Class Category
  * The object for a category
  */
-class Category extends System
+class Category
 {
 	/**
 	 * Define constants.
@@ -80,10 +85,6 @@ class Category extends System
 	 */
 	public function __construct($intId, $strName)
 	{
-		parent::__construct();
-		
-		$this->import('FrontendUser', 'User');
-		
 		$this->arrSubCategories = array();
 		$this->arrAccessRights = array();
 		$this->arrDocuments = array();
@@ -356,7 +357,7 @@ class Category extends System
 	 * @param	$subCategory	The subcategory to add.
 	 * @return	category	Returns this category.
 	 */
-	public function addSubCategory(Category $subCategory)
+	public function addSubCategory(\Category $subCategory)
 	{
 		$this->arrSubCategories[] = $subCategory;
 		return $this;
@@ -368,7 +369,7 @@ class Category extends System
 	 * @param	$subCategory	The subcategory to remove.
 	 * @return	category	Returns this category.
 	 */
-	public function removeSubCategory(Category $subCategory)
+	public function removeSubCategory(\Category $subCategory)
 	{
 		unset($this->arrSubCategories[$subCategory]);
 		return $this;
@@ -380,7 +381,7 @@ class Category extends System
 	 * @param	$accessRight	The access right to add.
 	 * @return	category	Returns this category.
 	 */
-	public function addAccessRight(AccessRight $accessRight)
+	public function addAccessRight(\AccessRight $accessRight)
 	{
 		$this->arrAccessRights[] = $accessRight;
 		return $this;
@@ -392,7 +393,7 @@ class Category extends System
 	 * @param	$document	The document to add.
 	 * @return	category	Returns this category.
 	 */
-	public function addDocument(Document $document)
+	public function addDocument(\Document $document)
 	{
 		$this->arrDocuments[] = $document;
 		return $this;
@@ -453,7 +454,7 @@ class Category extends System
 		}
 		else if ($this->generalReadPermission == self::GENERAL_READ_PERMISSION_CUSTOM && FE_USER_LOGGED_IN)
 		{
-			return $this->isAccessibleForCurrentMember(AccessRight::READ);
+			return $this->isAccessibleForCurrentMember(\AccessRight::READ);
 		}
 		else if ($this->generalReadPermission == self::GENERAL_READ_PERMISSION_INHERIT && $this->hasParentCategory())
 		{
@@ -469,7 +470,7 @@ class Category extends System
 	 */
 	public function isUploadableForCurrentMember()
 	{
-		return $this->isAccessibleForCurrentMember(AccessRight::UPLOAD);
+		return $this->isAccessibleForCurrentMember(\AccessRight::UPLOAD);
 	}
 	
 	/**
@@ -479,7 +480,7 @@ class Category extends System
 	 */
 	public function isDeletableForCurrentMember()
 	{
-		return $this->isAccessibleForCurrentMember(AccessRight::DELETE);
+		return $this->isAccessibleForCurrentMember(\AccessRight::DELETE);
 	}
 	
 	/**
@@ -489,7 +490,7 @@ class Category extends System
 	 */
 	public function isEditableForCurrentMember()
 	{
-		return $this->isAccessibleForCurrentMember(AccessRight::EDIT);
+		return $this->isAccessibleForCurrentMember(\AccessRight::EDIT);
 	}
 	
 	/**
@@ -499,7 +500,7 @@ class Category extends System
 	 */
 	public function isPublishableForCurrentMember()
 	{
-		return $this->isAccessibleForCurrentMember(AccessRight::PUBLISH);
+		return $this->isAccessibleForCurrentMember(\AccessRight::PUBLISH);
 	}
 	
 	/**
@@ -529,11 +530,7 @@ class Category extends System
 		else if ($this->generalManagePermission == self::GENERAL_MANAGE_PERMISSION_CUSTOM && FE_USER_LOGGED_IN)
 		{
 			$blnIsAccessible = false;
-			$arrMemberGroups = deserialize($this->User->groups);
-			if(version_compare(VERSION,'3.2', '>='))
-			{
-				$arrMemberGroups = deserialize(\FrontendUser::getInstance()->groups);
-			}
+			$arrMemberGroups = deserialize(\FrontendUser::getInstance()->groups);
 			if (!empty($arrMemberGroups))
 			{
 				foreach($this->arrAccessRights as $accessRight)

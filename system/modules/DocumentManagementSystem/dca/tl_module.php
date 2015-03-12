@@ -1,8 +1,8 @@
-<?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
+<?php
 
 /**
  * Contao Open Source CMS
- * Copyright (C) 2005-2014 Leo Feyer
+ * Copyright (C) 2005-2015 Leo Feyer
  *
  * Formerly known as TYPOlight Open Source CMS.
  *
@@ -21,7 +21,7 @@
  * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  Cliff Parnitzky 2014
+ * @copyright  Cliff Parnitzky 2014-2015
  * @author     Cliff Parnitzky
  * @package    DocumentManagementSystem
  * @license    LGPL
@@ -41,7 +41,8 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['dmsStartCategory'] = array(
 	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['dmsStartCategory'],
 	'inputType'               => 'select',
 	'options_callback'        => array('tl_module_dms','getStartCategoryOptions'),
-	'eval'                    => array('tl_class'=>'clr w50', 'includeBlankOption'=>true, 'submitOnChange'=>true)
+	'eval'                    => array('tl_class'=>'clr w50', 'includeBlankOption'=>true, 'submitOnChange'=>true),
+	'sql'                     => "int(10) unsigned NOT NULL default '0'"
 );
 $GLOBALS['TL_DCA']['tl_module']['fields']['dmsStartCategoryPath'] = array(
 	'input_field_callback'    => array('tl_module_dms','getStartCategoryPath')
@@ -49,34 +50,40 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['dmsStartCategoryPath'] = array(
 $GLOBALS['TL_DCA']['tl_module']['fields']['dmsStartCategoryIncluded'] = array(
 	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['dmsStartCategoryIncluded'],
 	'inputType'               => 'checkbox',
-	'eval'                    => array('tl_class'=>'clr w50 ')
+	'eval'                    => array('tl_class'=>'clr w50 '),
+	'sql'                     => "char(1) NOT NULL default ''"
 );
 $GLOBALS['TL_DCA']['tl_module']['fields']['dmsHideLockedCategories'] = array(
 	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['dmsHideLockedCategories'],
 	'inputType'               => 'checkbox',
-	'eval'                    => array('tl_class'=>'clr w50')
+	'eval'                    => array('tl_class'=>'clr w50'),
+	'sql'                     => "char(1) NOT NULL default ''"
 );
 $GLOBALS['TL_DCA']['tl_module']['fields']['dmsHideEmptyCategories'] = array(
 	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['dmsHideEmptyCategories'],
 	'inputType'               => 'checkbox',
-	'eval'                    => array('tl_class'=>'w50')
+	'eval'                    => array('tl_class'=>'w50'),
+	'sql'                     => "char(1) NOT NULL default ''"
 );
 $GLOBALS['TL_DCA']['tl_module']['fields']['dmsDefaultSearchType'] = array(
 	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['dmsDefaultSearchType'],
 	'inputType'               => 'select',
-	'options'                 => array(DmsLoaderParams::DOCUMENT_SEARCH_EXACT, DmsLoaderParams::DOCUMENT_SEARCH_LIKE),
+	'options'                 => array(\DmsLoaderParams::DOCUMENT_SEARCH_EXACT, \DmsLoaderParams::DOCUMENT_SEARCH_LIKE),
 	'reference'               => &$GLOBALS['TL_LANG']['tl_module']['dmsDefaultSearchTypeOptions'],
-	'eval'                    => array('tl_class'=>'clr w50')
+	'eval'                    => array('tl_class'=>'clr w50'),
+	'sql'                     => "varchar(5) NOT NULL default ''"
 );
 $GLOBALS['TL_DCA']['tl_module']['fields']['dmsPublishDocumentsPerDefault'] = array(
 	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['dmsPublishDocumentsPerDefault'],
 	'inputType'               => 'checkbox',
 	'eval'                    => array('tl_class'=>'clr w50'),
+	'sql'                     => "char(1) NOT NULL default ''"
 );
 $GLOBALS['TL_DCA']['tl_module']['fields']['dmsTemplate'] = array(
 	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['dmsTemplate'],
 	'inputType'               => 'select',
-	'options_callback'        => array('tl_module_dms', 'getDmsTemplates')
+	'options_callback'        => array('tl_module_dms', 'getDmsTemplates'),
+	'sql'                     => "varchar(128) NOT NULL default ''"
 );
 
 /**
@@ -84,11 +91,11 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['dmsTemplate'] = array(
  *
  * Provide miscellaneous methods that are used by the data configuration array.
  * PHP version 5
- * @copyright  Cliff Parnitzky 2014
+ * @copyright  Cliff Parnitzky 2014-2015
  * @author     Cliff Parnitzky
  * @package    Controller
  */
-class tl_module_dms extends Backend
+class tl_module_dms extends \Backend
 {
 	/**
 	 * Constructor
@@ -120,13 +127,13 @@ class tl_module_dms extends Backend
 	 * @param DataContainer
 	 * @return array
 	 */
-	public function getStartCategoryOptions(DataContainer $dc)
+	public function getStartCategoryOptions(\DataContainer $dc)
 	{
-		$dmsLoader = DmsLoader::getInstance();
-		$params = new DmsLoaderParams();
+		$dmsLoader = \DmsLoader::getInstance();
+		$params = new \DmsLoaderParams();
 		$params->rootCategoryId = 0;
 		$arrCategories = $dmsLoader->loadCategories($params);
-		$arrCategories = DmsLoader::flattenCategories($arrCategories);
+		$arrCategories = \DmsLoader::flattenCategories($arrCategories);
 		
 		$arrOptions = array();
 		foreach ($arrCategories as $category)
@@ -148,10 +155,10 @@ class tl_module_dms extends Backend
 	 * @param string the label
 	 * @return string
 	 */
-	public function getStartCategoryPath(DataContainer $dc)
+	public function getStartCategoryPath(\DataContainer $dc)
 	{
-		$dmsLoader = DmsLoader::getInstance();
-		$params = new DmsLoaderParams();
+		$dmsLoader = \DmsLoader::getInstance();
+		$params = new \DmsLoaderParams();
 		$params->loadRootCategory = true;
 		$category = $dmsLoader->loadCategory($dc->activeRecord->dmsStartCategory, $params);
 		$path = '';

@@ -1,8 +1,8 @@
-<?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
+<?php
 
 /**
  * Contao Open Source CMS
- * Copyright (C) 2005-2014 Leo Feyer
+ * Copyright (C) 2005-2015 Leo Feyer
  *
  * Formerly known as TYPOlight Open Source CMS.
  *
@@ -21,17 +21,22 @@
  * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  Cliff Parnitzky 2014
+ * @copyright  Cliff Parnitzky 2014-2015
  * @author     Cliff Parnitzky
  * @package    DocumentManagementSystem
  * @license    LGPL
  */
 
 /**
+ * Run in a custom namespace, so the class can be replaced
+ */
+namespace ContaoDMS;
+
+/**
  * Class DmsLoader
  * The loader of the dms
  */
-class DmsLoader extends Controller
+class DmsLoader extends \Controller
 {
 	/**
 	 * Current object instance (do not remove)
@@ -69,7 +74,7 @@ class DmsLoader extends Controller
 	 * @param	DmsLoaderParams	$params	The configured params to use while loading.
 	 * @return	array	Returns the category structure.
 	 */
-	public function loadCategories(DmsLoaderParams $params)
+	public function loadCategories(\DmsLoaderParams $params)
 	{
 		$rootCategory = null;
 		// if another root category is selected
@@ -106,7 +111,7 @@ class DmsLoader extends Controller
 			$arrFlattend[] = $category;
 			if ($category->hasSubCategories())
 			{
-				$arrFlattend = array_merge($arrFlattend, DmsLoader::flattenCategories($category->subCategories));
+				$arrFlattend = array_merge($arrFlattend, \DmsLoader::flattenCategories($category->subCategories));
 			}
 		}
 		
@@ -120,7 +125,7 @@ class DmsLoader extends Controller
 	 * @param	DmsLoaderParams	$params	The configured params to use while loading.
 	 * @return	category	Returns the category.
 	 */
-	public function loadCategory($categoryId, DmsLoaderParams $params)
+	public function loadCategory($categoryId, \DmsLoaderParams $params)
 	{
 		$objCategory = $this->Database->prepare("SELECT * FROM tl_dms_categories WHERE id = ?")
 									  ->limit(1)
@@ -154,7 +159,7 @@ class DmsLoader extends Controller
 	 * @param	DmsLoaderParams	$params	The configured params to use while loading.
 	 * @return	document	Returns the document.
 	 */
-	public function loadDocument($documentId, DmsLoaderParams $params)
+	public function loadDocument($documentId, \DmsLoaderParams $params)
 	{
 		$objDocument = $this->Database->prepare("SELECT d.*, CONCAT(m1.firstname, ' ', m1.lastname) AS upload_member_name, CONCAT(m2.firstname, ' ', m2.lastname) AS lastedit_member_name "
 											  . "FROM tl_dms_documents d "
@@ -185,7 +190,7 @@ class DmsLoader extends Controller
 	 * @param	DmsLoaderParams	$params	The configured params to use while loading.
 	 * @return	array	Returns an array of matching the documents.
 	 */
-	public function loadDocuments($strFileName, $strFileType, DmsLoaderParams $params)
+	public function loadDocuments($strFileName, $strFileType, \DmsLoaderParams $params)
 	{
 		$arrDocuments = array();
 		$objDocument = $this->Database->prepare("SELECT d.*, CONCAT(m1.firstname, ' ', m1.lastname) AS upload_member_name, CONCAT(m2.firstname, ' ', m2.lastname) AS lastedit_member_name "
@@ -213,7 +218,7 @@ class DmsLoader extends Controller
 	/**
 	 * Recursively reading the categories
 	 */
-	protected function getCategoryLevel($parentCategoryId, Category $parentCategory=null, DmsLoaderParams $params)
+	protected function getCategoryLevel($parentCategoryId, \Category $parentCategory=null, \DmsLoaderParams $params)
 	{
 		$arrCategories = array();
 		$objCategory = $this->Database->prepare("SELECT * FROM tl_dms_categories WHERE pid = ? ORDER BY sorting")
@@ -246,7 +251,7 @@ class DmsLoader extends Controller
 	 * @param	DmsLoaderParams	$params	The configured params to use while loading.
 	 * @return	arr	Returns array of access rights.
 	 */
-	private function getAccessRights(Category $category, DmsLoaderParams $params)
+	private function getAccessRights(\Category $category, \DmsLoaderParams $params)
 	{
 		$objAccessRight = $this->Database->prepare("SELECT * FROM tl_dms_access_rights WHERE pid = ?")
 										 ->execute($category->id);
@@ -267,7 +272,7 @@ class DmsLoader extends Controller
 	 * @param	DmsLoaderParams	$params	The configured params to use while loading.
 	 * @return	arr	Returns array of documents.
 	 */
-	private function getDocuments(Category $category, DmsLoaderParams $params)
+	private function getDocuments(\Category $category, \DmsLoaderParams $params)
 	{
 		$whereClause = "WHERE d.pid = ? ";
 		
@@ -276,7 +281,7 @@ class DmsLoader extends Controller
 		
 		if ($params->hasDocumentSearchText())
 		{
-			if ($params->documentSearchType == DmsLoaderParams::DOCUMENT_SEARCH_LIKE)
+			if ($params->documentSearchType == \DmsLoaderParams::DOCUMENT_SEARCH_LIKE)
 			{
 				$whereClause .= "AND (UPPER(d.name) LIKE ? OR UPPER(d.description) LIKE ? OR UPPER(d.keywords) LIKE ?) ";
 				$seachText = "%" . $params->documentSearchText . "%";
@@ -317,9 +322,9 @@ class DmsLoader extends Controller
 	 * @param	DatabaseResult	$objCategory	The database result.
 	 * @return	category	The created category.
 	 */
-	private function buildCategory(Database_Result $objCategory)
+	private function buildCategory(\Database_Result $objCategory)
 	{
-		$category = new Category($objCategory->id, $objCategory->name);
+		$category = new \Category($objCategory->id, $objCategory->name);
 		$category->parentCategoryId = $objCategory->pid;
 		$category->description = $objCategory->description;
 		$category->fileTypes = $objCategory->file_types;
@@ -351,19 +356,19 @@ class DmsLoader extends Controller
 	 * @param	DatabaseResult	$objAccessRight	The database result.
 	 * @return	accessRight	The created access right.
 	 */
-	private function buildAccessRight(Database_Result $objAccessRight)
+	private function buildAccessRight(\Database_Result $objAccessRight)
 	{
-		$accessRight = new AccessRight($objAccessRight->id, $objAccessRight->member_group);
+		$accessRight = new \AccessRight($objAccessRight->id, $objAccessRight->member_group);
 		$accessRight->categoryId = $objAccessRight->pid;
-		$strRight = accessRight::READ;
+		$strRight = \AccessRight::READ;
 		$accessRight->$strRight = $objAccessRight->right_read;
-		$strRight = accessRight::UPLOAD;
+		$strRight = \AccessRight::UPLOAD;
 		$accessRight->$strRight = $objAccessRight->right_upload;
-		$strRight = accessRight::DELETE;
+		$strRight = \AccessRight::DELETE;
 		$accessRight->$strRight = $objAccessRight->right_delete;
-		$strRight = accessRight::EDIT;
+		$strRight = \AccessRight::EDIT;
 		$accessRight->$strRight = $objAccessRight->right_edit;
-		$strRight = accessRight::PUBLISH;
+		$strRight = \AccessRight::PUBLISH;
 		$accessRight->$strRight = $objAccessRight->right_publish;
 		$accessRight->active = $objAccessRight->published;
 		$accessRight->activationStart = $objAccessRight->start;
@@ -388,9 +393,9 @@ class DmsLoader extends Controller
 	 * @param	DatabaseResult	$objDocument	The database result.
 	 * @return	document	The created document.
 	 */
-	private function buildDocument(Database_Result $objDocument)
+	private function buildDocument(\Database_Result $objDocument)
 	{
-		$document = new Document($objDocument->id, $objDocument->name);
+		$document = new \Document($objDocument->id, $objDocument->name);
 		$document->categoryId = $objDocument->pid;
 		$document->description = $objDocument->description;
 		$document->keywords = $objDocument->keywords;

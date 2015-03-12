@@ -1,8 +1,8 @@
-<?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
+<?php
 
 /**
  * Contao Open Source CMS
- * Copyright (C) 2005-2014 Leo Feyer
+ * Copyright (C) 2005-2015 Leo Feyer
  *
  * Formerly known as TYPOlight Open Source CMS.
  *
@@ -21,7 +21,7 @@
  * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  Cliff Parnitzky 2014
+ * @copyright  Cliff Parnitzky 2014-2015
  * @author     Cliff Parnitzky
  * @package    DocumentManagementSystem
  * @license    LGPL
@@ -45,7 +45,7 @@ $GLOBALS['TL_DCA']['tl_settings']['fields']['dmsBaseDirectory'] = array(
 $GLOBALS['TL_DCA']['tl_settings']['fields']['dmsMaxUploadFileSize'] = array(
 	'label'     => &$GLOBALS['TL_LANG']['tl_settings']['dmsMaxUploadFileSize'],
 	'inputType' => 'inputUnit',
-	'options'   => array(Document::FILE_SIZE_UNIT_BYTE, Document::FILE_SIZE_UNIT_KB, Document::FILE_SIZE_UNIT_MB, Document::FILE_SIZE_UNIT_GB),
+	'options'   => array(\Document::FILE_SIZE_UNIT_BYTE, \Document::FILE_SIZE_UNIT_KB, \Document::FILE_SIZE_UNIT_MB, \Document::FILE_SIZE_UNIT_GB),
 	'reference' => &$GLOBALS['TL_LANG']['DMS']['file_size_unit'],
 	'eval'      => array('tl_class'=>'clr w50', 'mandatory'=>true, 'rgxp'=>'digit'),
 	'save_callback' => array
@@ -65,11 +65,11 @@ $GLOBALS['TL_DCA']['tl_settings']['fields']['dmsPublishDocumentsPerDefault'] = a
  *
  * Provide miscellaneous methods that are used by the data configuration array.
  * PHP version 5
- * @copyright  Cliff Parnitzky 2014
+ * @copyright  Cliff Parnitzky 2014-2015
  * @author     Cliff Parnitzky
  * @package    Controller
  */
-class tl_settings_dms extends Backend
+class tl_settings_dms extends \Backend
 {
 	/**
 	 * Constructor
@@ -89,12 +89,12 @@ class tl_settings_dms extends Backend
 	{
 		$arrValue = deserialize($varValue);
 		$dmsUnit = $arrValue['unit'];
-		$dmsVal = Document::convertFileSize((double) $arrValue['value'], $dmsUnit, Document::FILE_SIZE_UNIT_BYTE);
+		$dmsVal = \Document::convertFileSize((double) $arrValue['value'], $dmsUnit, \Document::FILE_SIZE_UNIT_BYTE);
 		$phpVal = $this->getPhpUploadMaxFilesize();
 		
 		if ($dmsVal > $phpVal)
 		{
-			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['dmsMaxUploadFileSize'], Document::formatFileSize(Document::convertFileSize($phpVal, Document::FILE_SIZE_UNIT_BYTE, $dmsUnit), $dmsUnit)));
+			throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['dmsMaxUploadFileSize'], \Document::formatFileSize(\Document::convertFileSize($phpVal, \Document::FILE_SIZE_UNIT_BYTE, $dmsUnit), $dmsUnit)));
 		}
 		
 		return $varValue;
@@ -113,19 +113,19 @@ class tl_settings_dms extends Backend
 		switch($unit)
 		{
 			case 'k':
-				$val = Document::convertFileSize((double) substr($param, 0, - 1), Document::FILE_SIZE_UNIT_KB, Document::FILE_SIZE_UNIT_BYTE);
+				$val = \Document::convertFileSize((double) substr($param, 0, - 1), \Document::FILE_SIZE_UNIT_KB, \Document::FILE_SIZE_UNIT_BYTE);
 				break;
 			case 'm':
-				$val = Document::convertFileSize((double) substr($param, 0, - 1), Document::FILE_SIZE_UNIT_MB, Document::FILE_SIZE_UNIT_BYTE);
+				$val = \Document::convertFileSize((double) substr($param, 0, - 1), \Document::FILE_SIZE_UNIT_MB, \Document::FILE_SIZE_UNIT_BYTE);
 				break;
 			case 'g':
-				$val = Document::convertFileSize((double) substr($param, 0, - 1), Document::FILE_SIZE_UNIT_GB, Document::FILE_SIZE_UNIT_BYTE);
+				$val = \Document::convertFileSize((double) substr($param, 0, - 1), \Document::FILE_SIZE_UNIT_GB, \Document::FILE_SIZE_UNIT_BYTE);
 				break;
 		}
 		
 		if (!is_double($val))
 		{
-			throw new Exception('PHP value for upload_max_filesize could not be determined.');
+			throw new \Exception('PHP value for upload_max_filesize could not be determined.');
 		}
 		return $val;
 	}

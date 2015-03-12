@@ -19,9 +19,7 @@ For news and infos follow [@ContaoDMS](https://twitter.com/ContaoDMS).
 Installation
 ------------
 
-The extension can be installed using the Contao extension manager in the Contao backend.
-
-Or install it via composer: [contao-dms/dms](https://packagist.org/packages/contao-dms/dms).
+Install the extension via composer: [contao-dms/dms](https://packagist.org/packages/contao-dms/dms).
 
 If you prefer to install it manually, download the latest release here: https://github.com/ContaoDMS/dms/releases
 
@@ -35,8 +33,8 @@ https://github.com/ContaoDMS/dms/issues
 Compatibility
 -------------
 
-- min. version: Contao 2.9.5
-- max. version: Contao 3.3.x
+- min. Contao version: >= 3.2.0
+- max. Contao version: <  3.5.0
 
 
 Dependency
@@ -51,10 +49,14 @@ Migration
 For migrating from version 1.* to 2.* please backup the database and use the migration instructions at https://github.com/ContaoDMS/migration
 
 
-Documentation, Configuration and Customization
-----------------------------------------------
+Documentation
+-------------
 
 For documentation hints please have a look at https://github.com/ContaoDMS/documentation.
+
+
+Customization
+-------------
 
 For customization hints please have a look at https://github.com/ContaoDMS/customization.
 
