@@ -2,6 +2,10 @@
 Contao Extension "DocumentManagementSystem"
 ===========================================
 
+Version 3.1.1 (2015-03-23)
+--------------------------
+- fixed problems when using both modules on one page (see #43)
+
 Version 3.1.0 (2015-03-12)
 --------------------------
 - removed the Contao 2 compatibility (see #42)
