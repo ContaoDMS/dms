@@ -32,7 +32,10 @@
 			"sources":{
 				"system/modules/DocumentManagementSystem":"system/modules/DocumentManagementSystem",
 				"files/dms": "files/dms"
-			}
+			},
+			"runonce": [
+				"config/initialize.php"
+			]
 		},
 		"branch-alias": {
 			"dev-master": "3.1.x-dev"
