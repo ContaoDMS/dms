@@ -2,6 +2,11 @@
 Contao Extension "DocumentManagementSystem"
 ===========================================
 
+Version 3.2.0 (2015-xx-xx)
+--------------------------
+- added an init script for default system settings (see #45)
+- improved upload check for categories which have no allowed file types defined (see #28)
+
 Version 3.1.1 (2015-03-23)
 --------------------------
 - fixed problems when using both modules on one page (see #43)
