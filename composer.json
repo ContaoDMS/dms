@@ -34,11 +34,11 @@
 				"files/dms": "files/dms"
 			},
 			"runonce": [
-				"config/initialize.php"
+				"system/modules/DocumentManagementSystem/config/initialize.php"
 			]
 		},
 		"branch-alias": {
-			"dev-master": "3.1.x-dev"
+			"dev-master": "3.2.x-dev"
 		}
 	}
 }
