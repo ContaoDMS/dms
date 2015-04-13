@@ -26,12 +26,17 @@
  * @package    DocumentManagementSystem
  * @license    LGPL
  */
+
+/**
+ * Run in a custom namespace, so the class can be replaced
+ */
+namespace ContaoDMS;
  
 /**
  * Class DocumentManagementSystemInitializer
  * A utility class to initialize the system settings of the dms after installation
  */
-class DocumentManagementSystemInitializer extends Controller
+class DocumentManagementSystemInitializer extends \Controller
 {
 		const DMS_BASE_DIRECTORY_KEY = "dmsBaseDirectory";
 		const DMS_BASE_DIRECTORY_VALUE = "files/dms";
@@ -104,7 +109,7 @@ class DocumentManagementSystemInitializer extends Controller
 /**
  * Instantiate controller
  */
-$objDocumentManagementSystemInitializer = new DocumentManagementSystemInitializer();
+$objDocumentManagementSystemInitializer = new \DocumentManagementSystemInitializer();
 $objDocumentManagementSystemInitializer->run();
 
 ?>
