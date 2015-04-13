@@ -33,9 +33,10 @@
  */
 class DocumentManagementSystemInitializer extends Controller
 {
-		const DMS_BASE_DIRECTORY_PATH = "files/dms";
 		const DMS_BASE_DIRECTORY_KEY = "dmsBaseDirectory";
+		const DMS_BASE_DIRECTORY_VALUE = "files/dms";
 		const DMS_MAX_UPLOAD_FILE_SIZE_KEY = "dmsMaxUploadFileSize";
+		const DMS_MAX_UPLOAD_FILE_SIZE_VALUE = array('unit' => 'MB', 'value' => '5');
 		
 		/**
 		 * Initialize the object
@@ -58,14 +59,16 @@ class DocumentManagementSystemInitializer extends Controller
 		 */
 		private function initSystemSettings()
 		{
+			\System::log('Running init script for setting default DMS settings, if missing.', __METHOD__, TL_CONFIGURATION);
+			
 			if (!\Config::get(self::DMS_BASE_DIRECTORY_KEY))
 			{
-				$objDir = \FilesModel::findByPath(self::DMS_BASE_DIRECTORY_PATH);
+				$objDir = \FilesModel::findByPath(self::DMS_BASE_DIRECTORY_VALUE);
 				if ($objDir == null)
 				{
-					if (file_exists(TL_ROOT . '/' . self::DMS_BASE_DIRECTORY_PATH))
+					if (file_exists(TL_ROOT . '/' . self::DMS_BASE_DIRECTORY_VALUE))
 					{
-						$objDir = \Dbafs::addResource(self::DMS_BASE_DIRECTORY_PATH);
+						$objDir = \Dbafs::addResource(self::DMS_BASE_DIRECTORY_VALUE);
 					}
 					else
 					{
@@ -83,8 +86,7 @@ class DocumentManagementSystemInitializer extends Controller
 			
 			if (!\Config::get(self::DMS_MAX_UPLOAD_FILE_SIZE_KEY))
 			{
-				$arrFileSize = array('unit' => 'MB', 'value' => '5');
-				\Config::persist(self::DMS_MAX_UPLOAD_FILE_SIZE_KEY, serialize($arrFileSize));
+				\Config::persist(self::DMS_MAX_UPLOAD_FILE_SIZE_KEY, serialize(DMS_MAX_UPLOAD_FILE_SIZE_VALUE));
 			}
 		}
 }
