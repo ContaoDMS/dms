@@ -63,6 +63,7 @@ class DocumentManagementSystemInitializer extends Controller
 			
 			if (!\Config::get(self::DMS_BASE_DIRECTORY_KEY))
 			{
+				\System::log('Setting default DMS base directory to "' . self::DMS_BASE_DIRECTORY_VALUE . '".', __METHOD__, TL_CONFIGURATION);
 				$objDir = \FilesModel::findByPath(self::DMS_BASE_DIRECTORY_VALUE);
 				if ($objDir == null)
 				{
@@ -83,10 +84,19 @@ class DocumentManagementSystemInitializer extends Controller
 					\Config::persist(self::DMS_BASE_DIRECTORY_KEY, $uuid);
 				}
 			}
+			else
+			{
+				\System::log('DMS base directory already configured.', __METHOD__, TL_CONFIGURATION);
+			}
 			
 			if (!\Config::get(self::DMS_MAX_UPLOAD_FILE_SIZE_KEY))
 			{
+				\System::log('Setting default DMS max. upload file size to "5 MB".', __METHOD__, TL_CONFIGURATION);
 				\Config::persist(self::DMS_MAX_UPLOAD_FILE_SIZE_KEY, serialize(DMS_MAX_UPLOAD_FILE_SIZE_VALUE));
+			}
+			else
+			{
+				\System::log('DMS max. upload file size already configured.', __METHOD__, TL_CONFIGURATION);
 			}
 		}
 }
