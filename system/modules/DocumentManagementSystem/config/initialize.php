@@ -48,6 +48,7 @@ class DocumentManagementSystemInitializer extends \Controller
 		 */
 		public function __construct()
 		{
+			parent::__construct();
 		}
 		
 		/**
@@ -114,7 +115,7 @@ class DocumentManagementSystemInitializer extends \Controller
 /**
  * Instantiate controller
  */
-$objDocumentManagementSystemInitializer = new \DocumentManagementSystemInitializer();
+$objDocumentManagementSystemInitializer = new \ContaoDMS\DocumentManagementSystemInitializer();
 $objDocumentManagementSystemInitializer->run();
 
 ?>
