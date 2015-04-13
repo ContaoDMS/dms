@@ -64,6 +64,11 @@ class DocumentManagementSystemInitializer extends \Controller
 		 */
 		private function initSystemSettings()
 		{
+			if (\Config::get(self::DMS_BASE_DIRECTORY_KEY) && \Config::get(self::DMS_MAX_UPLOAD_FILE_SIZE_KEY))
+			{
+				return;
+			}
+			
 			\System::log('Running init script for setting default DMS settings, if missing.', __METHOD__, TL_CONFIGURATION);
 			
 			if (!\Config::get(self::DMS_BASE_DIRECTORY_KEY))
@@ -78,7 +83,7 @@ class DocumentManagementSystemInitializer extends \Controller
 					}
 					else
 					{
-						\System::log('Initialization of system setting for dms failed, because default base directory does not exists.', __METHOD__, TL_ERROR);
+						\System::log('Initialization of system setting for DMS failed, because default base directory does not exists.', __METHOD__, TL_ERROR);
 						$objDir = null;
 					}
 				}
