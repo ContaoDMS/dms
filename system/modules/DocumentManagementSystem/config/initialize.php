@@ -39,7 +39,7 @@ namespace ContaoDMS;
 class DocumentManagementSystemInitializer extends \Controller
 {
 		const DMS_BASE_DIRECTORY_KEY = "dmsBaseDirectory";
-		const DMS_BASE_DIRECTORY_VALUE = "files/dms";
+		const DMS_BASE_DIRECTORY_VALUE = TL_ROOT . "/files/dms";
 		const DMS_MAX_UPLOAD_FILE_SIZE_KEY = "dmsMaxUploadFileSize";
 		const DMS_MAX_UPLOAD_FILE_SIZE_VALUE = array('unit' => 'MB', 'value' => '5');
 		
@@ -86,7 +86,7 @@ class DocumentManagementSystemInitializer extends \Controller
 					\System::log('"FilesModel::findByPath" crashed: ' . $e->getMessage(), __METHOD__, TL_ERROR);
 				}
 				
-				if ($objDir == null)
+				if ($objDir === null)
 				{
 					if (file_exists(TL_ROOT . '/' . self::DMS_BASE_DIRECTORY_VALUE))
 					{
@@ -99,7 +99,7 @@ class DocumentManagementSystemInitializer extends \Controller
 					}
 				}
 				
-				if ($objDir != null)
+				if ($objDir !== null)
 				{
 					$uuid = \String::binToUuid($objDir->uuid);
 					\Config::persist(self::DMS_BASE_DIRECTORY_KEY, $uuid);
