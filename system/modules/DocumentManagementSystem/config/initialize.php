@@ -75,7 +75,17 @@ class DocumentManagementSystemInitializer extends \Controller
 			if (!\Config::get(self::DMS_BASE_DIRECTORY_KEY))
 			{
 				\System::log('Setting default DMS base directory to "' . self::DMS_BASE_DIRECTORY_VALUE . '".', __METHOD__, TL_CONFIGURATION);
-				$objDir = \FilesModel::findByPath(self::DMS_BASE_DIRECTORY_VALUE);
+				$objDir = null;
+				
+				try
+				{
+					$objDir = \FilesModel::findByPath(self::DMS_BASE_DIRECTORY_VALUE);
+				}
+				catch (\Exception $e)
+				{
+					\System::log('"FilesModel::findByPath" crashed: ' . $e->getMessage(), __METHOD__, TL_ERROR);
+				}
+				
 				if ($objDir == null)
 				{
 					if (file_exists(TL_ROOT . '/' . self::DMS_BASE_DIRECTORY_VALUE))
