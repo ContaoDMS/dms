@@ -103,6 +103,7 @@ class DocumentManagementSystemInitializer extends \Controller
 				
 				if ($uuid != null)
 				{
+					\Config::set(self::DMS_BASE_DIRECTORY_KEY, $uuid);
 					\Config::persist(self::DMS_BASE_DIRECTORY_KEY, $uuid);
 				}
 			}
@@ -114,6 +115,7 @@ class DocumentManagementSystemInitializer extends \Controller
 			if (!\Config::get(self::DMS_MAX_UPLOAD_FILE_SIZE_KEY))
 			{
 				\System::log('Setting default DMS max. upload file size to "5 MB".', __METHOD__, TL_CONFIGURATION);
+				\Config::set(self::DMS_MAX_UPLOAD_FILE_SIZE_KEY, serialize(DMS_MAX_UPLOAD_FILE_SIZE_VALUE));
 				\Config::persist(self::DMS_MAX_UPLOAD_FILE_SIZE_KEY, serialize(DMS_MAX_UPLOAD_FILE_SIZE_VALUE));
 			}
 			else
