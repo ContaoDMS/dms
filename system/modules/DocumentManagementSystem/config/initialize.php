@@ -78,8 +78,6 @@ class DocumentManagementSystemInitializer extends \Controller
 				
 				$uuid = null;
 				
-				//$objModels = \FilesModel::findMultipleByPaths(array(self::DMS_BASE_DIRECTORY_VALUE));
-				
 				$objDatabase = \Database::getInstance();
 				$objDir = $objDatabase->prepare("SELECT * FROM tl_files WHERE path=?")
 								->limit(1)
@@ -100,29 +98,20 @@ class DocumentManagementSystemInitializer extends \Controller
 					else
 					{
 						\System::log('Initialization of system setting for DMS failed, because default base directory does not exists.', __METHOD__, TL_ERROR);
+						return;
 					}
 				}
 				
 				if ($uuid != null)
 				{
-					\Config::set(self::DMS_BASE_DIRECTORY_KEY, $uuid);
 					\Config::persist(self::DMS_BASE_DIRECTORY_KEY, $uuid);
 				}
-			}
-			else
-			{
-				\System::log('DMS base directory already configured.', __METHOD__, TL_CONFIGURATION);
 			}
 			
 			if (!\Config::get(self::DMS_MAX_UPLOAD_FILE_SIZE_KEY))
 			{
 				\System::log('Setting default DMS max. upload file size to "5 MB".', __METHOD__, TL_CONFIGURATION);
-				\Config::set(self::DMS_MAX_UPLOAD_FILE_SIZE_KEY, serialize(DMS_MAX_UPLOAD_FILE_SIZE_VALUE));
-				\Config::persist(self::DMS_MAX_UPLOAD_FILE_SIZE_KEY, serialize(DMS_MAX_UPLOAD_FILE_SIZE_VALUE));
-			}
-			else
-			{
-				\System::log('DMS max. upload file size already configured.', __METHOD__, TL_CONFIGURATION);
+				\Config::persist(self::DMS_MAX_UPLOAD_FILE_SIZE_KEY, serialize(self::DMS_MAX_UPLOAD_FILE_SIZE_VALUE));
 			}
 		}
 }
