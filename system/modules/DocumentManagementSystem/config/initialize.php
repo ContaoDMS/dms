@@ -39,7 +39,7 @@ namespace ContaoDMS;
 class DocumentManagementSystemInitializer extends \Controller
 {
 		const DMS_BASE_DIRECTORY_KEY = "dmsBaseDirectory";
-		const DMS_BASE_DIRECTORY_VALUE = TL_ROOT . "/files/dms";
+		const DMS_BASE_DIRECTORY_VALUE = "files/dms";
 		const DMS_MAX_UPLOAD_FILE_SIZE_KEY = "dmsMaxUploadFileSize";
 		const DMS_MAX_UPLOAD_FILE_SIZE_VALUE = array('unit' => 'MB', 'value' => '5');
 		
@@ -75,33 +75,34 @@ class DocumentManagementSystemInitializer extends \Controller
 			if (!\Config::get(self::DMS_BASE_DIRECTORY_KEY))
 			{
 				\System::log('Setting default DMS base directory to "' . self::DMS_BASE_DIRECTORY_VALUE . '".', __METHOD__, TL_CONFIGURATION);
-				$objDir = null;
 				
-				try
+				$uuid = null;
+				
+				$objModels = \FilesModel::findMultipleByPaths(array(self::DMS_BASE_DIRECTORY_VALUE));
+				
+				if ($objModels !== null)
 				{
-					$objDir = \FilesModel::findByPath(self::DMS_BASE_DIRECTORY_VALUE);
-				}
-				catch (\Exception $e)
-				{
-					\System::log('"FilesModel::findByPath" crashed: ' . $e->getMessage(), __METHOD__, TL_ERROR);
+					if ($objModels->next())
+					{
+						$uuid = \String::binToUuid($objModels->uuid);
+					}
 				}
 				
-				if ($objDir === null)
+				if ($uuid == null)
 				{
 					if (file_exists(TL_ROOT . '/' . self::DMS_BASE_DIRECTORY_VALUE))
 					{
 						$objDir = \Dbafs::addResource(self::DMS_BASE_DIRECTORY_VALUE);
+						$uuid = \String::binToUuid($objDir->uuid);
 					}
 					else
 					{
 						\System::log('Initialization of system setting for DMS failed, because default base directory does not exists.', __METHOD__, TL_ERROR);
-						$objDir = null;
 					}
 				}
 				
-				if ($objDir !== null)
+				if ($uuid != null)
 				{
-					$uuid = \String::binToUuid($objDir->uuid);
 					\Config::persist(self::DMS_BASE_DIRECTORY_KEY, $uuid);
 				}
 			}
