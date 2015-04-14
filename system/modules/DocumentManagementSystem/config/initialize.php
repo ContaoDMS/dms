@@ -78,14 +78,16 @@ class DocumentManagementSystemInitializer extends \Controller
 				
 				$uuid = null;
 				
-				$objModels = \FilesModel::findMultipleByPaths(array(self::DMS_BASE_DIRECTORY_VALUE));
+				//$objModels = \FilesModel::findMultipleByPaths(array(self::DMS_BASE_DIRECTORY_VALUE));
 				
-				if ($objModels !== null)
+				$objDatabase = \Database::getInstance();
+				$objDir = $objDatabase->prepare("SELECT * FROM tl_files WHERE path=?")
+								->limit(1)
+								->execute(self::DMS_BASE_DIRECTORY_VALUE);
+				
+				if ($objDir->next())
 				{
-					if ($objModels->next())
-					{
-						$uuid = \String::binToUuid($objModels->uuid);
-					}
+					$uuid = \String::binToUuid($objDir->uuid);
 				}
 				
 				if ($uuid == null)
