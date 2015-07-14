@@ -43,16 +43,16 @@ Dependency
 - There are no dependencies to other extensions, that have to be installed.
 
 
+Documentation
+-------------
+
+For documentation hints please have a look at the [manual](http://cliffparnitzky.gitbooks.io/contaodms).
+
+
 Migration
 ---------
 
 For migrating from version 1.* to 2.* please backup the database and use the migration instructions at https://github.com/ContaoDMS/migration
-
-
-Documentation
--------------
-
-For documentation hints please have a look at https://github.com/ContaoDMS/documentation.
 
 
 Customization
