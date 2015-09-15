@@ -46,7 +46,11 @@ Dependency
 Documentation
 -------------
 
-For documentation hints please have a look at the [manual](http://cliffparnitzky.gitbooks.io/contaodms).
+[Read the manual](https://cliffparnitzky.gitbooks.io/contaodms)
+
+![DE](https://raw.githubusercontent.com/ContaoDMS/documentation/master/de/de.png) [Deutsches Handbuch](https://cliffparnitzky.gitbooks.io/contaodms/content/de/index.html)
+
+![EN](https://raw.githubusercontent.com/ContaoDMS/documentation/master/en/en.png) [English manual](https://cliffparnitzky.gitbooks.io/contaodms/content/en/index.html)
 
 
 Migration
