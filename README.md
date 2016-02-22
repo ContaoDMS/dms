@@ -34,13 +34,13 @@ Compatibility
 -------------
 
 - min. Contao version: >= 3.2.0
-- max. Contao version: <  3.5.0
+- max. Contao version: <  3.6.0
 
 
 Dependency
 ----------
 
-- There are no dependencies to other extensions, that have to be installed.
+There are no dependencies to other extensions, that have to be installed.
 
 
 Documentation
