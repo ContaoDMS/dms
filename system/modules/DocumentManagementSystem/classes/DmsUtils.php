@@ -350,7 +350,7 @@ class DmsUtils
 			foreach ($GLOBALS['TL_HOOKS']['dmsPostDocumentDownload'] as $callback)
 			{
 				$this->import($callback[0]);
-				$this->$callback[0]->$callback[1]($strFile, $document);
+				$this->{$callback[0]}->{$callback[1]}($strFile, $document);
 			}
 		}
 
