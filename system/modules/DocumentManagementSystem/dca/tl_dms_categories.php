@@ -66,8 +66,7 @@ $GLOBALS['TL_DCA']['tl_dms_categories'] = array
 		),
 		'label' => array
 		(
-			'fields'                  => array('name','file_types'),
-			'format'                  => '<span style="padding-left:5px;">%s</span><span style="color:#b3b3b3; padding-left:3px;">[%s]</span>',
+			'fields'                  => array('name'),
 			'label_callback'          => array('tl_dms_categories', 'addIcon')
 		),
 		'global_operations' => array
@@ -319,7 +318,7 @@ class tl_dms_categories extends \Backend
 	public function addIcon($row, $label, \DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false)
 	{
 		// Add the breadcrumb link
-		$label = '<a href="' . $this->addToUrl('cat='.$row['id']) . '">' . $label . '</a>';
+		$label = '<a href="' . $this->addToUrl('cat='.$row['id']) . '"><span style="padding-left:5px;">' . $label . '</span><span style="color:#b3b3b3; padding-left:3px;" title="' . $row['file_types'] . '">[' . \ContaoDMS\DmsUtils::getCuttedAllowedFileTypes($row['file_types']) . ']</span></a>';
 
 		$time = time();
 		$image = 'category.png';

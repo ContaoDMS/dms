@@ -38,6 +38,9 @@ namespace ContaoDMS;
  */
 class DmsUtils
 {
+	const ALLOWED_FILE_TYPES_MAX_LENGHT = 50;
+	const ALLOWED_FILE_TYPES_AND_SO_ON = " ...";
+	
 	/**
 	 * Return if documents should be published per default.
 	 *
@@ -356,6 +359,24 @@ class DmsUtils
 
 		// Stop script
 		exit;
+	}
+	
+	/**
+	 * Return the current object instance (Singleton)
+	 * @return DmsFileTypeSetsModificator
+	 */
+	public static function getCuttedAllowedFileTypes($strAllowedFileTypes)
+	{
+		if ($strAllowedFileTypes == null)
+		{
+			return "";
+		}
+		else if (strlen($strAllowedFileTypes) <= self::ALLOWED_FILE_TYPES_MAX_LENGHT)
+		{
+			return $strAllowedFileTypes;
+		}
+
+		return substr($strAllowedFileTypes, 0, self::ALLOWED_FILE_TYPES_MAX_LENGHT - strlen(self::ALLOWED_FILE_TYPES_AND_SO_ON)) . self::ALLOWED_FILE_TYPES_AND_SO_ON;
 	}
 }
 
