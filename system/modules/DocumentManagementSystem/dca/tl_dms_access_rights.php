@@ -324,7 +324,7 @@ class tl_dms_access_rights extends \Backend
 			foreach ($GLOBALS['TL_DCA']['tl_dms_access_rights']['fields']['published']['save_callback'] as $callback)
 			{
 				$this->import($callback[0]);
-				$blnVisible = $this->$callback[0]->$callback[1]($blnVisible, $this);
+				$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, $this);
 			}
 		}
 

@@ -128,7 +128,6 @@ class AccessRight
 				break;
 			default:
 				throw new Exception(sprintf('Invalid argument "%s"', $strKey));
-				break;
 		}
 	}
 

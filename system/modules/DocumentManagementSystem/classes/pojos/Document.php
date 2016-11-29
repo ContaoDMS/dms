@@ -158,7 +158,6 @@ class Document
 				break;
 			default:
 				throw new Exception(sprintf('Invalid argument "%s"', $strKey));
-				break;
 		}
 	}
 
@@ -321,7 +320,6 @@ class Document
 		if ($doubleFileSize < 0)
 		{
 			throw new \Exception(sprintf('Invalid file size [%s] or unit [%s] for document.', $this->intFileSize, $strKey));
-			break;
 		}
 		
 		if ($blnFormatted)

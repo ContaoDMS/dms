@@ -343,7 +343,7 @@ class DmsLoader extends \Controller
 			foreach ($GLOBALS['TL_HOOKS']['dmsModifyLoadedCategory'] as $callback)
 			{
 				$this->import($callback[0]);
-				$category = $this->$callback[0]->$callback[1]($category, $objCategory);
+				$category = $this->{$callback[0]}->{$callback[1]}($category, $objCategory);
 			}
 		}
 		
@@ -380,7 +380,7 @@ class DmsLoader extends \Controller
 			foreach ($GLOBALS['TL_HOOKS']['dmsModifyLoadedAccessRight'] as $callback)
 			{
 				$this->import($callback[0]);
-				$accessRight = $this->$callback[0]->$callback[1]($accessRight, $objAccessRight);
+				$accessRight = $this->{$callback[0]}->{$callback[1]}($accessRight, $objAccessRight);
 			}
 		}
 		
@@ -420,7 +420,7 @@ class DmsLoader extends \Controller
 			foreach ($GLOBALS['TL_HOOKS']['dmsModifyLoadedDocument'] as $callback)
 			{
 				$this->import($callback[0]);
-				$document = $this->$callback[0]->$callback[1]($document, $objDocument);
+				$document = $this->{$callback[0]}->{$callback[1]}($document, $objDocument);
 			}
 		}
 		
