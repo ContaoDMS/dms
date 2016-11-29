@@ -7,6 +7,18 @@ Version 3.2.0 (2015-xx-xx)
 - added an init script for default system settings (see #45)
 - improved upload check for categories which have no allowed file types defined (see #28)
 
+Version 3.1.4 (2016-11-14)
+--------------------------
+- fixed not using `break` after `throw` to ensure PHP7 compatibility (see #46)
+
+Version 3.1.3 (2016-09-08)
+--------------------------
+- adjusted the code to be compatible with PHP7 (see #46)
+
+Version 3.1.2 (2016-02-22)
+--------------------------
+- added Contao 3.5 compatibility
+
 Version 3.1.1 (2015-03-23)
 --------------------------
 - fixed problems when using both modules on one page (see #43)
