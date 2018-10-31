@@ -3,6 +3,7 @@
 	"description":"Provides a document management system for the Contao CMS. It offers the possibility to store versioned files in an unlimited category structure.",
 	"keywords":["contao", "dms", "document", "management", "files"],
 	"type":"contao-module",
+	"homepage":"https://github.com/ContaoDMS",
 	"license":"LGPL-3.0-or-later",
 	"authors":[
 		{
