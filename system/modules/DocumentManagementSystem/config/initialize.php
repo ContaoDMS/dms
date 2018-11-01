@@ -85,7 +85,7 @@ class DocumentManagementSystemInitializer extends \Controller
 				
 				if ($objDir->next())
 				{
-					$uuid = \String::binToUuid($objDir->uuid);
+					$uuid = \StringUtil::binToUuid($objDir->uuid);
 				}
 				
 				if ($uuid == null)
@@ -93,7 +93,7 @@ class DocumentManagementSystemInitializer extends \Controller
 					if (file_exists(TL_ROOT . '/' . self::DMS_BASE_DIRECTORY_VALUE))
 					{
 						$objDir = \Dbafs::addResource(self::DMS_BASE_DIRECTORY_VALUE);
-						$uuid = \String::binToUuid($objDir->uuid);
+						$uuid = \StringUtil::binToUuid($objDir->uuid);
 					}
 					else
 					{
