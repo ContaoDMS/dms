@@ -322,7 +322,7 @@ class DmsLoader extends \Controller
 	 * @param	DatabaseResult	$objCategory	The database result.
 	 * @return	category	The created category.
 	 */
-	private function buildCategory(\Database_Result $objCategory)
+	private function buildCategory($objCategory)
 	{
 		$category = new \Category($objCategory->id, $objCategory->name);
 		$category->parentCategoryId = $objCategory->pid;
