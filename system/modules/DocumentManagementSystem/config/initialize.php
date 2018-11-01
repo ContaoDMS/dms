@@ -39,7 +39,7 @@ namespace ContaoDMS;
 class DocumentManagementSystemInitializer extends \Controller
 {
 		const DMS_BASE_DIRECTORY_KEY = "dmsBaseDirectory";
-		const DMS_BASE_DIRECTORY_VALUE = \Config::get('uploadPath') . "/dms";
+		const DMS_BASE_DIRECTORY_VALUE = "dms";
 		const DMS_MAX_UPLOAD_FILE_SIZE_KEY = "dmsMaxUploadFileSize";
 		const DMS_MAX_UPLOAD_FILE_SIZE_VALUE = array('unit' => 'MB', 'value' => '5');
 		
@@ -74,14 +74,14 @@ class DocumentManagementSystemInitializer extends \Controller
 			
 			if (!\Config::get(self::DMS_BASE_DIRECTORY_KEY))
 			{
-				\System::log('Setting default DMS base directory to "' . self::DMS_BASE_DIRECTORY_VALUE . '".', __METHOD__, TL_CONFIGURATION);
+				\System::log('Setting default DMS base directory to "' . $this->getDmsBaseDirectory() . '".', __METHOD__, TL_CONFIGURATION);
 				
 				$uuid = null;
 				
 				$objDatabase = \Database::getInstance();
 				$objDir = $objDatabase->prepare("SELECT * FROM tl_files WHERE path=?")
 								->limit(1)
-								->execute(self::DMS_BASE_DIRECTORY_VALUE);
+								->execute($this->getDmsBaseDirectory());
 				
 				if ($objDir->next())
 				{
@@ -90,9 +90,9 @@ class DocumentManagementSystemInitializer extends \Controller
 				
 				if ($uuid == null)
 				{
-					if (file_exists(TL_ROOT . '/' . self::DMS_BASE_DIRECTORY_VALUE))
+					if (file_exists(TL_ROOT . '/' . $this->getDmsBaseDirectory()))
 					{
-						$objDir = \Dbafs::addResource(self::DMS_BASE_DIRECTORY_VALUE);
+						$objDir = \Dbafs::addResource($this->getDmsBaseDirectory());
 						$uuid = \StringUtil::binToUuid($objDir->uuid);
 					}
 					else
@@ -114,6 +114,11 @@ class DocumentManagementSystemInitializer extends \Controller
 				\Config::persist(self::DMS_MAX_UPLOAD_FILE_SIZE_KEY, serialize(self::DMS_MAX_UPLOAD_FILE_SIZE_VALUE));
 			}
 		}
+    
+    private function getDmsBaseDirectory()
+    {
+      return \Config::get('uploadPath') . "/" . self::DMS_BASE_DIRECTORY_VALUE;
+    }
 }
 
 /**
