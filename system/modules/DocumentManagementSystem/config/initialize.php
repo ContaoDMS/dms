@@ -39,7 +39,7 @@ namespace ContaoDMS;
 class DocumentManagementSystemInitializer extends \Controller
 {
 		const DMS_BASE_DIRECTORY_KEY = "dmsBaseDirectory";
-		const DMS_BASE_DIRECTORY_VALUE = "files/dms";
+		const DMS_BASE_DIRECTORY_VALUE = \Config::get('uploadPath') . "/dms";
 		const DMS_MAX_UPLOAD_FILE_SIZE_KEY = "dmsMaxUploadFileSize";
 		const DMS_MAX_UPLOAD_FILE_SIZE_VALUE = array('unit' => 'MB', 'value' => '5');
 		
