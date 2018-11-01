@@ -30,6 +30,13 @@ Tracker
 https://github.com/ContaoDMS/dms/issues
 
 
+Slack
+-----
+
+Workspace: https://contaodms.slack.com
+Invitation: https://join.slack.com/t/contaodms/shared_invite/enQtNDY5Mjg3NjU4MTEyLWM2OGYxMjY3NGE3ZjQyMmVkNDcxNjFjYzc2MDRlZGEwNDhmMDdiMzczMTZiMjFjNjRkOGJmYjY4YTRiNTYwOWY
+
+
 Compatibility
 -------------
 
