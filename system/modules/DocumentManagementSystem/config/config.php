@@ -21,7 +21,7 @@
  * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  Cliff Parnitzky 2014-2015
+ * @copyright  Cliff Parnitzky 2014-2018
  * @author     Cliff Parnitzky
  * @package    DocumentManagementSystem
  * @license    LGPL
@@ -33,25 +33,25 @@
  */
 array_insert($GLOBALS['BE_MOD'], 1, array
 (
-	'dms' => array
-	(
-		'dms_categories' => array
-		(
-			'tables'     => array('tl_dms_categories'),
-			'icon'       => 'system/modules/DocumentManagementSystem/assets/categories.png'
-		),
-		'dms_access_rights' => array
-		(
-			'tables'     => array('tl_dms_access_rights'),
-			'icon'       => 'system/modules/DocumentManagementSystem/assets/access_rights.png'
-		),
-		
-		'dms_documents' => array
-		(
-			'tables'     => array('tl_dms_documents'),
-			'icon'       => 'system/modules/DocumentManagementSystem/assets/documents.png'
-		)
-	)
+  'dms' => array
+  (
+    'dms_categories' => array
+    (
+      'tables'     => array('tl_dms_categories'),
+      'icon'       => 'system/modules/DocumentManagementSystem/assets/categories.png'
+    ),
+    'dms_access_rights' => array
+    (
+      'tables'     => array('tl_dms_access_rights'),
+      'icon'       => 'system/modules/DocumentManagementSystem/assets/access_rights.png'
+    ),
+    
+    'dms_documents' => array
+    (
+      'tables'     => array('tl_dms_documents'),
+      'icon'       => 'system/modules/DocumentManagementSystem/assets/documents.png'
+    )
+  )
 ));
 
 /**
@@ -59,11 +59,11 @@ array_insert($GLOBALS['BE_MOD'], 1, array
  */
 array_insert($GLOBALS['FE_MOD'], 1, array
 (
-	'dms' => array
-	(
-		'dms_listing'    => 'ModuleDmsListing',
-		'dms_management' => 'ModuleDmsManagement'
-	)
+  'dms' => array
+  (
+    'dms_listing'    => 'ModuleDmsListing',
+    'dms_management' => 'ModuleDmsManagement'
+  )
 ));
 
 /**
@@ -71,14 +71,14 @@ array_insert($GLOBALS['FE_MOD'], 1, array
  */
 $GLOBALS['TL_DMS']['SPECIALCHARS'] = array
 (
-	"&" => "_",
-	" " => "-",
-	"#" => "_",
-	"," => "_",
-	";" => "_",
-	":" => "_",
-	"<" => "-",
-	">" => "-"
+  "&" => "_",
+  " " => "-",
+  "#" => "_",
+  "," => "_",
+  ";" => "_",
+  ":" => "_",
+  "<" => "-",
+  ">" => "-"
 );
 
 /**
@@ -86,7 +86,11 @@ $GLOBALS['TL_DMS']['SPECIALCHARS'] = array
  */
 if (TL_MODE == 'BE')
 {
-	$GLOBALS['TL_CSS'][] = 'system/modules/DocumentManagementSystem/assets/dms_backend.css';
+  $GLOBALS['TL_CSS'][] = 'system/modules/DocumentManagementSystem/assets/dms_backend.css';
+  if (version_compare(VERSION, '4.4', '>='))
+  {
+    $GLOBALS['TL_CSS'][] = 'system/modules/DocumentManagementSystem/assets/dms_backend_svg.css';
+  }
 }
  
 ?>
