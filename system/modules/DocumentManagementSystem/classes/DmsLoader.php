@@ -356,7 +356,7 @@ class DmsLoader extends \Controller
 	 * @param	DatabaseResult	$objAccessRight	The database result.
 	 * @return	accessRight	The created access right.
 	 */
-	private function buildAccessRight(\Database_Result $objAccessRight)
+	private function buildAccessRight($objAccessRight)
 	{
 		$accessRight = new \AccessRight($objAccessRight->id, $objAccessRight->member_group);
 		$accessRight->categoryId = $objAccessRight->pid;
@@ -393,7 +393,7 @@ class DmsLoader extends \Controller
 	 * @param	DatabaseResult	$objDocument	The database result.
 	 * @return	document	The created document.
 	 */
-	private function buildDocument(\Database_Result $objDocument)
+	private function buildDocument($objDocument)
 	{
 		$document = new \Document($objDocument->id, $objDocument->name);
 		$document->categoryId = $objDocument->pid;
