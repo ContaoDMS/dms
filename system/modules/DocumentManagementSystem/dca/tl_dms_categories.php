@@ -321,18 +321,18 @@ class tl_dms_categories extends \Backend
     $label = '<a href="' . $this->addToUrl('cat='.$row['id']) . '"><span style="padding-left:5px;">' . $label . '</span><span style="color:#b3b3b3; padding-left:3px;" title="' . $row['file_types'] . '">[' . \ContaoDMS\DmsUtils::getCuttedAllowedFileTypes($row['file_types']) . ']</span></a>';
 
     $time = time();
-    $image = 'category.png';
+    $image = 'category';
 
     $published = ($row['published'] && ($row['start'] == '' || $row['start'] < $time) && ($row['stop'] == '' || $row['stop'] > $time));
     if (!$published)
     {
-      $image = 'category_1.png';
+      $image .= '_1';
     }
 
     // Return the image only
     if ($blnReturnImage)
     {
-      return $this->generateImage($image, '', $imageAttribute);
+      return $this->generateImage($image . '.png', '', $imageAttribute);
     }
 
     $genReadPerm = $row['general_read_permission'];
@@ -362,7 +362,7 @@ class tl_dms_categories extends \Backend
                . '</span>';
     }
 
-    return '<a>' . $this->generateImage('system/modules/DocumentManagementSystem/assets/' . $image, '', $imageAttribute) . '</a>' . $label . $genReadPermImg . $genManagePermImg . $pubDocPerDefImg . $inhFileTypesImg;
+    return '<a>' . $this->generateImage('system/modules/DocumentManagementSystem/assets/' . $image . '.png', '', $imageAttribute . ' data-icon="' . 'system/modules/DocumentManagementSystem/assets/' . (!$published ? $image : rtrim($image, '_1')) . '.png' . '" data-icon-disabled="' . 'system/modules/DocumentManagementSystem/assets/' . rtrim($image, '_1') . '_1.png' . '"') . '</a>' . $label . $genReadPermImg . $genManagePermImg . $pubDocPerDefImg . $inhFileTypesImg;
   }
 
 
