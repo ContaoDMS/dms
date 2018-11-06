@@ -362,7 +362,7 @@ class tl_dms_categories extends \Backend
                . '</span>';
     }
 
-    return '<a href="do=feRedirect">' . $this->generateImage('system/modules/DocumentManagementSystem/assets/' . $image . '.png', '', $imageAttribute . ' data-icon="' . 'system/modules/DocumentManagementSystem/assets/' . ($published ? $image : rtrim($image, '_1')) . '.png' . '" data-icon-disabled="' . 'system/modules/DocumentManagementSystem/assets/' . rtrim($image, '_1') . '_1.png' . '"') . '</a>' . $label . $genReadPermImg . $genManagePermImg . $pubDocPerDefImg . $inhFileTypesImg;
+    return '<a href="' . $this->addToUrl('cat='.$row['id']) . '#do=feRedirect">' . $this->generateImage('system/modules/DocumentManagementSystem/assets/' . $image . '.png', '', $imageAttribute . ' data-icon="' . 'system/modules/DocumentManagementSystem/assets/' . ($published ? $image : rtrim($image, '_1')) . '.png' . '" data-icon-disabled="' . 'system/modules/DocumentManagementSystem/assets/' . rtrim($image, '_1') . '_1.png' . '"') . '</a>' . $label . $genReadPermImg . $genManagePermImg . $pubDocPerDefImg . $inhFileTypesImg;
   }
 
 
