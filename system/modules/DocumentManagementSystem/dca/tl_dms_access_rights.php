@@ -267,7 +267,7 @@ class tl_dms_access_rights extends \Backend
     
     $image = 'system/modules/DocumentManagementSystem/assets/access_rights';
     
-    return $this->generateImage(($published ? $image : $image.'_') . '._png', '', 'data-icon="' . (!$published ? $image : rtrim($image, '_')) . '.png" data-icon-disabled="' . rtrim($image, '_') . '_.png"') . $label .'<span style="color:#b3b3b3; padding-left:3px;">' . $accessRightRead . ' ' . $accessRightUpload . ' ' . $accessRightDelete . ' ' . $accessRightEdit . ' ' . $accessRightPublish . '</span>';
+    return $this->generateImage(($published ? $image : $image.'_') . '.png', '', 'data-icon="' . (!$published ? $image : rtrim($image, '_')) . '.png" data-icon-disabled="' . rtrim($image, '_') . '_.png"') . $label .'<span style="color:#b3b3b3; padding-left:3px;">' . $accessRightRead . ' ' . $accessRightUpload . ' ' . $accessRightDelete . ' ' . $accessRightEdit . ' ' . $accessRightPublish . '</span>';
   }
   
     /**
