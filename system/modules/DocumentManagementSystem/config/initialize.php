@@ -21,7 +21,7 @@
  * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  Cliff Parnitzky 2014-2015
+ * @copyright  Cliff Parnitzky 2014-2018
  * @author     Cliff Parnitzky
  * @package    DocumentManagementSystem
  * @license    LGPL
@@ -38,87 +38,87 @@ namespace ContaoDMS;
  */
 class DocumentManagementSystemInitializer extends \Controller
 {
-		const DMS_BASE_DIRECTORY_KEY = "dmsBaseDirectory";
-		const DMS_BASE_DIRECTORY_VALUE = "dms";
-		const DMS_MAX_UPLOAD_FILE_SIZE_KEY = "dmsMaxUploadFileSize";
-		const DMS_MAX_UPLOAD_FILE_SIZE_VALUE = array('unit' => 'MB', 'value' => '5');
-		
-		/**
-		 * Initialize the object
-		 */
-		public function __construct()
-		{
-			parent::__construct();
-		}
-		
-		/**
-		 * Run the controller
-		 */
-		public function run()
-		{
-				$this->initSystemSettings();
-		}
-		
-		/**
-		 * Init the system setting
-		 * Set base directoy, if not set
-		 */
-		private function initSystemSettings()
-		{
-			if (\Config::get(self::DMS_BASE_DIRECTORY_KEY) && \Config::get(self::DMS_MAX_UPLOAD_FILE_SIZE_KEY))
-			{
-				return;
-			}
-			
-			\System::log('Running init script for setting default DMS settings, if missing.', __METHOD__, TL_CONFIGURATION);
-			
-			if (!\Config::get(self::DMS_BASE_DIRECTORY_KEY))
-			{
-				\System::log('Setting default DMS base directory to "' . $this->getDmsBaseDirectory() . '".', __METHOD__, TL_CONFIGURATION);
-				
-				$uuid = null;
-				
-				$objDatabase = \Database::getInstance();
-				$objDir = $objDatabase->prepare("SELECT * FROM tl_files WHERE path=?")
-								->limit(1)
-								->execute($this->getDmsBaseDirectory());
-				
-				if ($objDir->next())
-				{
-					$uuid = \StringUtil::binToUuid($objDir->uuid);
-				}
-				
-				if ($uuid == null)
-				{
-					if (file_exists(TL_ROOT . '/' . $this->getDmsBaseDirectory()))
-					{
-						$objDir = \Dbafs::addResource($this->getDmsBaseDirectory());
-						$uuid = \StringUtil::binToUuid($objDir->uuid);
-					}
-					else
-					{
-						\System::log('Initialization of system setting for DMS failed, because default base directory does not exists.', __METHOD__, TL_ERROR);
-						return;
-					}
-				}
-				
-				if ($uuid != null)
-				{
-					\Config::persist(self::DMS_BASE_DIRECTORY_KEY, $uuid);
-				}
-			}
-			
-			if (!\Config::get(self::DMS_MAX_UPLOAD_FILE_SIZE_KEY))
-			{
-				\System::log('Setting default DMS max. upload file size to "5 MB".', __METHOD__, TL_CONFIGURATION);
-				\Config::persist(self::DMS_MAX_UPLOAD_FILE_SIZE_KEY, serialize(self::DMS_MAX_UPLOAD_FILE_SIZE_VALUE));
-			}
-		}
-    
-    private function getDmsBaseDirectory()
+  const DMS_BASE_DIRECTORY_KEY = "dmsBaseDirectory";
+  const DMS_BASE_DIRECTORY_VALUE = "dms";
+  const DMS_MAX_UPLOAD_FILE_SIZE_KEY = "dmsMaxUploadFileSize";
+  const DMS_MAX_UPLOAD_FILE_SIZE_VALUE = array('unit' => 'MB', 'value' => '5');
+  
+  /**
+   * Initialize the object
+   */
+  public function __construct()
+  {
+    parent::__construct();
+  }
+  
+  /**
+   * Run the controller
+   */
+  public function run()
+  {
+      $this->initSystemSettings();
+  }
+  
+  /**
+   * Init the system setting
+   * Set base directoy, if not set
+   */
+  private function initSystemSettings()
+  {
+    if (\Config::get(self::DMS_BASE_DIRECTORY_KEY) && \Config::get(self::DMS_MAX_UPLOAD_FILE_SIZE_KEY))
     {
-      return \Config::get('uploadPath') . "/" . self::DMS_BASE_DIRECTORY_VALUE;
+      return;
     }
+    
+    \System::log('Running init script for setting default DMS settings, if missing.', __METHOD__, TL_CONFIGURATION);
+    
+    if (!\Config::get(self::DMS_BASE_DIRECTORY_KEY))
+    {
+      \System::log('Setting default DMS base directory to "' . $this->getDmsBaseDirectory() . '".', __METHOD__, TL_CONFIGURATION);
+      
+      $uuid = null;
+      
+      $objDatabase = \Database::getInstance();
+      $objDir = $objDatabase->prepare("SELECT * FROM tl_files WHERE path=?")
+              ->limit(1)
+              ->execute($this->getDmsBaseDirectory());
+      
+      if ($objDir->next())
+      {
+        $uuid = \StringUtil::binToUuid($objDir->uuid);
+      }
+      
+      if ($uuid == null)
+      {
+        if (file_exists(TL_ROOT . '/' . $this->getDmsBaseDirectory()))
+        {
+          $objDir = \Dbafs::addResource($this->getDmsBaseDirectory());
+          $uuid = \StringUtil::binToUuid($objDir->uuid);
+        }
+        else
+        {
+          \System::log('Initialization of system setting for DMS failed, because default base directory does not exists.', __METHOD__, TL_ERROR);
+          return;
+        }
+      }
+      
+      if ($uuid != null)
+      {
+        \Config::persist(self::DMS_BASE_DIRECTORY_KEY, $uuid);
+      }
+    }
+    
+    if (!\Config::get(self::DMS_MAX_UPLOAD_FILE_SIZE_KEY))
+    {
+      \System::log('Setting default DMS max. upload file size to "5 MB".', __METHOD__, TL_CONFIGURATION);
+      \Config::persist(self::DMS_MAX_UPLOAD_FILE_SIZE_KEY, serialize(self::DMS_MAX_UPLOAD_FILE_SIZE_VALUE));
+    }
+  }
+  
+  private function getDmsBaseDirectory()
+  {
+    return \Config::get('uploadPath') . "/" . self::DMS_BASE_DIRECTORY_VALUE;
+  }
 }
 
 /**
