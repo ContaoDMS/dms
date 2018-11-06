@@ -362,7 +362,7 @@ class tl_dms_categories extends \Backend
                . '</span>';
     }
 
-    return '<a>' . $this->generateImage('system/modules/DocumentManagementSystem/assets/' . $image . '.png', '', $imageAttribute . ' data-icon="' . 'system/modules/DocumentManagementSystem/assets/' . (!$published ? $image : rtrim($image, '_1')) . '.png' . '" data-icon-disabled="' . 'system/modules/DocumentManagementSystem/assets/' . rtrim($image, '_1') . '_1.png' . '"') . '</a>' . $label . $genReadPermImg . $genManagePermImg . $pubDocPerDefImg . $inhFileTypesImg;
+    return '<a>' . $this->generateImage('system/modules/DocumentManagementSystem/assets/' . $image . '.png', '', $imageAttribute . ' data-icon="' . 'system/modules/DocumentManagementSystem/assets/' . ($published ? $image : rtrim($image, '_1')) . '.png' . '" data-icon-disabled="' . 'system/modules/DocumentManagementSystem/assets/' . rtrim($image, '_1') . '_1.png' . '"') . '</a>' . $label . $genReadPermImg . $genManagePermImg . $pubDocPerDefImg . $inhFileTypesImg;
   }
 
 
@@ -397,8 +397,7 @@ class tl_dms_categories extends \Backend
       $icon = 'invisible.gif';
     }
 
-    return '<a href="'.$this->addToUrl($href).'" title="'.specialchars($title).'"'.$attributes.'>'.$this->generateImage($icon, $label).'</a> ';
-    //return '<a href="'.$this->addToUrl($href).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label, 'data-state="' . ($row['published'] ? 1 : 0) . '"').'</a> ';
+    return '<a href="'.$this->addToUrl($href).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label, 'data-state="' . ($row['published'] ? 1 : 0) . '"').'</a> ';
   }
 
   /**
