@@ -68,17 +68,14 @@ class DocumentManagementSystemInitializer extends \Controller
   {
     if (!file_exists(TL_ROOT . '/' . $this->getDmsBaseDirectory()))
     {
-      echo "neu";
       mkdir(TL_ROOT . '/' . $this->getDmsBaseDirectory(), 0775, true);
-        
       $objDir = \Dbafs::addResource($this->getDmsBaseDirectory());
-      $objDir->protected = false; 
-      $objDir->save(); 
+      
+      $objFolder = new Folder($this->getDmsBaseDirectory());
+			$objFolder->unprotect(); 
       
       mkdir(TL_ROOT . '/' . $this->getDmsBaseDirectory() . "/temp", 0775, true);
-    }
-    else{
-      echo "schon da";
+      $objDir = \Dbafs::addResource($this->getDmsBaseDirectory() . "/temp");
     }
   }
   
