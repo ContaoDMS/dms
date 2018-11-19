@@ -66,15 +66,16 @@ class DocumentManagementSystemInitializer extends \Controller
    */
   private function initDirectoryStructure()
   {
-    if (!is_dir($dir = dirname(TL_ROOT . '/' . $this->getDmsBaseDirectory()))) {
-        mkdir($dir, 0775, true);
+    if (!file_exists(TL_ROOT . '/' . $this->getDmsBaseDirectory()))
+    {
+      echo "neu";
+      mkdir(TL_ROOT . '/' . $this->getDmsBaseDirectory(), 0775, true);
         
-        $objDir = \Dbafs::addResource($dir);
-        $objDir->protected = false; 
-        $objDir->save(); 
-        //$objDir = \Dbafs::addResource($this->getDmsBaseDirectory());
-        
-        mkdir($dir . "/temp", 0775, true);
+      $objDir = \Dbafs::addResource($this->getDmsBaseDirectory());
+      $objDir->protected = false; 
+      $objDir->save(); 
+      
+      mkdir(TL_ROOT . '/' . $this->getDmsBaseDirectory() . "/temp", 0775, true);
     }
     else{
       echo "schon da";
