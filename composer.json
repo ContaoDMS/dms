@@ -18,21 +18,14 @@
 		"source":"https://github.com/ContaoDMS/dms"
 	},
 	"require":{
-		"php":">=5.3",
-		"contao/core-bundle":"~3.2 || ~4.4",
-		"contao-community-alliance/composer-plugin":"~2.4 || ~3.0"
-	},
-	"conflict": {
-		"contao/core":"3.4.0,3.4.1,3.4.2"
-	},
-	"replace": {
-		"contao-legacy/dokmansystem": "*"
+		"php":"~7.1",
+		"contao/core-bundle":"~4.4",
+		"contao-community-alliance/composer-plugin":"~3.0"
 	},
 	"extra":{
 		"contao":{
 			"sources":{
-				"system/modules/DocumentManagementSystem":"system/modules/DocumentManagementSystem",
-				"files/dms": "files/dms"
+				"system/modules/DocumentManagementSystem":"system/modules/DocumentManagementSystem"
 			},
 			"runonce": [
 				"system/modules/DocumentManagementSystem/config/initialize.php"
