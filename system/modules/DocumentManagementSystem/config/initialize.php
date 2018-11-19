@@ -71,7 +71,7 @@ class DocumentManagementSystemInitializer extends \Controller
       mkdir(TL_ROOT . '/' . $this->getDmsBaseDirectory(), 0775, true);
       $objDir = \Dbafs::addResource($this->getDmsBaseDirectory());
       
-      $objFolder = new Folder($this->getDmsBaseDirectory());
+      $objFolder = new \Folder($this->getDmsBaseDirectory());
 			$objFolder->unprotect(); 
       
       mkdir(TL_ROOT . '/' . $this->getDmsBaseDirectory() . "/temp", 0775, true);
