@@ -40,7 +40,6 @@ Invitation: https://join.slack.com/t/contaodms/shared_invite/enQtNDY5Mjg3NjU4MTE
 Compatibility
 -------------
 
-- Contao version >= 3.2.0 ... <  3.6.0
 - Contao version >= 4.4.0
 
 
