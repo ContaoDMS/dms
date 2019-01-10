@@ -83,7 +83,7 @@ class ModuleDmsListing extends \Module
 			$this->Template->setData($this->arrData);
 		}
 		
-		$dmsLoader = DmsLoader::getInstance();
+		$dmsLoader = \DmsLoader::getInstance();
 		$params = new \DmsLoaderParams();
 		// Prepare paramters for loader
 		$params->rootCategoryId = $this->dmsStartCategory;
@@ -162,7 +162,7 @@ class ModuleDmsListing extends \Module
 		// apply the read permissions, to only show valid categories
 		$arrCategories = $this->applyReadPermissionsToCategories($arrCategories);
 		// flatten the tree structure (easier to use in template)
-		$arrCategories = DmsLoader::flattenCategories($arrCategories);
+		$arrCategories = \DmsLoader::flattenCategories($arrCategories);
 		
 		// add all needed values to template
 		$this->Template->categories = $arrCategories;

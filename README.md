@@ -30,11 +30,17 @@ Tracker
 https://github.com/ContaoDMS/dms/issues
 
 
+Slack
+-----
+
+Workspace: https://contaodms.slack.com
+Invitation: https://join.slack.com/t/contaodms/shared_invite/enQtNDY5Mjg3NjU4MTEyLWM2OGYxMjY3NGE3ZjQyMmVkNDcxNjFjYzc2MDRlZGEwNDhmMDdiMzczMTZiMjFjNjRkOGJmYjY4YTRiNTYwOWY
+
+
 Compatibility
 -------------
 
-- min. Contao version: >= 3.2.0
-- max. Contao version: <  3.6.0
+- Contao version >= 4.4.0
 
 
 Dependency
@@ -43,16 +49,20 @@ Dependency
 There are no dependencies to other extensions, that have to be installed.
 
 
+Documentation
+-------------
+
+[Read the manual](https://cliffparnitzky.gitbooks.io/contaodms)
+
+![DE](https://raw.githubusercontent.com/ContaoDMS/documentation/master/de/de.png) [Deutsches Handbuch](https://cliffparnitzky.gitbooks.io/contaodms/content/de/index.html)
+
+![EN](https://raw.githubusercontent.com/ContaoDMS/documentation/master/en/en.png) [English manual](https://cliffparnitzky.gitbooks.io/contaodms/content/en/index.html)
+
+
 Migration
 ---------
 
 For migrating from version 1.* to 2.* please backup the database and use the migration instructions at https://github.com/ContaoDMS/migration
-
-
-Documentation
--------------
-
-For documentation hints please have a look at https://github.com/ContaoDMS/documentation.
 
 
 Customization

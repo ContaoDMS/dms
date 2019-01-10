@@ -469,7 +469,7 @@ class Category
 	 */
 	public function isUploadableForCurrentMember()
 	{
-		return $this->isAccessibleForCurrentMember(\AccessRight::UPLOAD);
+		return $this->isAccessibleForCurrentMember(\AccessRight::UPLOAD) && count($this->getAllowedFileTypes()) > 0;
 	}
 	
 	/**
