@@ -470,7 +470,7 @@ class Document
 	/**
 	 * Return the custom data for the given key.
 	 *
-	 * @return	mixed	The custom data if something if something was found for the key.
+	 * @return	mixed	The custom data if something was found for the key.
 	 */
 	public function getCustomData($key)
 	{
