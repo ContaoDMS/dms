@@ -2,6 +2,11 @@
 Contao Extension "DocumentManagementSystem"
 ===========================================
 
+Version 3.2.1 (2019-02-04)
+--------------------------
+- fixed problem with displaying fields in document view (see #49)
+- fixed problem with trasferring custom data (see #50)
+
 Version 3.2.0 (2019-01-10)
 --------------------------
 - added an init script for default system settings (see #45)
