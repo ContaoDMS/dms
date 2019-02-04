@@ -414,7 +414,7 @@ class DmsLoader extends \Controller
     $document->lasteditDate = $objDocument->lastedit_date;
     $document->published = $objDocument->published;
     
-    // HOOK: modify the access right
+    // HOOK: modify the document
     if (isset($GLOBALS['TL_HOOKS']['dmsModifyLoadedDocument']) && is_array($GLOBALS['TL_HOOKS']['dmsModifyLoadedDocument']))
     {
       foreach ($GLOBALS['TL_HOOKS']['dmsModifyLoadedDocument'] as $callback)
