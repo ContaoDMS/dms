@@ -469,9 +469,9 @@ class tl_dms_documents extends \Backend
     $doc = $dc->activeRecord;
 
     return '
-<div class="w50">
+<div class="w50 widget">
   <h3><label for="ctrl_purge">'.$GLOBALS['TL_LANG']['tl_dms_documents']['data_file_name_org'][0].'</label></h3>
-  <p class="tl_text dms_disabled_text tl_tip">' . $doc->data_file_name . '</p>
+  <input type="text" class="tl_text" value="' . $doc->data_file_name . '" disabled="">
   <p class="tl_help tl_tip">'.$GLOBALS['TL_LANG']['tl_dms_documents']['data_file_name_org'][1].'</p>
 </div>';
   }
@@ -486,9 +486,9 @@ class tl_dms_documents extends \Backend
     $doc = $dc->activeRecord;
 
     return '
-<div class="w50">
+<div class="w50 widget">
   <h3><label for="ctrl_purge">'.$GLOBALS['TL_LANG']['tl_dms_documents']['data_file_type'][0].'</label></h3>
-  <p class="tl_text dms_disabled_text tl_tip">' . $doc->data_file_type . '</p>
+  <input type="text" class="tl_text" value="' . $doc->data_file_type . '" disabled="">
   <p class="tl_help tl_tip">'.$GLOBALS['TL_LANG']['tl_dms_documents']['data_file_type'][1].'</p>
 </div>';
   }
@@ -503,9 +503,9 @@ class tl_dms_documents extends \Backend
     $doc = $dc->activeRecord;
 
     return '
-<div class="w50">
+<div class="w50 widget">
   <h3><label for="ctrl_purge">'.$GLOBALS['TL_LANG']['tl_dms_documents']['data_file_size'][0].'</label></h3>
-  <p class="tl_text dms_disabled_text tl_tip">' . $doc->data_file_size . '</p>
+  <input type="text" class="tl_text" value="' . $doc->data_file_size . '" disabled="">
   <p class="tl_help tl_tip">'.$GLOBALS['TL_LANG']['tl_dms_documents']['data_file_size'][1].'</p>
 </div>';
   }

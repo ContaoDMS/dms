@@ -60,7 +60,7 @@ class AccessRight
 	private $blnActive = false;
 	private $strActivationStart = "";
 	private $strActivationStop = "";
-
+	private $arrCustomData = array();
 	
 	/**
 	 * reference to category
@@ -243,6 +243,37 @@ class AccessRight
 		$time = time();
 		$active = ($this->active && ($this->activationStart == '' || $this->activationStart < $time) && ($this->activationStop == '' || $this->activationStop > $time));
 		return $active;
+	}
+	
+	/**
+	 * Return the custom data for the given key.
+	 *
+	 * @return	mixed	The custom data if something was found for the key.
+	 */
+	public function getCustomData($key)
+	{
+		return $this->arrCustomData[$key];
+	}
+	
+	/**
+	 * Return all keys of the custom data.
+	 *
+	 * @return	array	The list of all custom data keys.
+	 */
+	public function getCustomDataKeys()
+	{
+		return array_keys($this->arrCustomData);
+	}
+	
+	/**
+	 * Set the custom data for the given key.
+	 *
+	 * @param	string	$key	The key to use.
+	 * @param	mixed	$value	The value to set.
+	 */
+	public function setCustomData($key, $value)
+	{
+		return $this->arrCustomData[$key] = $value;
 	}
 }
 

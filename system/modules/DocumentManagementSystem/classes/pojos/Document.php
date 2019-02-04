@@ -67,6 +67,7 @@ class Document
 	private $strLasteditMemberName = "";
 	private $intLasteditDate = -1;
 	private $blnPublished = false;
+	private $arrCustomData = array();
 	
 	/**
 	 * reference to category
@@ -464,6 +465,37 @@ class Document
 	public function isPublished()
 	{
 		return $this->blnPublished;
+	}
+	
+	/**
+	 * Return the custom data for the given key.
+	 *
+	 * @return	mixed	The custom data if something was found for the key.
+	 */
+	public function getCustomData($key)
+	{
+		return $this->arrCustomData[$key];
+	}
+	
+	/**
+	 * Return all keys of the custom data.
+	 *
+	 * @return	array	The list of all custom data keys.
+	 */
+	public function getCustomDataKeys()
+	{
+		return array_keys($this->arrCustomData);
+	}
+	
+	/**
+	 * Set the custom data for the given key.
+	 *
+	 * @param	string	$key	The key to use.
+	 * @param	mixed	$value	The value to set.
+	 */
+	public function setCustomData($key, $value)
+	{
+		return $this->arrCustomData[$key] = $value;
 	}
 	
 	/**
