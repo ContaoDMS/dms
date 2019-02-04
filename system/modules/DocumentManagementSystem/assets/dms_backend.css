@@ -1,2 +1,1 @@
-/* Contao Open Source CMS :: Copyright (C) 2005-2013 Leo Feyer :: LGPL license */
-.w30 { float: left; height: auto; min-height: 72px; width: 30%; } #tl_breadcrumb { padding-top: 5px; } #tl_breadcrumb li img { position: relative; top: -1px; }
+.w30 { float: left; height: auto; min-height: 72px; width: 30%; } @media (max-width: 767px) {.w30 { float: none; width: calc(100% - 30px); } } #tl_breadcrumb { padding-top: 5px; } #tl_breadcrumb li img { position: relative; top: -1px; } 
