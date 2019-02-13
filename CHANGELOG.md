@@ -2,10 +2,14 @@
 Contao Extension "DocumentManagementSystem"
 ===========================================
 
+Version 3.2.2 (2019-02-14)
+--------------------------
+- fixed problem with trasferring custom data fromt frontend to database (see #50)
+
 Version 3.2.1 (2019-02-04)
 --------------------------
 - fixed problem with displaying fields in document view (see #49)
-- fixed problem with trasferring custom data (see #50)
+- fixed problem with transferring custom data from database to frontend (see #50)
 
 Version 3.2.0 (2019-01-10)
 --------------------------
