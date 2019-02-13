@@ -328,7 +328,7 @@ class ModuleDmsManagement extends \Module
       
       // load possible documents for file name
       $params->loadCategory = true; // need the category of existing documents
-      $arrDocuments = $dmsLoader->loadDocuments($arrFileParts['fileName'], $arrFileParts['fileType'], $params);
+      $existingDocuments = $dmsLoader->loadDocuments($arrFileParts['fileName'], $arrFileParts['fileType'], $params);
       $params->loadCategory = false;
       
       $arrFileNameParts = \Document::splitFileName($strFileName);
@@ -339,10 +339,10 @@ class ModuleDmsManagement extends \Module
       $proposedDocumentVersionMinor = 0;
       $proposedDocumentVersionPatch = 0;
       
-      if (count($arrDocuments) > 0)
+      if (count($existingDocuments) > 0)
       {
         // the list of documents is ordered by version, so the highest should be at end
-        $lastDocument = end($arrDocuments);
+        $lastDocument = end($existingDocuments);
         $proposedDocumentName = $lastDocument->name;
         $proposedDocumentDescription = $lastDocument->description;
         $proposedDocumentKeywords = $lastDocument->keywords;
@@ -366,7 +366,7 @@ class ModuleDmsManagement extends \Module
       
       // check if an existing document is in another category
       $blnCategoriesDiffer = false;
-      foreach ($arrDocuments as $existingDocument)
+      foreach ($existingDocuments as $existingDocument)
       {
         // will be true, if one is true (keep true status, if once set)
         $blnCategoriesDiffer = $blnCategoriesDiffer || ($category->id != $existingDocument->categoryId);
@@ -388,7 +388,7 @@ class ModuleDmsManagement extends \Module
       $this->Template->fileSizeKbFormatted = \Document::formatFileSize(\Document::convertFileSize($intFileSize, \Document::FILE_SIZE_UNIT_BYTE, \Document::FILE_SIZE_UNIT_KB), \Document::FILE_SIZE_UNIT_KB);
       $this->Template->fileSizeMbFormatted = \Document::formatFileSize(\Document::convertFileSize($intFileSize, \Document::FILE_SIZE_UNIT_BYTE, \Document::FILE_SIZE_UNIT_MB), \Document::FILE_SIZE_UNIT_MB);
       $this->Template->fileSizeGbFormatted = \Document::formatFileSize(\Document::convertFileSize($intFileSize, \Document::FILE_SIZE_UNIT_BYTE, \Document::FILE_SIZE_UNIT_GB), \Document::FILE_SIZE_UNIT_GB);
-      $this->Template->existingDocuments = $arrDocuments;
+      $this->Template->existingDocuments = $existingDocuments;
       $this->Template->documentName = $proposedDocumentName;
       $this->Template->documentDescription = $proposedDocumentDescription;
       $this->Template->documentKeywords = $proposedDocumentKeywords;
@@ -462,16 +462,16 @@ class ModuleDmsManagement extends \Module
     {
       // load possible documents for file name
       $params->loadCategory = true; // need the category of existing documents
-      $arrDocuments = $dmsLoader->loadDocuments($arrTempFileParts['fileName'], $arrTempFileParts['fileType'], $params);
+      $existingDocuments = $dmsLoader->loadDocuments($arrTempFileParts['fileName'], $arrTempFileParts['fileType'], $params);
       $params->loadCategory = false;
       
       if (strlen($documentName) == 0)
       {
         $arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['upload_no_name_set'];
-        if (count($arrDocuments) > 0)
+        if (count($existingDocuments) > 0)
         {
         // the list of documents is ordered by version, so the highest should be at end
-          $lastDocument = end($arrDocuments);
+          $lastDocument = end($existingDocuments);
           $documentName = $lastDocument->name;
         }
       }
@@ -482,7 +482,7 @@ class ModuleDmsManagement extends \Module
         $arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['upload_no_version_set'];
       }
       
-      foreach ($arrDocuments as $existingDocument)
+      foreach ($existingDocuments as $existingDocument)
       {
         // will be true, if one is true (keep true status, if once set)
         if ($existingDocument->versionMajor == $documentVersionMajor &&
@@ -490,6 +490,16 @@ class ModuleDmsManagement extends \Module
           $existingDocument->versionPatch == $documentVersionPatch)
         {
           $arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['upload_version_already_used'];
+        }
+      }
+      
+      // HOOK: verify the uploaded document from frontend
+      if (isset($GLOBALS['TL_HOOKS']['dmsVerifyUploadedDocument']) && is_array($GLOBALS['TL_HOOKS']['dmsVerifyUploadedDocument']))
+      {
+        foreach ($GLOBALS['TL_HOOKS']['dmsVerifyUploadedDocument'] as $callback)
+        {
+          $this->import($callback[0]);
+          $arrMessages = $this->{$callback[0]}->{$callback[1]}($arrMessages, $existingDocuments, $this->Input);
         }
       }
       
@@ -505,16 +515,6 @@ class ModuleDmsManagement extends \Module
         $this->Template->documentVersionMinor = $documentVersionMinor;
         $this->Template->documentVersionPatch = $documentVersionPatch;
         $this->Template->documentPublish = $documentPublish;
-        
-        // HOOK: manipulate template when errors occure
-        /*if (isset($GLOBALS['TL_HOOKS']['dmsModifyTemplateForUploadedDocument']) && is_array($GLOBALS['TL_HOOKS']['dmsModifyUploadedDocument']))
-        {
-          foreach ($GLOBALS['TL_HOOKS']['dmsModifyUploadedDocument'] as $callback)
-          {
-            $this->import($callback[0]);
-            $document = $this->{$callback[0]}->{$callback[1]}($document, $this->Input);
-          }
-        }*/
       }
       else
       {
@@ -573,7 +573,7 @@ class ModuleDmsManagement extends \Module
       $this->Template->fileSizeKbFormatted = \Document::formatFileSize(\Document::convertFileSize($intFileSize, \Document::FILE_SIZE_UNIT_BYTE, \Document::FILE_SIZE_UNIT_KB), \Document::FILE_SIZE_UNIT_KB);
       $this->Template->fileSizeMbFormatted = \Document::formatFileSize(\Document::convertFileSize($intFileSize, \Document::FILE_SIZE_UNIT_BYTE, \Document::FILE_SIZE_UNIT_MB), \Document::FILE_SIZE_UNIT_MB);
       $this->Template->fileSizeGbFormatted = \Document::formatFileSize(\Document::convertFileSize($intFileSize, \Document::FILE_SIZE_UNIT_BYTE, \Document::FILE_SIZE_UNIT_GB), \Document::FILE_SIZE_UNIT_GB);
-      $this->Template->existingDocuments = $arrDocuments;
+      $this->Template->existingDocuments = $existingDocuments;
       
       $blnShowStart = false;
     }
@@ -774,12 +774,12 @@ class ModuleDmsManagement extends \Module
       
       // load existing documents for file name
       $params->loadCategory = true; // need the category of existing documents
-      $arrDocuments = $dmsLoader->loadDocuments($document->fileName, $document->fileType, $params);
+      $existingDocuments = $dmsLoader->loadDocuments($document->fileName, $document->fileType, $params);
       $params->loadCategory = false;
       
       $existingDocuments = array();
       $blnCategoriesDiffer = false; // check if an existing document is in another category
-      foreach ($arrDocuments as $existingDocument)
+      foreach ($existingDocuments as $existingDocument)
       {
         if ($existingDocument->id != $documentId)
         {
@@ -900,13 +900,13 @@ class ModuleDmsManagement extends \Module
         }
       }
       
-      // HOOK: modify the edited document from frontend
-      if (isset($GLOBALS['TL_HOOKS']['dmsModifyEditedDocument']) && is_array($GLOBALS['TL_HOOKS']['dmsModifyEditedDocument']))
+      // HOOK: verify the edited document from frontend
+      if (isset($GLOBALS['TL_HOOKS']['dmsVerifyEditedDocument']) && is_array($GLOBALS['TL_HOOKS']['dmsVerifyEditedDocument']))
       {
-        foreach ($GLOBALS['TL_HOOKS']['dmsModifyEditedDocument'] as $callback)
+        foreach ($GLOBALS['TL_HOOKS']['dmsVerifyEditedDocument'] as $callback)
         {
           $this->import($callback[0]);
-          $document = $this->{$callback[0]}->{$callback[1]}($document, $this->Input);
+          $arrMessages = $this->{$callback[0]}->{$callback[1]}($arrMessages, $existingDocuments, $this->Input);
         }
       }
       
@@ -917,6 +917,16 @@ class ModuleDmsManagement extends \Module
       }
       else
       {
+        // HOOK: modify the edited document from frontend
+        if (isset($GLOBALS['TL_HOOKS']['dmsModifyEditedDocument']) && is_array($GLOBALS['TL_HOOKS']['dmsModifyEditedDocument']))
+        {
+          foreach ($GLOBALS['TL_HOOKS']['dmsModifyEditedDocument'] as $callback)
+          {
+            $this->import($callback[0]);
+            $document = $this->{$callback[0]}->{$callback[1]}($document, $this->Input);
+          }
+        }
+
         // update document
         $dmsWriter = \DmsWriter::getInstance();
         $document = $dmsWriter->updateDocument($document);
