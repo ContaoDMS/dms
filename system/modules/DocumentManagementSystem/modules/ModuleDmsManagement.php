@@ -324,7 +324,7 @@ class ModuleDmsManagement extends \Module
     else
     {
       // move the uploaded file to dms temp dir
-      move_uploaded_file($_FILES['dmsFile']['tmp_name'], \DmsConfig::getTempDirectory(true) . $strFileNameUnversioned);
+      //move_uploaded_file($_FILES['dmsFile']['tmp_name'], \DmsConfig::getTempDirectory(true) . $strFileNameUnversioned);
       
       // load possible documents for file name
       $params->loadCategory = true; // need the category of existing documents
