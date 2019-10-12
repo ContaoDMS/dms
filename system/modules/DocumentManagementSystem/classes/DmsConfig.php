@@ -87,7 +87,7 @@ class DmsConfig
 	public static function getTempDirectory($blnAppendTrailingSlash)
 	{
 		//$path = self::getBaseDirectory(true) . self::DIRECTORY_NAME_TEMP;
-		$path = "system/tmp";
+		$path = TL_ROOT . "/system/tmp";
 		
 		if ($blnAppendTrailingSlash)
 		{
