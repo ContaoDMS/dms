@@ -523,7 +523,8 @@ class ModuleDmsManagement extends \Module
         
         // move the temp file to dms dir and append version
         //rename(\DmsConfig::getTempDirectory(true) . $tempFileNameCleaned, \DmsConfig::getDocumentFilePath($fileFileNameVersioned));
-        move_uploaded_file($tempFileNameCleaned, \DmsConfig::getDocumentFilePath($fileFileNameVersioned));
+        //move_uploaded_file(\DmsConfig::getTempDirectory(true) . $tempFileNameCleaned, \DmsConfig::getDocumentFilePath($fileFileNameVersioned));
+        print_r($fileFileNameVersioned);
         \Dbafs::addResource(\DmsConfig::getDocumentFilePath($fileFileNameVersioned));
         
         // store document
