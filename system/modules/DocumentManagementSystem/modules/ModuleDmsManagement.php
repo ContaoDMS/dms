@@ -452,7 +452,7 @@ class ModuleDmsManagement extends \Module
       $arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['upload_document_not_allowed'];
       $blnShowStart = true;
     }
-    else if (!file_exists(\DmsConfig::getTempDirectory(true) . $tempFileNameCleaned))
+    else if (!file_exists(TL_ROOT . '/' . \DmsConfig::getTempDirectory(true) . $tempFileNameCleaned))
     {
       $arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['upload_temp_file_not_found'];
       $blnShowStart = false;
