@@ -324,8 +324,7 @@ class ModuleDmsManagement extends \Module
     else
     {
       // move the uploaded file to dms temp dir
-      //move_uploaded_file($_FILES['dmsFile']['tmp_name'], \DmsConfig::getTempDirectory(true) . $strFileNameUnversioned);
-      rename($_FILES['dmsFile']['tmp_name'], \DmsConfig::getTempDirectory(true) . $strFileNameUnversioned);
+      move_uploaded_file($_FILES['dmsFile']['tmp_name'], \DmsConfig::getTempDirectory(true) . $strFileNameUnversioned);
       
       // load possible documents for file name
       $params->loadCategory = true; // need the category of existing documents
@@ -453,7 +452,7 @@ class ModuleDmsManagement extends \Module
       $arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['upload_document_not_allowed'];
       $blnShowStart = true;
     }
-    else if (!file_exists(\DmsConfig::getTempDirectory(true) . $tempFileNameCleaned))
+    else if (!file_exists(TL_ROOT . '/' . \DmsConfig::getTempDirectory(true) . $tempFileNameCleaned))
     {
       $arrMessages['errors'][] = $GLOBALS['TL_LANG']['DMS']['ERR']['upload_temp_file_not_found'];
       $blnShowStart = false;
@@ -524,7 +523,6 @@ class ModuleDmsManagement extends \Module
         
         // move the temp file to dms dir and append version
         rename(\DmsConfig::getTempDirectory(true) . $tempFileNameCleaned, \DmsConfig::getDocumentFilePath($fileFileNameVersioned));
-        //move_uploaded_file(\DmsConfig::getTempDirectory(true) . $tempFileNameCleaned, \DmsConfig::getDocumentFilePath($fileFileNameVersioned));
         \Dbafs::addResource(\DmsConfig::getDocumentFilePath($fileFileNameVersioned));
         
         // store document
