@@ -2,9 +2,13 @@
 Contao Extension "DocumentManagementSystem"
 ===========================================
 
+Version 3.2.3 (2019-12-18)
+--------------------------
+- fixed determining template group in frontend modules (see #53)
+
 Version 3.2.2 (2019-02-14)
 --------------------------
-- fixed problem with trasferring custom data fromt frontend to database (see #50)
+- fixed problem with transferring custom data fromt frontend to database (see #50)
 
 Version 3.2.1 (2019-02-04)
 --------------------------
