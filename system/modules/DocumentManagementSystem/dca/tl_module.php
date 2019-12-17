@@ -2,7 +2,7 @@
 
 /**
  * Contao Open Source CMS
- * Copyright (C) 2005-2018 Leo Feyer
+ * Copyright (C) 2005-2019 Leo Feyer
  *
  * Formerly known as TYPOlight Open Source CMS.
  *
@@ -21,7 +21,7 @@
  * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  Cliff Parnitzky 2014-2018
+ * @copyright  Cliff Parnitzky 2014-2019
  * @author     Cliff Parnitzky
  * @package    DocumentManagementSystem
  * @license    LGPL
@@ -91,7 +91,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['dmsTemplate'] = array(
  *
  * Provide miscellaneous methods that are used by the data configuration array.
  * PHP version 5
- * @copyright  Cliff Parnitzky 2014-2018
+ * @copyright  Cliff Parnitzky 2014-2019
  * @author     Cliff Parnitzky
  * @package    Controller
  */
@@ -112,14 +112,7 @@ class tl_module_dms extends \Backend
    */
   public function getDmsTemplates(DataContainer $dc)
   {
-    $intPid = $dc->activeRecord->pid;
-    
-    if ($this->Input->get('act') == 'overrideAll')
-    {
-      $intPid = $this->Input->get('id');
-    }
-    
-    return $this->getTemplateGroup('mod_' . $dc->activeRecord->type, $intPid);
+    return $this->getTemplateGroup('mod_' . $dc->activeRecord->type);
   }
   
   /**
