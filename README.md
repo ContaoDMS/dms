@@ -1,6 +1,7 @@
 [![Latest Version on Packagist](http://img.shields.io/packagist/v/contao-dms/dms.svg?style=flat)](https://packagist.org/packages/contao-dms/dms)
 [![Installations via composer per month](http://img.shields.io/packagist/dm/contao-dms/dms.svg?style=flat)](https://packagist.org/packages/contao-dms/dms)
 [![Installations via composer total](http://img.shields.io/packagist/dt/contao-dms/dms.svg?style=flat)](https://packagist.org/packages/contao-dms/dms)
+[![Donate](https://img.shields.io/badge/Donate-PayPal-blue.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TLYR46BKTXLWN&source=url)
 
 Contao Extension: DocumentManagementSystem
 ==========================================
@@ -57,6 +58,15 @@ Documentation
 ![DE](https://raw.githubusercontent.com/ContaoDMS/documentation/master/de/de.png) [Deutsches Handbuch](https://cliffparnitzky.gitbooks.io/contaodms/content/de/index.html)
 
 ![EN](https://raw.githubusercontent.com/ContaoDMS/documentation/master/en/en.png) [English manual](https://cliffparnitzky.gitbooks.io/contaodms/content/en/index.html)
+
+
+Donation
+--------
+
+If this project helps you, please help me to improve it.
+
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TLYR46BKTXLWN&source=url)
+
 
 
 Migration
