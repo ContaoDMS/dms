@@ -35,7 +35,7 @@ Slack
 -----
 
 Workspace: https://contaodms.slack.com
-Invitation: https://join.slack.com/t/contaodms/shared_invite/enQtNDY5Mjg3NjU4MTEyLWM2OGYxMjY3NGE3ZjQyMmVkNDcxNjFjYzc2MDRlZGEwNDhmMDdiMzczMTZiMjFjNjRkOGJmYjY4YTRiNTYwOWY
+Invitation: https://join.slack.com/t/contaodms/shared_invite/zt-5zl5r6gw-o3ClITapJjmR8LPtARJHbA
 
 
 Compatibility
@@ -53,11 +53,11 @@ There are no dependencies to other extensions, that have to be installed.
 Documentation
 -------------
 
-[Read the manual](https://cliffparnitzky.gitbooks.io/contaodms)
+[Read the manual](https://contaodms.gitbook.io/contaodms/)
 
-![DE](https://raw.githubusercontent.com/ContaoDMS/documentation/master/de/de.png) [Deutsches Handbuch](https://cliffparnitzky.gitbooks.io/contaodms/content/de/index.html)
+![DE](https://raw.githubusercontent.com/ContaoDMS/documentation/master/de/de.png) [Deutsches Handbuch](https://contaodms.gitbook.io/contaodms/de)
 
-![EN](https://raw.githubusercontent.com/ContaoDMS/documentation/master/en/en.png) [English manual](https://cliffparnitzky.gitbooks.io/contaodms/content/en/index.html)
+![EN](https://raw.githubusercontent.com/ContaoDMS/documentation/master/en/en.png) [English manual](https://contaodms.gitbook.io/contaodms/en)
 
 
 Donation
