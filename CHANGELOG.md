@@ -2,6 +2,14 @@
 Contao Extension "DocumentManagementSystem"
 ===========================================
 
+Version 3.2.5 (2023-07-05)
+--------------------------
+- adds missing `$` (see #55)
+
+Version 3.2.4 (2023-01-17)
+--------------------------
+- Unlock PHP 8.1
+
 Version 3.2.3 (2019-12-18)
 --------------------------
 - fixed determining template group in frontend modules (see #53)
