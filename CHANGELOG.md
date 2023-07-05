@@ -2,6 +2,10 @@
 Contao Extension "DocumentManagementSystem"
 ===========================================
 
+Version 3.2.6 (2023-07-06)
+--------------------------
+- Ensure to exclude the `id` when storing the document
+
 Version 3.2.5 (2023-07-05)
 --------------------------
 - adds missing `$` (see #55)
