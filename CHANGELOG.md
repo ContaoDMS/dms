@@ -2,6 +2,10 @@
 Contao Extension "DocumentManagementSystem"
 ===========================================
 
+Version 3.3.0 (2023-07-06)
+--------------------------
+- Add some dmsPostDocument... - Hooks
+
 Version 3.2.7 (2023-07-06)
 --------------------------
 - Delete `xhtml` templates

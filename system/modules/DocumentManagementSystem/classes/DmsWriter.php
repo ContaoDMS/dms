@@ -81,6 +81,17 @@ class DmsWriter extends \Controller
     $objDocument = $this->Database->prepare("INSERT INTO tl_dms_documents %s")->set($arrSet)->execute();
     
     $document->id = $objDocument->insertId;
+    
+    // HOOK: custom action after initial storing a document
+    if (isset($GLOBALS['TL_HOOKS']['dmsPostDocumentUpload']) && is_array($GLOBALS['TL_HOOKS']['dmsPostDocumentUpload']))
+    {
+      foreach ($GLOBALS['TL_HOOKS']['dmsPostDocumentUpload'] as $callback)
+      {
+        $this->import($callback[0]);
+        $this->{$callback[0]}->{$callback[1]}($document);
+      }
+    }
+    
     return $document;
   }
   
@@ -96,6 +107,16 @@ class DmsWriter extends \Controller
     
     $this->Database->prepare("UPDATE tl_dms_documents %s WHERE id=?")->set($arrSet)->execute($document->id);
     
+    // HOOK: custom action after editing a document
+    if (isset($GLOBALS['TL_HOOKS']['dmsPostDocumentEditing']) && is_array($GLOBALS['TL_HOOKS']['dmsPostDocumentEditing']))
+    {
+      foreach ($GLOBALS['TL_HOOKS']['dmsPostDocumentEditing'] as $callback)
+      {
+        $this->import($callback[0]);
+        $this->{$callback[0]}->{$callback[1]}($document);
+      }
+    }
+    
     return $document;
   }
   
@@ -108,6 +129,16 @@ class DmsWriter extends \Controller
   public function deleteDocument(\Document $document)
   {
     $objStmt = $this->Database->prepare("DELETE FROM tl_dms_documents WHERE id=?")->execute($document->id);
+    
+    // HOOK: custom action after editing a document
+    if (isset($GLOBALS['TL_HOOKS']['dmsPostDocumentDeletion']) && is_array($GLOBALS['TL_HOOKS']['dmsPostDocumentDeletion']))
+    {
+      foreach ($GLOBALS['TL_HOOKS']['dmsPostDocumentDeletion'] as $callback)
+      {
+        $this->import($callback[0]);
+        $this->{$callback[0]}->{$callback[1]}($document);
+      }
+    }
     
     return ($objStmt->affectedRows > 0);
   }

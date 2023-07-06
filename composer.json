@@ -19,7 +19,7 @@
 	},
 	"require":{
 		"php":"~7.1 || ~8.1",
-		"contao/core-bundle":"~4.4",
+		"contao/core-bundle":"~4.13",
 		"contao-community-alliance/composer-plugin":"~3.0"
 	},
 	"extra":{
@@ -32,7 +32,7 @@
 			]
 		},
 		"branch-alias": {
-			"dev-master": "3.2.x-dev"
+			"dev-master": "3.3.x-dev"
 		}
 	}
 }
