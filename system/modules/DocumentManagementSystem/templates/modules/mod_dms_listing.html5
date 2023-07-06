@@ -155,7 +155,6 @@
 </form>
 
 <script type="text/javascript">
-<!--
 	function expandCollapseCategory (checkbox)
 	{
 		document.getElementById('docId').value = "";
@@ -215,12 +214,10 @@
 		return 0;
 	}
 	
-	window.addEvent('domready', function()
-	{
+	document.addEventListener("DOMContentLoaded", () => {
 		window.scrollTo(0, document.getElementById('lastExpandedCollapsedCategoryPosition').value);
 	});
 
--->
 </script>
 
 </div>
