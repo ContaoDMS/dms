@@ -149,7 +149,7 @@ class ModuleDmsManagement extends \Module
             $unpublishDocument = (int) $this->Input->post('unpublishDocument');
             $publishDocument = (int) $this->Input->post('publishDocument');
             
-            if ($editDocument != '' && is_numeric($editDocument))
+            if ($editDocument != '' && is_numeric($editDocument) && $editDocument > 0)
             {
               $storeProperties = (bool) $this->Input->post('storeProperties');
             
@@ -162,7 +162,7 @@ class ModuleDmsManagement extends \Module
                 $this->manageEditDocumentEnterProperties($params, $dmsLoader, $manageCategory, $arrMessages, $blnShowStart, $editDocument);
               }
             }
-            else if ($deleteDocument != '' && is_numeric($deleteDocument))
+            else if ($deleteDocument != '' && is_numeric($deleteDocument) && $deleteDocument > 0)
             {
               if ((bool) $this->Input->post('deleteDocumentConfirmed'))
               {
@@ -174,11 +174,11 @@ class ModuleDmsManagement extends \Module
                 $this->manageSelectDocument($params, $dmsLoader, $manageCategory, $arrMessages, $blnShowStart);
               }
             }
-            else if ($unpublishDocument != '' && is_numeric($unpublishDocument))
+            else if ($unpublishDocument != '' && is_numeric($unpublishDocument) && $unpublishDocument > 0)
             {
               $this->manageUnpublishDocument($params, $dmsLoader, $manageCategory, $arrMessages, $blnShowStart, $unpublishDocument);
             }
-            else if ($publishDocument != '' && is_numeric($publishDocument))
+            else if ($publishDocument != '' && is_numeric($publishDocument) && $publishDocument > 0)
             {
               $this->managePublishDocument($params, $dmsLoader, $manageCategory, $arrMessages, $blnShowStart, $publishDocument);
             }

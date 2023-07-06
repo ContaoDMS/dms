@@ -76,11 +76,22 @@ class DmsWriter extends \Controller
    */
   public function storeDocument(\Document $document)
   {
-    $arrSet = $this->buildDocumentDataArray($document, false);
+    $arrSet = $this->buildDocumentDataArray($document);
     
     $objDocument = $this->Database->prepare("INSERT INTO tl_dms_documents %s")->set($arrSet)->execute();
     
     $document->id = $objDocument->insertId;
+    
+    // HOOK: custom action after initial storing a document
+    if (isset($GLOBALS['TL_HOOKS']['dmsPostDocumentUpload']) && is_array($GLOBALS['TL_HOOKS']['dmsPostDocumentUpload']))
+    {
+      foreach ($GLOBALS['TL_HOOKS']['dmsPostDocumentUpload'] as $callback)
+      {
+        $this->import($callback[0]);
+        $this->{$callback[0]}->{$callback[1]}($document);
+      }
+    }
+    
     return $document;
   }
   
@@ -92,9 +103,19 @@ class DmsWriter extends \Controller
    */
   public function updateDocument(\Document $document)
   {
-    $arrSet = $this->buildDocumentDataArray($document, false);
+    $arrSet = $this->buildDocumentDataArray($document);
     
     $this->Database->prepare("UPDATE tl_dms_documents %s WHERE id=?")->set($arrSet)->execute($document->id);
+    
+    // HOOK: custom action after editing a document
+    if (isset($GLOBALS['TL_HOOKS']['dmsPostDocumentEditing']) && is_array($GLOBALS['TL_HOOKS']['dmsPostDocumentEditing']))
+    {
+      foreach ($GLOBALS['TL_HOOKS']['dmsPostDocumentEditing'] as $callback)
+      {
+        $this->import($callback[0]);
+        $this->{$callback[0]}->{$callback[1]}($document);
+      }
+    }
     
     return $document;
   }
@@ -109,6 +130,16 @@ class DmsWriter extends \Controller
   {
     $objStmt = $this->Database->prepare("DELETE FROM tl_dms_documents WHERE id=?")->execute($document->id);
     
+    // HOOK: custom action after editing a document
+    if (isset($GLOBALS['TL_HOOKS']['dmsPostDocumentDeletion']) && is_array($GLOBALS['TL_HOOKS']['dmsPostDocumentDeletion']))
+    {
+      foreach ($GLOBALS['TL_HOOKS']['dmsPostDocumentDeletion'] as $callback)
+      {
+        $this->import($callback[0]);
+        $this->{$callback[0]}->{$callback[1]}($document);
+      }
+    }
+    
     return ($objStmt->affectedRows > 0);
   }
   
@@ -116,16 +147,11 @@ class DmsWriter extends \Controller
    * Builds a document from a database result.
    *
    * @param  Document  $document  The document to get the data from.
-   * @param  bool  $blnIncludeId  False if the id should be excluded (should not be in resulting array).
    * @return  array  The associative array of properties and values.
    */
-  private function buildDocumentDataArray(\Document $document, $blnIncludeId)
+  private function buildDocumentDataArray(\Document $document)
   {
     $arrData = array();
-    if (!$blnIncludeId)
-    {
-      $arrData['id'] = $document->id;
-    }
     $arrData['tstamp'] = time();
     $arrData['name'] = $document->name;
     $arrData['pid'] = $document->categoryId;
